@@ -51,7 +51,8 @@
 \date{}
 
 \usepackage[autostyle]{csquotes}
-
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{bibliography.bib}
 
 
 \begin{document}
@@ -356,7 +357,7 @@ The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \
 \begin{subequations}
 \label{eq:lssvm}
 \begin{equation}
-	 \underset{\mathbf{w},e}{\text{min}} & & f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
+	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
 \end{equation}
 \begin{equation}
 \label{eq:stpart}
@@ -375,15 +376,22 @@ Let us first consider the following lemma that establishes the convergence of th
 
 \begin{lemma}
 \label{lem:lem1}
-For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability.
+For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability to a vector of finite norm $||\mathbf{w}||_2 = \mathbf{w}^T\mathbf{w}$.
 \end{lemma}
 
 \begin{proof}
-Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}|y}(\bm{\alpha}_j|y)$ the probability of input vector $\bm{\alpha}_j$, $j=1, \ldots, M$, given that the true value is $y$. By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}|y}(\bm{\alpha}_j|y)$ training vectors $\bm{\alpha}_j$ with associated true value $y$ in any training sequence. All these training points will have the same value of $e_i$, from (\ref{eq:stpart}), that will appear with probability $p_{\bm{a}|y}(\bm{\alpha}_j|y)$ for a given true value. Therefore asymptotically problem (\ref{eq:lssvm}) becomes
+Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$, with $y \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $y_i$, $i=1, \ldots, S$.
+
+By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ training vectors $\bm{\alpha}_j$ with associated true value $y$ in any training sequence.
+All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
+Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\mathbf{\alpha}_j$, but with different labels $y_m \neq y_n$. Therefore, for $\mathbf{a}^{i}=\mathbf{\alpha_j}$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
+This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
+Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
 \begin{subequations}
+\label{eq:lssvm22}
 \begin{equation}
 \label{eq:lssvm2}
-	 \underset{\mathbf{w},e}{\text{min}} & & f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}|y}(\bm{\alpha}_j|1) e_{j,1}^2 + p_{\bm{a}}(\bm{\alpha}_j|-1) e_{j,-1}^2]  
+	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
 \end{equation}
 \begin{equation}
 \label{stpart2}
@@ -394,7 +402,13 @@ Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ 
 	 \quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
 \end{equation}
 \end{subequations}
-whose solution provides the convergence value (in probability) of vector $\bm{w}$.
+which solution provides the convergence value (in probability) of vector $\bm{w}$. 
+Note that while the original problem \eqref{eq:lssvm} as $S \to \infty$ has infinite constraints, it can be solved by the problem \eqref{eq:lssvm22} that includes a finite number $2M$ of constraints.
+
+Solving \eqref{eq:lssvm22} using the dual formulation, we obtain \cite{Suykens1999}
+\begin{equation}
+	\mathbf{w}^T\mathbf{w} = \sum	todo
+\end{equation}
 \end{proof}
 
 \begin{theorem}
@@ -685,6 +699,6 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 
 
 
-\bibliographystyle{IEEEtran}
-\bibliography{bibliography.bib}
+%\bibliographystyle{IEEEtran}
+%\bibliography{bibliography.bib}
 \end{document}
