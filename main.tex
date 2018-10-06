@@ -394,21 +394,30 @@ Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
 	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
 \end{equation}
 \begin{equation}
-\label{stpart2}
+\label{eq:stpart2}
 	 \text{subject to}\,  [\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,1}\quad j = 1 ,\dots,M.
 \end{equation}
 \begin{equation}
-\label{stpart2}
+\label{eq:stpart3}
 	 \quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
 \end{equation}
 \end{subequations}
 which solution provides the convergence value (in probability) of vector $\bm{w}$. 
 Note that while the original problem \eqref{eq:lssvm} as $S \to \infty$ has infinite constraints, it can be solved by the problem \eqref{eq:lssvm22} that includes a finite number $2M$ of constraints.
 
-Solving \eqref{eq:lssvm22} using the dual formulation, we obtain \cite{Suykens1999}
+We now solve \eqref{eq:lssvm22} with the dual formulation following the same steps used for the \ac{lssvm} in \cite{Suykens1999} with minor modifications. In particular, when building the Lagrangian we need to introduce two sets of multipliers: $v_k$ for \eqref{eq:stpart2} and $u_k$ for \eqref{eq:stpart3}, $k=1,\dots, M$. Then, by deriving with respect to $\mathbf{w}$ and setting to 0, we obtain
 \begin{equation}
-	\mathbf{w}^T\mathbf{w} = \sum	todo
+\label{eq:wSolution}
+\begin{aligned}
+%	\mathbf{w}\mathbf{w}^T =& \sum_{k=1}^{M} \sum_{h=1}^{M} v_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h)	
+%								- \sum_{k=1}^{M} \sum_{h=1}^{M} v_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)	\\
+%							&	\sum_{k=1}^{M} \sum_{h=1}^{M} u_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)
+%								- \sum_{k=1}^{M} \sum_{h=1}^{M} u_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h) \\
+	\mathbf{w}\mathbf{w}^T =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
+\end{aligned}
 \end{equation}
+where we used the fact that the kernel function is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
+
 \end{proof}
 
 \begin{theorem}
