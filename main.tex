@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{bm,array}
 \usepackage{color,soul}
 %\usepackage{epstopdf}
@@ -416,7 +417,10 @@ We now solve \eqref{eq:lssvm22} with the dual formulation following the same ste
 	\mathbf{w}\mathbf{w}^T =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
 \end{aligned}
 \end{equation}
-where we used the fact that the kernel function is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
+where we used the fact that the kernel function
+\begin{equation}
+	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
+\end{equation} is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
 
 \end{proof}
 
