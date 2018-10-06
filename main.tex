@@ -358,6 +358,7 @@ The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \
 \begin{subequations}
 \label{eq:lssvm}
 \begin{equation}
+\label{eq:lssvmOrig}
 	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
 \end{equation}
 \begin{equation}
@@ -426,20 +427,20 @@ where we used the fact that the kernel function
 
 \begin{theorem}
 \label{th:lsnp}
-Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l(\mathbf{w},e)$ given an infinite number of training points $\bm{a}^{(i)}$. Then the classificator obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classificator obtained via \ac{np} lemma.
+Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l(\mathbf{w},e)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classificator obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classificator obtained via \ac{np} lemma.
 \end{theorem}
 \begin{proof}
-Let $f_l^*$ be the solution to the optimization problem \eqref{eq:lssvm}. Since we're assuming perfect training, then $f_l^* < +\infty$ and the optimization variables $\mathbf{w}$ will converge as $S$ grows. We can then write
+From \eqref{eq:lssvmOrig} consider
 \begin{equation}
-\label{eq:weightsLim}
-			\lim_{S \to +\infty} \mathbf{w}^T \mathbf{w} < +\infty.	
-\end{equation}
-Consider now
-\begin{equation}
+\label{eq:lssvmDim1}
 	\lim_{S \to +\infty} \frac{1}{S} f_l(\mathbf{w},e) =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
 \end{equation}
 where $\E_t(\mathbf{w},b) = \Exp{\left(y_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
-The first equality comes from \eqref{eq:weightsLim}, while the last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
+The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
+\begin{equation}
+	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
+\end{equation} 
+The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
 \begin{equation}
 \label{eq:lsInf}
 	\begin{aligned}
