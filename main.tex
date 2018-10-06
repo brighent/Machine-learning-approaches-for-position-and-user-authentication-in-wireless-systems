@@ -356,7 +356,7 @@ The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \
 \begin{subequations}
 \label{eq:lssvm}
 \begin{equation}
-	 \underset{\mathbf{w},e}{\text{min}} & & f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
+	 \underset{\mathbf{w},e}{\text{min}} \, f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
 \end{equation}
 \begin{equation}
 \label{eq:stpart}
@@ -383,7 +383,7 @@ Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ 
 \begin{subequations}
 \begin{equation}
 \label{eq:lssvm2}
-	 \underset{\mathbf{w},e}{\text{min}} & & f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}|y}(\bm{\alpha}_j|1) e_{j,1}^2 + p_{\bm{a}}(\bm{\alpha}_j|-1) e_{j,-1}^2]  
+	 \underset{\mathbf{w},e}{\text{min}} \, f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}|y}(\bm{\alpha}_j|1) e_{j,1}^2 + p_{\bm{a}}(\bm{\alpha}_j|-1) e_{j,-1}^2]  
 \end{equation}
 \begin{equation}
 \label{stpart2}
