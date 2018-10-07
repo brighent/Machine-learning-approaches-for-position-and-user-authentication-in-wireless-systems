@@ -53,7 +53,7 @@
 
 \usepackage[autostyle]{csquotes}
 \usepackage[backend=biber,style=ieee]{biblatex}
-\addbibresource{bibliography.bib}
+\bibliography{bibliography}
 
 
 \begin{document}
@@ -282,9 +282,174 @@ which can be rewritten as
 \end{equation}
 We hence obtained the same formulation of (\ref{eq:bayesDisc}) and, by following the same steps of the proof of theorem 1 we see that imposing a threshold on the output of the \ac{ce}-trained \ac{nn} is equivalent of performing hypothesis testing with \ac{np} lemma.
 \end{proof}
+\section{Support Vector Machine}\label{sec:svm}
+A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input attenuation vector $\mathbf{a}^{(i)} \in \mathbb{R}^N$ the \ac{svm} returns $y_i = 1$ if $\mathbf{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $y_i=-1$ if $\mathbf{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$.
 
-\section{Replicator neural network}\label{sec:auto}
+The classification problem is modelled as a function $y: \mathbb{R}^N \to \mathbb{R}$ defined by
+\begin{equation}
+\label{eq:svm}
+y(\mathbf{a}^{(i)}) = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
+\end{equation}
+where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weights vector and $b$ is a bias parameter. The decision function is 
+\begin{equation}
+\label{eq:sign}
+y_i = \sign(y(\mathbf{a}^{(i)})).
+\end{equation}
+Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
+
+\subsection{Training and Relation with \ac{np} Lemma}
+Given a training set $\{\mathbf{a^{(i)}}\}_{i=1}^S$, the \ac{svm} searches for the hyperplane maximizing the margin, \ie the perpendicular distance between the decision boundary and the closest data point. 
+%This translates into the optimization problem \cite{Bishop2006}
+%\begin{equation}
+%\label{eq:svmS}
+%\begin{aligned}
+%& \underset{\mathbf{w},b}{\text{min}} & & \frac{1}{2} \mathbf{w}^T \mathbf{w} \\
+%& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)})] + b \geq 1 %\quad i = 1,\dots,S,
+%\end{aligned}
+%\end{equation}
+%where the constraints come from \eqref{eq:sign}. 
+Moreover we want to minimize the mis-classification errors.
+
+%, thus requiring to relax the constraint by introducing the slack variables $\xi_i$. The optimization problem becomes
+%\begin{equation}
+%	\begin{aligned}
+%	& \underset{\mathbf{w},\bm{\xi}}{\text{min}} & & f_s(\mathbf{w},\bm{\xi})= \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^S \xi_i & \\
+%	& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] \geq 1- \xi_i & i = 1 ,\dots,S \\
+% &					& & \xi_i \geq 0 & i = 1 ,\dots,S,
+%	\end{aligned}	
+%\end{equation} 
+%where $C$ is a parameter which controls the trade-off between margin minimization and slack variables penalty, and $\bm{\xi}$ is the vector whose $i^{\rm th}$ component is the slack variable $\xi_i$ . 
+
+The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \ac{svm} first introduced in \cite{Suykens1999}. In \cite{Yevs} it is shown that  \ac{svm} and \ac{lssvm} are equivalent under mild conditions. The \ac{lssvm} defines the optimization problem as
+\begin{subequations}
+	\label{eq:lssvm}
+	\begin{equation}
+	\label{eq:lssvmOrig}
+	\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
+	\end{equation}
+	\begin{equation}
+	\label{eq:stpart}
+	\text{subject to}\,  y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
+	\end{equation}
+\end{subequations}
+
+From the constraints in \eqref{eq:lssvm} and the fact that $y_i = \pm 1$ we have
+\begin{equation}
+\label{eq:els}
+e_i^2 = (1 - y_iy(\mathbf{a}^{(i)}) )^2 = (y_i - y(\mathbf{a}^{(i)}))^2,
+\end{equation}
+that is the squared error between the soft output of the \ac{lssvm} $y(\mathbf{a}^i)$ and the correct training label $y_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classificators. 
+
+Let us first consider the following lemma that establishes the convergence of the learning phase of \ac{svm}, as the training sample set becomes large.
+
+\begin{lemma}
+	\label{lem:lem1}
+	For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability to a vector of finite norm $||\mathbf{w}||_2 = \mathbf{w}^T\mathbf{w}$.
+\end{lemma}
+
+\begin{proof}
+	Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$, with $y \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $y_i$, $i=1, \ldots, S$.
+	
+	By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ training vectors $\bm{\alpha}_j$ with associated true value $y$ in any training sequence.
+	All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
+	Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\mathbf{\alpha}_j$, but with different labels $y_m \neq y_n$. Therefore, for $\mathbf{a}^{i}=\mathbf{\alpha_j}$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
+	This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
+	Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
+	\begin{subequations}
+		\label{eq:lssvm22}
+		\begin{equation}
+		\label{eq:lssvm2}
+		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
+		\end{equation}
+		\begin{equation}
+		\label{eq:stpart2}
+		\text{subject to}\,  [\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,1}\quad j = 1 ,\dots,M.
+		\end{equation}
+		\begin{equation}
+		\label{eq:stpart3}
+		\quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
+		\end{equation}
+	\end{subequations}
+	which solution provides the convergence value (in probability) of vector $\bm{w}$. 
+	Note that while the original problem \eqref{eq:lssvm} as $S \to \infty$ has infinite constraints, it can be solved by the problem \eqref{eq:lssvm22} that includes a finite number $2M$ of constraints.
+	
+	We now solve \eqref{eq:lssvm22} with the dual formulation following the same steps used for the \ac{lssvm} in \cite{Suykens1999} with minor modifications. In particular, when building the Lagrangian we need to introduce two sets of multipliers: $v_k$ for \eqref{eq:stpart2} and $u_k$ for \eqref{eq:stpart3}, $k=1,\dots, M$. Then, by deriving with respect to $\mathbf{w}$ and setting to 0, we obtain 
+	\begin{equation}
+	\label{eq:wSolution}
+	\begin{aligned}
+	%	\mathbf{w}\mathbf{w}^T =& \sum_{k=1}^{M} \sum_{h=1}^{M} v_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h)	
+	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} v_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)	\\
+	%							&	\sum_{k=1}^{M} \sum_{h=1}^{M} u_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)
+	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} u_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h) \\
+	\mathbf{w}\mathbf{w}^T =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
+	\end{aligned}
+	\end{equation}
+	where we used the fact that the kernel function
+	\begin{equation}
+	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
+	\end{equation} is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
+	
+\end{proof}
+
+\begin{theorem}
+	\label{th:lsnp}
+	Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l(\mathbf{w},e)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classificator obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classificator obtained via \ac{np} lemma.
+\end{theorem}
+\begin{proof}
+	From \eqref{eq:lssvmOrig} consider
+	\begin{equation}
+	\label{eq:lssvmDim1}
+	\lim_{S \to +\infty} \frac{1}{S} f_l(\mathbf{w},e) =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
+	\end{equation}
+	where $\E_t(\mathbf{w},b) = \Exp{\left(y_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
+	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
+	\begin{equation}
+	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
+	\end{equation} 
+	The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
+	\begin{equation}
+	\label{eq:lsInf}
+	\begin{aligned}
+	& \underset{\mathbf{w},b}{\text{min}} & &  \E_t(\mathbf{w},b), & 
+	\end{aligned}	
+	\end{equation}
+	where we dropped the constraints in \eqref{eq:lssvm} by substitution using \eqref{eq:els}. The optimization problem is the same as in the \ac{nn} case and from \cite{Ruck-90} we have that the couple $(\mathbf{w}^*,b^*)$ minimizing \eqref{eq:lsInf} and parametrizing \eqref{eq:svm} is such that
+	\begin{equation}
+	y(\mathbf{a}^i;\mathbf{w}^*,b^*)  \approx \mathbb{P}(\mathcal{H}_0|\mathbf{a}^{(i)}) - \mathbb{P}(\mathcal{H}_1|\mathbf{a}^{(i)}).
+	\end{equation}
+	The proof now is the same as in Theorem \ref{th:nn_np}.
+\end{proof}
+Note that in order to build the \ac{roc} it is required to change the decision function \eqref{eq:sign} with the thresholded version
+\begin{equation}
+y_i = 
+\begin{cases}
++1 \quad y(\mathbf{a}^{(i)})  \geq \gamma^* \\
+-1 \quad y(\mathbf{a}^{(i)})  < \gamma^*.
+\end{cases}		
+\end{equation}
+
+%It is common practice in the literature \cite{Bishop2006,Suykens1999} to work with the dual formulation of the optimization problems \eqref{eq:svmS} to \eqref{eq:lssvm} by constructing the Lagrangian. 
+%In the dual formulation objective functions and constraints are expressed as functions of the kernel 
+%\begin{equation}
+%	\psi(\mathbf{r}_i,\mathbf{r}_j) = \phi (\mathbf{r}_i)^T \phi(\mathbf{r}_j),	
+%\end{equation}
+%without explicitly defining the function $\phi(\cdot)$. 
+%The output of $\phi(\cdot)$ can now be of infinite dimension, like with the radial kernel family
+%\begin{equation}
+%	\psi(\mathbf{r}_i,\mathbf{r}_j; \sigma) = \exp \left( \frac{|| \mathbf{r}_i - \mathbf{r}_j ||^2}{2\sigma^2} \right).
+%\end{equation}
+%In this case, Theorem \ref{th:lsnp} holds only if
+%\begin{equation}
+%	\lim_{S \to +\infty} \frac{1}{S} \mathbf{w}^T \mathbf{w} < +\infty.	
+%\end{equation} 
+%However, if we let $C \to +\infty$ in \eqref{eq:lssvm}
+
+\section{One-class Classification}
+\label{sec:OneClass}
 In this section we consider the case where discrimination between the two areas $\mathcal{A}_0$ and $\mathcal{A}_1$ is performed based on data generated only from the authentic region, i.e., the available attenuation vectors $\bm{a}^{(i)}$ used for training are generated from \acp{ue} located in $\mathcal{A}_0$. This type of problem is usually referred to as \textit{one-class classification}. 
+
+\subsection{Replicator neural network}
+\label{sec:auto}
 
 In order to solve this problem we exploit a \ac{nn} that implements a \textit{\ac{rnn}}, i.e., a network that is trained to: a) convert high-dimensional inputs to low-dimensional codes in the hidden layer; b) reconstruct the high-dimensional input at the output layer from the low-dimensional codes of the hidden layer \cite{Hinton-2006}.
 
@@ -316,167 +481,24 @@ where $a_i$ denotes the $i^{\rm th}$ component of the vector. The authentication
 \mathcal{A}_1 \, \text{if} \, \epsilon \ge \gamma. 
 \end{cases}
 \end{equation}
-\section{Support Vector Machine}\label{sec:svm}
-A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input attenuation vector $\mathbf{a}^{(i)} \in \mathbb{R}^N$ the \ac{svm} returns $y_i = 1$ if $\mathbf{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $y_i=-1$ if $\mathbf{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$.
 
-The classification problem is modelled as a function $y: \mathbb{R}^N \to \mathbb{R}$ defined by
-\begin{equation}
-\label{eq:svm}
-	y(\mathbf{a}^{(i)}) = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
-\end{equation}
-where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weights vector and $b$ is a bias parameter. The decision function is 
-\begin{equation}
-\label{eq:sign}
-	y_i = \sign(y(\mathbf{a}^{(i)})).
-\end{equation}
-Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
-
-\subsection{Training and Relation with \ac{np} Lemma}
-Given a training set $\{\mathbf{a^{(i)}}\}_{i=1}^S$, the \ac{svm} searches for the hyperplane maximizing the margin, \ie the perpendicular distance between the decision boundary and the closest data point. 
-%This translates into the optimization problem \cite{Bishop2006}
-%\begin{equation}
-%\label{eq:svmS}
-%\begin{aligned}
-%& \underset{\mathbf{w},b}{\text{min}} & & \frac{1}{2} \mathbf{w}^T \mathbf{w} \\
-%& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)})] + b \geq 1 %\quad i = 1,\dots,S,
-%\end{aligned}
-%\end{equation}
-%where the constraints come from \eqref{eq:sign}. 
-Moreover we want to minimize the mis-classification errors.
-
-%, thus requiring to relax the constraint by introducing the slack variables $\xi_i$. The optimization problem becomes
-%\begin{equation}
-%	\begin{aligned}
-%	& \underset{\mathbf{w},\bm{\xi}}{\text{min}} & & f_s(\mathbf{w},\bm{\xi})= \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^S \xi_i & \\
-%	& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] \geq 1- \xi_i & i = 1 ,\dots,S \\
-	% &					& & \xi_i \geq 0 & i = 1 ,\dots,S,
-%	\end{aligned}	
-%\end{equation} 
-%where $C$ is a parameter which controls the trade-off between margin minimization and slack variables penalty, and $\bm{\xi}$ is the vector whose $i^{\rm th}$ component is the slack variable $\xi_i$ . 
-
-The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \ac{svm} first introduced in \cite{Suykens1999}. In \cite{Yevs} it is shown that  \ac{svm} and \ac{lssvm} are equivalent under mild conditions. The \ac{lssvm} defines the optimization problem as
+\subsection{One-Class Support Vector Machine}
+In this section we consider the one-class \ac{svm} as first introduced in \cite{Scholkopf2001estimating}. The one-class \ac{svm} defines the same decision function as the original \ac{svm}, given by \eqref{eq:sign}, however the training optimization problem is slightly different:
 \begin{subequations}
-\label{eq:lssvm}
-\begin{equation}
-\label{eq:lssvmOrig}
-	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
-\end{equation}
-\begin{equation}
-\label{eq:stpart}
-	 \text{subject to}\,  y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
-\end{equation}
+	\label{eq:oneClassSvm}
+	\begin{equation}
+	\label{eq:oneClass1}
+	\underset{\mathbf{w},\psi, b}{\text{min}} \quad f_o(\mathbf{w},\psi, b) \triangleq
+	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{1}{\nu S} \sum_{i=1}^S \xi_i + b 
+	\end{equation}
+	\begin{equation}
+	\label{eq:oneClassConstr}
+	\text{subject to}\, \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b \geq - \xi_i, \, \xi_i \geq 0,  \quad i = 1,\dots S, 
+	\end{equation}
 \end{subequations}
+where $\nu \in (0,1]$ is a hyper-parameter.
+Note that in the one-class case, the bias parameter $b$ appears also in the objective function.
 
-From the constraints in \eqref{eq:lssvm} and the fact that $y_i = \pm 1$ we have
-\begin{equation}
-\label{eq:els}
-		e_i^2 = (1 - y_iy(\mathbf{a}^{(i)}) )^2 = (y_i - y(\mathbf{a}^{(i)}))^2,
-\end{equation}
-that is the squared error between the soft output of the \ac{lssvm} $y(\mathbf{a}^i)$ and the correct training label $y_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classificators. 
-
-Let us first consider the following lemma that establishes the convergence of the learning phase of \ac{svm}, as the training sample set becomes large.
-
-\begin{lemma}
-\label{lem:lem1}
-For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability to a vector of finite norm $||\mathbf{w}||_2 = \mathbf{w}^T\mathbf{w}$.
-\end{lemma}
-
-\begin{proof}
-Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$, with $y \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $y_i$, $i=1, \ldots, S$.
-
-By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ training vectors $\bm{\alpha}_j$ with associated true value $y$ in any training sequence.
-All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
-Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\mathbf{\alpha}_j$, but with different labels $y_m \neq y_n$. Therefore, for $\mathbf{a}^{i}=\mathbf{\alpha_j}$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
-This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
-Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
-\begin{subequations}
-\label{eq:lssvm22}
-\begin{equation}
-\label{eq:lssvm2}
-	 \underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
-\end{equation}
-\begin{equation}
-\label{eq:stpart2}
-	 \text{subject to}\,  [\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,1}\quad j = 1 ,\dots,M.
-\end{equation}
-\begin{equation}
-\label{eq:stpart3}
-	 \quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
-\end{equation}
-\end{subequations}
-which solution provides the convergence value (in probability) of vector $\bm{w}$. 
-Note that while the original problem \eqref{eq:lssvm} as $S \to \infty$ has infinite constraints, it can be solved by the problem \eqref{eq:lssvm22} that includes a finite number $2M$ of constraints.
-
-We now solve \eqref{eq:lssvm22} with the dual formulation following the same steps used for the \ac{lssvm} in \cite{Suykens1999} with minor modifications. In particular, when building the Lagrangian we need to introduce two sets of multipliers: $v_k$ for \eqref{eq:stpart2} and $u_k$ for \eqref{eq:stpart3}, $k=1,\dots, M$. Then, by deriving with respect to $\mathbf{w}$ and setting to 0, we obtain 
-\begin{equation}
-\label{eq:wSolution}
-\begin{aligned}
-%	\mathbf{w}\mathbf{w}^T =& \sum_{k=1}^{M} \sum_{h=1}^{M} v_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h)	
-%								- \sum_{k=1}^{M} \sum_{h=1}^{M} v_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)	\\
-%							&	\sum_{k=1}^{M} \sum_{h=1}^{M} u_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)
-%								- \sum_{k=1}^{M} \sum_{h=1}^{M} u_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h) \\
-	\mathbf{w}\mathbf{w}^T =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
-\end{aligned}
-\end{equation}
-where we used the fact that the kernel function
-\begin{equation}
-	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
-\end{equation} is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
-
-\end{proof}
-
-\begin{theorem}
-\label{th:lsnp}
-Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l(\mathbf{w},e)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classificator obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classificator obtained via \ac{np} lemma.
-\end{theorem}
-\begin{proof}
-From \eqref{eq:lssvmOrig} consider
-\begin{equation}
-\label{eq:lssvmDim1}
-	\lim_{S \to +\infty} \frac{1}{S} f_l(\mathbf{w},e) =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
-\end{equation}
-where $\E_t(\mathbf{w},b) = \Exp{\left(y_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
-The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
-\begin{equation}
-	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
-\end{equation} 
-The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
-\begin{equation}
-\label{eq:lsInf}
-	\begin{aligned}
-	& \underset{\mathbf{w},b}{\text{min}} & &  \E_t(\mathbf{w},b), & 
-	\end{aligned}	
-\end{equation}
-where we dropped the constraints in \eqref{eq:lssvm} by substitution using \eqref{eq:els}. The optimization problem is the same as in the \ac{nn} case and from \cite{Ruck-90} we have that the couple $(\mathbf{w}^*,b^*)$ minimizing \eqref{eq:lsInf} and parametrizing \eqref{eq:svm} is such that
-\begin{equation}
-	 y(\mathbf{a}^i;\mathbf{w}^*,b^*)  \approx \mathbb{P}(\mathcal{H}_0|\mathbf{a}^{(i)}) - \mathbb{P}(\mathcal{H}_1|\mathbf{a}^{(i)}).
-\end{equation}
-The proof now is the same as in Theorem \ref{th:nn_np}.
-\end{proof}
-Note that in order to build the \ac{roc} it is required to change the decision function \eqref{eq:sign} with the thresholded version
-\begin{equation}
-y_i = 
-\begin{cases}
- +1 \quad y(\mathbf{a}^{(i)})  \geq \gamma^* \\
- -1 \quad y(\mathbf{a}^{(i)})  < \gamma^*.
-\end{cases}		
-\end{equation}
-
-%It is common practice in the literature \cite{Bishop2006,Suykens1999} to work with the dual formulation of the optimization problems \eqref{eq:svmS} to \eqref{eq:lssvm} by constructing the Lagrangian. 
-%In the dual formulation objective functions and constraints are expressed as functions of the kernel 
-%\begin{equation}
-%	\psi(\mathbf{r}_i,\mathbf{r}_j) = \phi (\mathbf{r}_i)^T \phi(\mathbf{r}_j),	
-%\end{equation}
-%without explicitly defining the function $\phi(\cdot)$. 
-%The output of $\phi(\cdot)$ can now be of infinite dimension, like with the radial kernel family
-%\begin{equation}
-%	\psi(\mathbf{r}_i,\mathbf{r}_j; \sigma) = \exp \left( \frac{|| \mathbf{r}_i - \mathbf{r}_j ||^2}{2\sigma^2} \right).
-%\end{equation}
-%In this case, Theorem \ref{th:lsnp} holds only if
-%\begin{equation}
-%	\lim_{S \to +\infty} \frac{1}{S} \mathbf{w}^T \mathbf{w} < +\infty.	
-%\end{equation} 
-%However, if we let $C \to +\infty$ in \eqref{eq:lssvm}
 
 \section{BSs' optimal position}\label{sec:bsPos}
 As attenuation maps are different at each \ac{bs} and depend on the surrounding environment in terms of shadowing effects the performance of the authentication system depends on the number of \acp{bs} and their position. In this section we derive an approach to optimally locate \acp{bs} so that the authentication system attains the best performance. 
@@ -711,7 +733,7 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 \newpage 
 
 
-
+\printbibliography
 
 %\bibliographystyle{IEEEtran}
 %\bibliography{bibliography.bib}
