@@ -103,128 +103,111 @@ The contribution of this paper can be summarized as follows:
 The following notation will be used throughout the paper: bold letters $\bm{x}$ refer to vectors, whereas capital bold letters $\bm{H}$ refer to matrices, $\mathbb{E}[]$ denotes the expected value, $e_i$ denotes the all zero vector except for component $i$ which is equal to $1$ and $(\cdot)^T$ denotes the transpose.
 
 \section{System Model}
-Consider a network with $N_{\rm bs}$ \acp{bs}, where \ac{bs} $n$, $n=1,...,N_{\rm bs}$, is located in position $\bm{x}_{\rm bs}^{(n)} =(X_{\rm bs}^{(n)},Y_{\rm bs}^{(n)})$, where entries represent respectively the $x$ and $y$ coordinates. 
+We consider a cellular system with $N_{\rm BS}$ \acp{bs} covering a region $\mathcal{A}$ over a plane. We propose a location authentication system able to determine if a \ac{ue} is transmitting from within an {\em authorized} sub-region $\mathcal{A}_0$ of the region$\mathcal{A}$. The authentication process exploits the features of the channel between the \ac{ue} and the \acp{bs}, and in particular the location dependency of these features, that allow to distinguish between a transmission from the region $\mathcal{A_0}$ and a transmission from the complementary region $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. Among the various features (e.g. power, impulse response, phase offset) we consider here a narrowband transmission and we focus on the power received by the \acp{bs} upon \ac{ue} transmission.
 
-Consider a \ac{ue} transmitting with power $P_{\rm tx}$. The received power at the $n^{\rm th}$ \ac{bs} is
-\begin{equation}
-    P_{\rm rc}^n[dB]= P_{\rm tx}[dB] -  a^{(n)}[dB],
-\end{equation}
-where $a^{(n)}$ is the attenuation incurred by the transmitted signal to \ac{bs} $n$. Assuming that the transmitting power of each \ac{ue} is known, the \ac{bs} can compute the attenuation value $a^{(n)}$. As signals transmitted from different locations incur to different attenuation we exploit such values to implement the authentication system.
+In details, the location authentication procedure encompasses two phases. In the first phase ( authentication identification) the \ac{ue} transmits a training signal ( known at the \acs{bs}) from various points within region $\mathcal{A}_0$, and the \acp{bs} estimate the attenuation incurred by the transmission and store them in association with $\mathcal{A}_0$. In this phase some external authentication technique must be used to ensure that the \ac{ue} is in region $\mathcal{A}_0$. Similarly the \ac{ue} transmits a training signal from the complementary area $\mathcal{A}_1$ and the \acp{bs} store the attenuations, associating them to $\mathcal{A}_1$.
 
-We propose two models for the attenuation coefficient $a^{(n)}$. Consider a \ac{ue} located in position $\bm{x}_{\rm ue}=(X_u,Y_u)$. Let us define the distance between the \ac{ue} and the \ac{bs} as
+In the second phase (authentication verification) the \ac{ue} transmits a known training sequence from any points in $\mathcal{A}$, and the \acp{bs} must decide whether the \ac{ue} is in region $\mathcal{A}_0$ or $\mathcal{A}_1$.
+
+\subsection{Channel model}
+
+\Ac{bs} $n$, $n=1,...,N_{\rm bs}$, is located in position $\bm{x}_{\rm bs}^{(n)} =(X_{\rm bs}^{(n)},Y_{\rm bs}^{(n)})$. For a \ac{ue} located at $\bm{x}_{\rm ue}=(X_u,Y_u)$, its distance from the \ac{bs} is
 \begin{equation}
     L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)}) = \sqrt{(X_{\rm bs}^{(n)}-X_u)^2+(Y_{\rm bs}^{(n)}-Y_u)^2}.
 \end{equation}
-When considering \ac{los} links the path loss is modelled as
+When a \ac{ue} transmits with power $P_{\rm tx}$, the received power at the $n^{\rm th}$ \ac{bs} is
+\begin{equation}
+    P_{\rm rc}^n[dB]= P_{\rm tx}[dB] -  a^{(n)}[dB],
+\end{equation}
+where $a^{(n)}$ is the attenuation incurred by the transmitted signal to \ac{bs} $n$. The attenuation coefficient includes th effects of path-loss, shadowing and fading, i.e.
+\begin{equation}
+    \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
+\end{equation}
+where $\sigma_{a,n}^2=P_{\ell}^{(n)}-4.34s$ (\hl{citare}), $P_{\ell}^{(n)}$ is the path-loss coefficient and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component. For the path-loss we consider two scenarios: \ac{los} and non-\ac{los}.
+
+For a \ac{los} link the path loss coefficinet in dB is modelled as
 \begin{equation}\label{eq:los}
-    P_{\rm LOS}^{(n)}[dB] = 20\log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{c}\right),
+    P_{\rm LOS,dB}^{(n)} = 20\log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{c}\right),
 \end{equation}
 where $f$ is the carrier frequency and $c$ is the speed of light.
-We refer to the \textit{\ac{los} scenario} the case where $a^{(n)}=P_{\rm LOS}$.
 
-When considering non-\ac{los} links path loss is defined as
+For a  non-\ac{los} link the path loss coefficient in dB is defined as
 \begin{equation}
-    P_{\rm non-LOS}^{(n)}[dB] = 40\log10\left (\frac{L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{10^3}\right ) + 21\log10\left(\frac{f}{10^6}\right) + 80;
+    P_{\rm non-LOS,dB}^{(n)} = 40\log10\left (\frac{L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{10^3}\right ) + 21\log10\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
 
-The shadowing term $s \sim \mathcal{N}(0,\sigma_s^2)$ is modelled as a zero mean $\sigma_s^2$ variance Gaussian random variable. We will refer to the \textit{full scenario} when considering both \ac{los} non-\ac{los} links, shadowing effects and fading. In the full scenario the attenuation toward the $n^{\rm th}$ \ac{bs}, due to the shadowing effects, is modelled as normal random variable with zero mean and variance
-\begin{equation}\label{eq:rss}
-    \sigma_f^2(n) = P_l^{(n)}n-4,34s,
-\end{equation}
-and hence the attenuation coefficient due to fading is modelled as
-\begin{equation}\label{eq:fade}
-a^{(n)}[dB]= \mathcal{N}(0,\sigma_f^{-2}(n)).
-\end{equation}
+We assume that fading and shadowing are time-invariant while fading is time dependent. The shadowing $s$ depends on positions $\bm{x}_{\rm ue}$ and $\bm{x}_{\rm bs}^{(n)}$ and is correlated at different \ac{ue} and \ac{bs} positions. \hl{aggiungere info}
 
-Let us denote as $\mathcal{A}_0$ the legitimate area, i.e., where \acp{ue} are allowed to access the network and as $\mathcal{A}_1$ the area where \acp{ue} are not allowed to access the network. Assume that $\mathcal{A}_0$ is a sub-region of $\mathcal{A}_1$. Let us denote as $|\mathcal{A}_{0}|$ the area in $m^2$ of the legitimate region and as $|\mathcal{A}_{1}|$ the area in $m^2$ of the non-legitimate region.
-Since $\mathcal{A}_0 \subset \mathcal{A}_1$ the size of the overall area coincides with $|\mathcal{A}_1|$. 
+\subsection{Decision rule with known statistics}\label{sec:auth}
+The authentication problem has a straightforward formulation as an hypothesis test. Let us define the two hypothesis: $\mathcal{H}_0$: the \ac{ue} is transmitting from area $\mathcal{A}_0$; $\mathcal{H}_1$: the \ac{ue} is transmitting from area $\mathcal{A}_1$.
 
-\section{Location authentication}\label{sec:auth}
-Consider a location authentication system based on physical layer information. In such a system, the legitimate user, traditionally referred to as Alice, sends a message to a central system, traditionally referred to as Bob, that is in charge of authenticating it. The process is divided in two phases: location association and location verification. In location association phase, Alice sends a message $x$ to Bob through a secure channel $h$. Bob associate the channel $h$ to Alice and what Bob expects is that each successive message coming from Alice will go through a channel that is very similar to $h$. During the location verification phase, Bob receives a message from an unknown user and estimates a channel $\hat{h}$: if $\hat{h}$ is very similar to $h$, then Bob can conclude that the message comes from Alice. Otherwise, nothing can be said on the identity of the transmitter and the message is considered non-secure.
-
-We exploit this two-step authentication procedure in order to grant access to the network only to users located in area $A_0$. Let us define the attenuation vector $\bm{a}=[a^{(1)},...,a^{(N_{\rm bs})}]$, whose $n^{\rm th}$ entry is the attenuation value measured at the $n^{\rm th}$ \ac{bs} for the current message. During the location association phase, we collect attenuation vectors from both area $A_0$ and area $A_1$ in order to create the sets $\mathcal{S}_0$ and $\mathcal{S}_1$ of the attenuation vectors of the two areas. The idea is that different areas are associated to different attenuation vectors and, if $N_{\rm bs}$ is sufficiently large, we can discriminate area based on attenuation vectors. During the location verification phase, the system compares the current attenuation vector, i.e., the one associated to the current message, with those associated to area $A_0$ and if a match is detected the user is granted access to the network.
-
-This problem has a straightforward formulation as an hypothesis testing problem. Let us define the two hypothesis: a) hypothesis $\mathcal{H}_0$, i.e., the user is transmitting from area $\mathcal{A}_0$; b) hypothesis $\mathcal{H}_1$, i.e., the user is transmitting from area $\mathcal{A}_1$.
-
-Given the attenuation vector $\bm{a}$ we want to determine which of the two hypothesis is more likely to be true in order to implement the aforementioned authentication system. 
-We exploit the Neyman-Pearson lemma to test the hypothesis. Let us define the \ac{llr}
+Given the attenuation vector $\bm{a}$ we want to determine which of the two hypothesis is more likely to be true in order to implement the aforementioned authentication system. However due to the random nature of the channel (including fading) a given estimated authentication vector $\bm{a}$ can not be associated univocally to one of the two regions. Instead, we indicate with $p(\bm{a}|\mathcal{H}_i)$ the probability of estimating the vector $\bm{a}$ given that hypothesis $\mathcal{H}_i$ is verified (i.e., the \ac{ue} is in region $\mathcal{A}_i$).
+Assuming that these conditional distributions are known we can compute the \ac{llr}
 \begin{equation}\label{eq:lr}
-    \mathcal{L}=\log\left(\frac{p(\bm{a}|\mathcal{H}_0)}{p(\bm{a}|\mathcal{H}_1)}\right),
+    \mathcal{L}^{(\bm{a})}=\log\left(\frac{p(\bm{a}|\mathcal{H}_0)}{p(\bm{a}|\mathcal{H}_1)}\right).
 \end{equation}
-where $p(\bm{a}|\mathcal{H}_{\cdot})$ is the probability of measuring the attenuation vector $\bm{a}$ given that hypothesis $\mathcal{H}_\cdot$ is verified. According to the \ac{np} lemma, the most powerful test is the one that compares the value $\mathcal{L}$ with a threshold value $\Lambda$ in order to choose the more likely hypothesis. Let us define two error probabilities: $P_{\rm FA}$ as the false alarm probability, i.e. the probability $P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H_0)$ that a legitimate user is classified as non-legitimate; $P_{\rm MD}$ as the mis-detection probability, i.e., the probability $P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H_1)$ that a non-legitimate user is classified as legitimate. The \ac{np} lemma ensures that, given a false alarm probability value the minimum mis-detection probability is obtained by choosing
-\begin{equation}
-    \begin{cases}
-    \mathcal{H}_1 \quad\text{if} \quad \mathcal{L} \le \Lambda \\
-    \mathcal{H}_0  \quad\text{if} \quad \mathcal{L} > \Lambda.
-    \end{cases}
-\end{equation}
+According to the \ac{np} lemma, the most powerful test is obtained by comparing $\mathcal{L}^{(\bm{a})}$ with a threshold value $\Lambda$ i.e., deciding for hypothesis $\mathcal{H}_1$ if $\mathcal{L}^{(\bm{a})} \le \Lambda$ and for hypothesis $\mathcal{H}_0$ if $\mathcal{L}^{(\bm{a})} > \Lambda$. Let us define two error probabilities: the false alarm probability, i.e. the probability  that a legitimate user is classified as non-legitimate $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H_0)$; the mis-detection probability, i.e., the probability that a non-legitimate user is classified as legitimate, $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H_1)$. The \ac{np} lemma ensures that,for a given false alarm probability, the minimum mis-detection probability is obtained comparing $\mathcal{L}^{(\bm{a})}$ with $\Lambda$, where $\Lambda$is chosen according to the desired false-alarm probability.
 
-This method ensures that the performance of the authentication system are optimal. However the statistics needed to compute the \ac{llr} (\ref{eq:lr}) are not always available. A numerical approximation can be obtained in certain cases, but we will show  that this requires a large data-set to get a good approximation. In the following sections we introduce different \ac{ml} techniques that will be exploited to implement the authentication system without requiring a-priori knowledge of the channel statistics.
+Since in practice the statistics $p(\bm{a}|\mathcal{H}_i)$ are not available, we propose to use a machine-learning approach to perform the authentication. To this end we briefly describe here the \ac{nn} and the \ac{svm} that will be used in the next sections.
 
-\section{Neural network overview}\label{sec:nn}
+\subsection{Neural networks}\label{sec:nn}
 
-A \ac{nn} is a function of the type $f:\mathbb{R}^N \to \mathbb{R}^O$ which maps a set of $N$ real values into $O$ real values. A \ac{nn} is identified by three types of layer: the input layer, the hidden layers, and the output layer. This architecture is also known as \ac{mlp}
+A \ac{nn} is a function of the type $\mathbb{R}^N \to \mathbb{R}^O$ which maps a set of $N$ real values into $O$ real values. A \ac{nn} processes the input in stages, named layers, where the output of one layer is the input of the next layer. For a \ac{nn} with $L-1$ layers the first layer (layer $0$) is denoted input layer, the last layer (layer $L-1$) is denoted output layer and the other layers are denoted as hidden layers. This architecture is also known as \ac{mlp}
 
-Let us consider a \ac{nn} with $L-1$ layers and denote as $N^{(\ell-1)}$ is the size of the $(\ell-1)^{\rm th}$ layer. The output of the $n^{\rm th}$ neuron of the $\ell^{\rm th}$ layer is
+Layer $L-1$ has $N^{(\ell-1)}$ outputs obtained by processing the inputs with $N^{(\ell-1)}$ functions named neurons. The output of the $n^{\rm th}$ neuron of the $\ell^{\rm th}$ layer is
 \begin{equation}\label{eq:nonLin}
-y_n^{(\ell)} = \sigma\left( \bm{w}_n^{(\ell -1)}\bm{y}^{(\ell-1)}+b_n^{(\ell)} \right),
+y_n^{(\ell)} = \psi\left( \bm{w}_n^{(\ell -1)}\bm{y}^{(\ell-1)}+b_n^{(\ell)} \right),
 \end{equation}
-i.e., a mapping via an activation function $\sigma$ of the weighted linear combination with weights $\bm{w}_n^{(\ell -1)}\in \mathbb{R}^{1\times N^{(\ell-1)}}$ of the outputs $\bm{y}^{(\ell-1)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$ of the previous layer plus a bias $b_n^{(\ell)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$. The types of layer are characterized by the weights and the activation functions to be used. In the input layer each neuron corresponds to a single value of the input vector, hence , by defining as the layer $0$ the input layer, we have $\bm{w}_n^{(0)}= e_n$. The activation function of the input layer is the identity function.
+i.e., a mapping via an activation function $\psi$ of the weighted linear combination with weights $\bm{w}_n^{(\ell -1)}\in \mathbb{R}^{1\times N^{(\ell-1)}}$ of the outputs $\bm{y}^{(\ell-1)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$ of the previous layer plus a bias $b_n^{(\ell)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$. The \ac{nn} input is $\bm{y}^{(0)}$ while its output is $\bm{y}^{(L-1)}$. The activation function of the input layer is the identity function.
 
-The weights of each layer are updated by means of a supervised learning algorithm which feed to the network a set of input values and the corresponding labels, i.e. known output values, such that the input values are mapped to the corresponding output labels. The activation function of the hidden layers is the sigmoid function
+The activation function of the hidden layers is the sigmoid function
 \begin{equation}
-\sigma(x) = \frac{1}{1-e^{-x}},
+\psi^{(\ell)}(x) = \frac{1}{1-e^{-x}},
 \end{equation}
-whereas the activation function of the output layer is a $\tanh^{-1}$ function
+whereas the activation function of the output layer is 
 \begin{equation}
-\tanh^{-1}(x) = \frac{1}{2} \left( \frac{1+x}{1-x} \right).
+\psi^{(L-1)}(x)=\tanh^{-1}(x) = \frac{1}{2} \left( \frac{1+x}{1-x} \right).
 \end{equation}
 
 
-Consider a network with $N_{\rm BS}$ \acp{bs}. Since the information available at \ac{bs} $n$ is the attenuation value $a_n$ we use the attenuation vector $\bm{a}$ as input of the \ac{mlp}. The input layer will be hence composed by $N_{\rm BS}$ neurons. The objective is to train a \ac{mlp} with a single output neuron whose value is used for hypothesis testing. 
+The vectors $\bm{w}_n^{(\ell)}$ and the scalars $b_n^{(\ell)}$ must be properly chosen for the desired purposes of the \ac{nn}.
+
+Since the output of the neural network $y^{(L-1)}$ is a continuous value in ${-1,1}$, in order to perform classification, a suitable threshold value $\lambda$ must be chosen, such that the input vector $\bm{y}^{(0)}$ is classified as
+$\mathcal{H}_0$ if $\bm{y}^{(L-1)} > \lambda$ and as $\mathcal{H}_1$ if $\bm{y}^{(L-1)} \le \lambda$.
+
 
 In the next sections we investigate the effects of training the \ac{mlp} with two different loss functions: the \ac{mse} and the \ac{ce}.
+\subsection{Support Vector Machine}\label{sec:svm}
+A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input attenuation vector $\mathbf{a}^{(i)} \in \mathbb{R}^N$ the \ac{svm} returns $y_i = 1$ if $\mathbf{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $y_i=-1$ if $\mathbf{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$.
 
+The classification problem is modelled as a function $y: \mathbb{R}^N \to \mathbb{R}$ defined by
+\begin{equation}
+\label{eq:svm}
+y(\mathbf{a}^{(i)}) = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
+\end{equation}
+where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weights vector and $b$ is a bias parameter. The decision function is 
+\begin{equation}
+\label{eq:sign}
+y_i = \sign(y(\mathbf{a}^{(i)})).
+\end{equation}
+Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
+\section{Authentication by machine learning approaches}
 \subsection{ MSE training}
-Consider a set of training attenuation vectors $\bm{a}^{(i)} \, , \, i=1,...,S$ with target output $\theta^{(i)} \, , \, i=1,...,S $ where $\theta^{(i)}$ is equal to $1$ if $\bm{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $\theta^{(i)}=-1$ if $\bm{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$. Let us define as $\bm{\theta}_{\rm MSE}$ the vector of target values, i.e., $\bm{\theta}_{\rm MSE}=[\theta^{(1)},...,\theta^{(S)}]$.
-
-Let us define as $\tilde{\bm{\theta}}_{\rm MSE}$ the vector of the output values of the \ac{mlp}, whose $i^{\rm th}$ component is the output of the \ac{mlp} obtained with the $i^{\rm th}$ training vector. The \ac{mlp} training is performed via gradient descent minimizing the \ac{mse}, defined as
+Let us define as $\tilde{\bm{y}}_{\rm MSE}$ the vector of the output values of the \ac{mlp}, whose $i^{\rm th}$ component is the output of the \ac{mlp} obtained with the $i^{\rm th}$ training vector, and as $\bm{y}_{MSE}$ the vector of the labels of the training vectors. The \ac{mlp} training is performed via gradient descent minimizing the \ac{mse}, defined as
 \begin{equation}
-MSE = \mathbb{E}[||\tilde{\bm{\theta}}_{\rm MSE}-\bm{\theta}_{\rm MSE}||^2].
+MSE = \mathbb{E}[||\tilde{\bm{y}}_{\rm MSE}-\bm{y}_{\rm MSE}||^2].
 \end{equation}
 
-Since the output of the neural network $\theta^{(i)}$ is a continuous value in ${-1,1}$, in order to perform classification, a suitable threshold value $\lambda$ must be chosen, such that the input vector $\bm{a}^{(i)}$ is classified as
-\begin{equation}
-\bm{a}^{(i)} \in
-\begin{cases}
-\mathcal{A}_0 \, \text{if} \, \theta^{(i)} > \lambda \\
-\mathcal{A}_1 \, \text{if} \, \theta^{(i)} \le \lambda, 
-\end{cases}
-\end{equation}
-where $\bm{a}^{(i)} \in \mathcal{A}_.$ denotes that the attenuation vector $\bm{a}^{(i)}$ has been generated from a \ac{ue} located in area $\mathcal{A}_.$.
-
-The test to be performed is hence similar to the one performed by the \ac{np} detector. In the next section we show the relation that exists between \ac{mse} training and the optimal hypothesis testing. 
-
-\subsection{MSE training connection with N-P lemma}
-In the previous section we showed that a \ac{nn} implements a function $f(\bm{a},\bm{W})$, where $\bm{a}$ is the vector of input parameters and $\bm{W}$ is the matrix whose $\ell{\rm th}$ column is obtained by stacking the vector of weights $\bm{w}_n^{(\ell)}$ and bias $b_n^{(\ell)}$ of each neuron of the $\ell{\rm th}$ layer. In this section we are going to prove the following theorem:
+We now prove the connection of \ac{mse} training with the \ac{np} theorem.
 \begin{theorem}
 \label{th:nn_np}
 Consider a \ac{nn} with perfect training and a sufficient number of parameters such that training reaches a global minimum. Then the classificator obtained by training the \ac{nn} via \ac{mse} is equivalent to the classificator obtained via \ac{np} lemma.
 \end{theorem}
 \begin{proof}
-Consider the function $f(\bm{a},\bm{W})$ implemented by the \ac{nn} and the Bayes optimal discriminant function
-\begin{equation}
+It has been shown in \cite{Ruck-90} that a \ac{nn} trained via \ac{mse} implements a function that is the minimum \ac{mse} approximation of the Bayes optimal discriminant function
+\begin{equation}\label{eq:bayesDisc}
 g_0(\bm{a}) = \mathbb{P}(\mathcal{H}_0|\bm{a}) - \mathbb{P}(\mathcal{H}_1|\bm{a}).
 \end{equation} 
-The \ac{mse} obtained by a \ac{nn} performing classification with target outputs ${-1,1}$ for the two hypothesis can be written as \cite{Ruck-90}
-\begin{equation}\label{eq:mseAs}
-E_t(\bm{W}) = \mathbb{E} \left\{ \left( f(\bm{a},\bm{W} - g_0(\bm{a}) \right)^2 \right\} + \left \{1-\mathbb{E}[g_0(\bm{a})]^2\right \}.
-\end{equation}
-The \ac{nn} training problem is solved by minimizing $E_t(\bm{W})$ respect to the parameters $\bm{W}$ and we notice that the second term in (\ref{eq:mseAs}) does not depend on $\bm{W}$.
-From \cite{Ruck-90}, when the number of parameters goes to infinity, we obtain
-\begin{equation}\label{eq:bayesDisc}
-f(\bm{a},\bm{W}) \approx \mathbb{P}(\mathcal{H}_0|\bm{a}) - \mathbb{P}(\mathcal{H}_1|\bm{R}). 
-\end{equation}
 By recalling that $\mathbb{P}(x|y)=\mathbb{P}(y|x)\mathbb{P}(x)/\mathbb{P}(y)$ we can write
 \begin{equation}
 g_0(\bm{a}) = \frac{{\mathbb P}(\bm{a}|\mathcal H_0){\mathbb P}(\mathcal H_0) - {\mathbb P}(\bm{a}|\mathcal H_1){\mathbb P}(\mathcal H_1)}{\mathbb P(\bm{a})},
@@ -241,22 +224,17 @@ which is equivalent to the \ac{np} criterion.
 \end{proof}
 
 \subsection{CE training}
-Consider the training attenuation vectors set $\bm{a}^{(i)}$, $i=1,...,S$ with target output vector $\bm{\theta}^{\rm CE}$, where the $i^{\rm th}$ component is equal to $1$ if $\bm{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $\theta_i=0$ if $\bm{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$. Let us define as $\tilde{\bm{\theta}}^{\rm CE}$ the vector whose $i^{\rm th}$ component $\tilde{\theta}_i^{\rm CE}$ is the output of the \ac{nn} obtained with the $i^{\rm th}$ training vector. The \ac{nn} training is performed via gradient descent minimizing the \ac{ce} defined as
+In this case the \ac{nn} training is performed via gradient descent minimizing the \ac{ce} defined as
 \begin{equation}\label{eq:ce}
-CE = -\sum_{i=1}^{S}\left(\tilde{\theta}_i^{\rm CE}log\left(\theta_i^{\rm CE}\right)+\left(1-\tilde{\theta}_i^{\rm CE}\right)log\left(1-\theta_i^{\rm CE}\right) \right).
+CE = -\sum_{i=1}^{S}\left(\tilde{y}_i^{\rm CE}\log\left(y_i^{\rm CE}\right)+\left(1-\tilde{y}_i^{\rm CE}\right)\log\left(1-y_i^{\rm CE}\right) \right).
 \end{equation}
-In this case the output of the \ac{nn} is a continuous value between $0$ and $1$ and a suitable threshold value must be chosen in order to assign label $0$ or $1$ to the considered input vector.
-
-Comparison with a threshold is the key step of the \ac{np} lemma and we notice that this is also required when performing \ac{ce} training. In the next section we show how the two methods are related.
-
-\subsection{CE training connection to N-P lemma}
-When training is performed with \ac{ce} loss function the output of the \ac{nn} represents the probability $\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})$ of being in hypothesis $\mathcal{H}_0$ given that the attenuation vector is $\bm{a}^{(i)}$ \cite{Bishop2006}, i.e.,
+When training is performed with \ac{ce} loss function the output of the \ac{nn} is the minimum \ac{mse} approximation of the probability $\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})$ of being in hypothesis $\mathcal{H}_0$ given that the attenuation vector is $\bm{a}^{(i)}$ \cite{Bishop2006}, i.e.,
 \begin{equation}
     f(\bm{a}^{(i)},\bm{W}) \approx \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)}),
 \end{equation} 
 where $\bm{W}$ is the matrix whose $\ell{\rm th}$ column is obtained by stacking the vector of weights $\bm{w}_n^{(\ell)}$ and bias $b_n^{(\ell)}$ of each neuron of the $\ell{\rm th}$ layer.
 
-In this section we prove the following
+We then have the following result
 \begin{theorem}
 \label{th:nn_np2}
 Consider a \ac{nn} with perfect training and a sufficient number of parameters such that the training reaches a global minimum. Then the classificator obtained by training the \ac{nn} via \ac{ce} is equivalent to the classificator obtained via \ac{np} lemma.
@@ -268,34 +246,21 @@ Since we are considering a two class classification problem the probability $\ma
 \end{equation}
 By imposing a threshold on the output of the \ac{nn} we obtain
 \begin{equation}
-    f(\bm{a}^{(i)},\bm{W}) \approx \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)}) > \lambda,
+    \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)}) \approx  f(\bm{a}^{(i)},\bm{W}) \gtrapprox \lambda,
 \end{equation}
 which can be rewritten as
 \begin{equation}
-    2\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-1 > \hat{\lambda}
+    2\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-1 \gtrapprox \hat{\lambda}
 \end{equation}
 \begin{equation}
-    \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-(1-\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})) > \hat{\lambda}
+    \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-(1-\mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})) \gtrapprox \hat{\lambda}
 \end{equation}
 \begin{equation}
-    \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-\mathbb{P}(\mathcal{H}_1|\bm{a}^{(i)}) > \hat{\lambda}.
+    \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)})-\mathbb{P}(\mathcal{H}_1|\bm{a}^{(i)}) \gtrapprox \hat{\lambda}.
 \end{equation}
 We hence obtained the same formulation of (\ref{eq:bayesDisc}) and, by following the same steps of the proof of theorem 1 we see that imposing a threshold on the output of the \ac{ce}-trained \ac{nn} is equivalent of performing hypothesis testing with \ac{np} lemma.
 \end{proof}
-\section{Support Vector Machine}\label{sec:svm}
-A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input attenuation vector $\mathbf{a}^{(i)} \in \mathbb{R}^N$ the \ac{svm} returns $y_i = 1$ if $\mathbf{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $y_i=-1$ if $\mathbf{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$.
 
-The classification problem is modelled as a function $y: \mathbb{R}^N \to \mathbb{R}$ defined by
-\begin{equation}
-\label{eq:svm}
-y(\mathbf{a}^{(i)}) = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
-\end{equation}
-where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weights vector and $b$ is a bias parameter. The decision function is 
-\begin{equation}
-\label{eq:sign}
-y_i = \sign(y(\mathbf{a}^{(i)})).
-\end{equation}
-Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
 
 \subsection{Training and Relation with \ac{np} Lemma}
 Given a training set $\{\mathbf{a^{(i)}}\}_{i=1}^S$, the \ac{svm} searches for the hyperplane maximizing the margin, \ie the perpendicular distance between the decision boundary and the closest data point. 
