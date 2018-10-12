@@ -12,6 +12,7 @@
 \usepackage[acronym,shortcuts]{glossaries}
 \usepackage{graphicx}
 \usepackage{graphics}
+\usepackage[inline]{enumitem}
 \makeglossaries
 %%% Glossaries/Acronyms
 
@@ -20,6 +21,7 @@
 \newacronym{bs}{BS}{base station}
 \newacronym{ce}{CE}{Cross Entropy}
 \newacronym{kl}{K-L}{Kullback-Leibler}
+\newacronym{ls}{LS}{least-squares}
 \newacronym{llr}{LLR}{log likelihood-ratio}
 \newacronym{los}{LOS}{line of sight}
 \newacronym{lssvm}{LS-SVM}{least squares SVM}
@@ -41,6 +43,7 @@
 \newcommand{\ie}{i.e., }
 \newcommand{\wrt}{w.r.t. }
 \newcommand{\Exp}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\ai}{\mathbf{a}^{(i)}}
 
 \DeclareMathOperator{\sign}{sign}
 \DeclareMathOperator{\E}{E}
@@ -192,6 +195,17 @@ y_i = \sign(y(\mathbf{a}^{(i)})).
 \end{equation}
 Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
 \section{Authentication by machine learning approaches}
+The Neyman Pearson approach requires the knowledge of the conditional \ac{pdf} of the pbserved channel feature. When these are not available, as typically, occurs in practical systems, we can resort to \ac{ml} approaches. Note that these solutions do not explicitly evaluate the \ac{pdf} to compute then the \ac{llr}, rather implement directly the primitive by which the decision is taken.
+
+In this Section we \begin{enumerate*}[label=\alph*)]
+\item a describe how to learn the decision function with both \ac{nn} and \ac{svm} and \item show that in asymptotic conditions (infinite training) the \ac{nn} and \ac{svm} functions approximate the Neyman-Pearson optimal \ac{llr} function.
+\end{enumerate*}
+
+In this Section we assume that the authentication system has access to both regions $\mathcal{A}_0$ and $\mathcal{A}_1$ and that during the authentication phase $S$ attenuation vectors $\ai, \ i=1,\dots S$, are collected, belonging to both regions. For each vector $\ai$ we define the identification function $t_i = -1$ if $\ai$ was obtained using a transmitter in region $\mathcal{A}_0$ and $t_i = 1$ if the transmitter was in region $\mathcal{A}_1$.
+
+We consider two learning strategies (based on the \ac{mse} and \ac{ce} for \ac{nn} \hl{Citare NN} and one learning strategy (the \ac{ls} approach) for \ac{svm} \cite{Suykens1999}.
+
+
 \subsection{ MSE training}
 Let us define as $\tilde{\bm{y}}_{\rm MSE}$ the vector of the output values of the \ac{mlp}, whose $i^{\rm th}$ component is the output of the \ac{mlp} obtained with the $i^{\rm th}$ training vector, and as $\bm{y}_{MSE}$ the vector of the labels of the training vectors. The \ac{mlp} training is performed via gradient descent minimizing the \ac{mse}, defined as
 \begin{equation}
