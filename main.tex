@@ -189,6 +189,7 @@ A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for
 \end{equation}
 where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter, and the decision function
 \begin{equation}
+\label{eq:cases}
 \hat{t} = 
 \begin{cases}
 +1 \quad \tilde{t}  \geq \gamma^* \\
@@ -440,7 +441,7 @@ where $a_i$ denotes the $i^{\rm th}$ component of the vector. The authentication
 \end{equation}
 
 \subsection{One-Class Support Vector Machine}
-In this section we consider the one-class \ac{svm} as first introduced in \cite{Scholkopf2001estimating}. The one-class \ac{svm} defines the same decision function as the original \ac{svm}, given by \eqref{eq:sign}, however the training optimization problem is slightly different:
+In this section we consider the one-class \ac{svm} as first introduced in \cite{Scholkopf2001estimating}. The one-class \ac{svm} defines the same decision function as in \eqref{eq:cases}, however the training optimization problem is slightly different:
 \begin{subequations}
 	\label{eq:oneClassSvm}
 	\begin{equation}
