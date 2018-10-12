@@ -182,19 +182,22 @@ $\mathcal{H}_0$ if $\bm{y}^{(L-1)} > \lambda$ and as $\mathcal{H}_1$ if $\bm{y}^
 
 In the next sections we investigate the effects of training the \ac{mlp} with two different loss functions: the \ac{mse} and the \ac{ce}.
 \subsection{Support Vector Machine}\label{sec:svm}
-A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input attenuation vector $\mathbf{a}^{(i)} \in \mathbb{R}^N$ the \ac{svm} returns $y_i = 1$ if $\mathbf{a}^{(i)}$ has been generated form a user located in area $\mathcal{A}_0$ whereas $y_i=-1$ if $\mathbf{a}^{(i)}$ has been generated form a user in $\mathcal{A}_1$.
-
-The classification problem is modelled as a function $y: \mathbb{R}^N \to \mathbb{R}$ defined by
+A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input vector $\bm{y}^{(0)} \in \mathbb{R}^N$ the \ac{svm} returns $\hat{t} = 1$ if $\bm{y}^{(0)}$ belongs to class 0 whereas $\hat{t}=-1$ if $\bm{y}^{(0)}$ belongs to class 1. It comprises the function $\tilde{t}: \mathbb{R}^N \to \mathbb{R}$ defined by
 \begin{equation}
 \label{eq:svm}
-y(\mathbf{a}^{(i)}) = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
+\tilde{t} = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
 \end{equation}
-where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weights vector and $b$ is a bias parameter. The decision function is 
+where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter, and the decision function
 \begin{equation}
-\label{eq:sign}
-y_i = \sign(y(\mathbf{a}^{(i)})).
-\end{equation}
-Geometrically, the \ac{svm} defines a hyperplane in $\mathbb{R}^K$ defined by $y(\mathbf{a}^i)=0$ which separates the features of the two classes.
+\hat{t} = 
+\begin{cases}
++1 \quad \tilde{t}  \geq \gamma^* \\
+-1 \quad \tilde{t}  < \gamma^*,
+\end{cases}		
+\end{equation} 
+where $\gamma^*$ is a fixed threshold and controls false alarm and miss detection probabilities. Note that in the classical \ac{svm} formulation we have $\gamma^* = 0$.
+
+While typically the feature-space transformation function is fixed, the vector $\mathbf{w}$ must be properly chosen to perform the desired classification
 \section{Authentication by machine learning approaches}
 The Neyman Pearson approach requires the knowledge of the conditional \ac{pdf} of the pbserved channel feature. When these are not available, as typically, occurs in practical systems, we can resort to \ac{ml} approaches. Note that these solutions do not explicitly evaluate the \ac{pdf} to compute then the \ac{llr}, rather implement directly the primitive by which the decision is taken.
 
@@ -277,30 +280,8 @@ We hence obtained the same formulation of (\ref{eq:bayesDisc}) and, by following
 \end{proof}
 
 
-\subsection{Training and Relation with \ac{np} Lemma}
-Given a training set $\{\mathbf{a^{(i)}}\}_{i=1}^S$, the \ac{svm} searches for the hyperplane maximizing the margin, \ie the perpendicular distance between the decision boundary and the closest data point. 
-%This translates into the optimization problem \cite{Bishop2006}
-%\begin{equation}
-%\label{eq:svmS}
-%\begin{aligned}
-%& \underset{\mathbf{w},b}{\text{min}} & & \frac{1}{2} \mathbf{w}^T \mathbf{w} \\
-%& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)})] + b \geq 1 %\quad i = 1,\dots,S,
-%\end{aligned}
-%\end{equation}
-%where the constraints come from \eqref{eq:sign}. 
-Moreover we want to minimize the mis-classification errors.
-
-%, thus requiring to relax the constraint by introducing the slack variables $\xi_i$. The optimization problem becomes
-%\begin{equation}
-%	\begin{aligned}
-%	& \underset{\mathbf{w},\bm{\xi}}{\text{min}} & & f_s(\mathbf{w},\bm{\xi})= \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^S \xi_i & \\
-%	& \text{subject to} & & y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] \geq 1- \xi_i & i = 1 ,\dots,S \\
-% &					& & \xi_i \geq 0 & i = 1 ,\dots,S,
-%	\end{aligned}	
-%\end{equation} 
-%where $C$ is a parameter which controls the trade-off between margin minimization and slack variables penalty, and $\bm{\xi}$ is the vector whose $i^{\rm th}$ component is the slack variable $\xi_i$ . 
-
-The relation with \ac{np} lemma comes from the \ac{lssvm}, an extension of the \ac{svm} first introduced in \cite{Suykens1999}. In \cite{Yevs} it is shown that  \ac{svm} and \ac{lssvm} are equivalent under mild conditions. The \ac{lssvm} defines the optimization problem as
+\subsection{Least-Squares approach for \ac{svm}}
+For the learning phase of \ac{svm} we consider the \ac{lssvm}, an extension of the \ac{svm} first introduced in \cite{Suykens1999}. In \cite{Yevs} it is shown that  \ac{svm} and \ac{lssvm} are equivalent under mild conditions. The learning in \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
 	\label{eq:lssvm}
 	\begin{equation}
