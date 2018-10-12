@@ -570,6 +570,37 @@ This allows us to construct the manifold of the non-authentic area and hence to 
 
 In order to build the manifold of the training set we compute the outputs of the hidden layer when the vectors of the training set are fed as input. 
 
+\subsection{One-class \ac{svm} Attack}
+
+\begin{algorithm}[t]
+  \algsetup{linenosize=\tiny}
+  \scriptsize
+
+ \KwData{ Trained one-class \ac{svm}, step}
+ \KwResult{succesful attack vector }
+ 
+
+ \Repeat{attack is succesful}{
+        select a random support vector \;
+        compute the gradient \;
+        move along the gradient of step \;
+        evaluate new point \;
+        \eIf{
+        	$\tilde{t} = -1$}
+        	{new point belongs to non-authentic area\;
+        	retrain \ac{svm}\;}
+        	{test new point for an attack\;
+        		\eIf{attack is succesful}
+        			{return new point}
+        			{new point belongs to non-authentic area\;
+        			 retrain \ac{svm}\;}}
+      
+      }
+    
+ \caption{One-class \ac{svm} Attack}
+\end{algorithm}
+
+
 \section{Numerical results: los scenario}\label{sec:res_los}
 In order to confirm the theoretical results obtained so far and compare the different solutions we test the performance of the authentication systems based on two measures: the \textit{true positive rate} and the \textit{false positive rate}. 
 
