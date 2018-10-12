@@ -290,16 +290,16 @@ For the learning phase of \ac{svm} we consider the \ac{lssvm}, an extension of t
 	\end{equation}
 	\begin{equation}
 	\label{eq:stpart}
-	\text{subject to}\,  y_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
+	\text{subject to}\,  \hat{t}_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
 	\end{equation}
 \end{subequations}
 
-From the constraints in \eqref{eq:lssvm} and the fact that $y_i = \pm 1$ we have
+From the constraints in \eqref{eq:lssvm} and the fact that $\hat{t}_i = \pm 1$ we have
 \begin{equation}
 \label{eq:els}
-e_i^2 = (1 - y_iy(\mathbf{a}^{(i)}) )^2 = (y_i - y(\mathbf{a}^{(i)}))^2,
+e_i^2 = (1 - \hat{t}_iy(\mathbf{a}^{(i)}) )^2 = (\hat{t}_i - y(\mathbf{a}^{(i)}))^2,
 \end{equation}
-that is the squared error between the soft output of the \ac{lssvm} $y(\mathbf{a}^i)$ and the correct training label $y_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classificators. 
+that is the squared error between the soft output of the \ac{lssvm} $y(\mathbf{a}^i)$ and the correct training label $\hat{t}_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classificators. 
 
 Let us first consider the following lemma that establishes the convergence of the learning phase of \ac{svm}, as the training sample set becomes large.
 
@@ -309,18 +309,18 @@ Let us first consider the following lemma that establishes the convergence of th
 \end{lemma}
 
 \begin{proof}
-	Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$, with $y \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $y_i$, $i=1, \ldots, S$.
+	Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,\hat{t})$, with $\hat{t} \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $\hat{t}_i$, $i=1, \ldots, S$.
 	
-	By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ training vectors $\bm{\alpha}_j$ with associated true value $y$ in any training sequence.
-	All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,y)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
-	Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\mathbf{\alpha}_j$, but with different labels $y_m \neq y_n$. Therefore, for $\mathbf{a}^{i}=\mathbf{\alpha_j}$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
+	By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,\hat{t})$ training vectors $\bm{\alpha}_j$ with associated true value $\hat{t}$ in any training sequence.
+	All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,\hat{t})$ times in the sum $\sum_{i=1}^{S} e_i^2$.
+	Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\bm{\alpha}_j$, but with different labels $\hat{t}_m \neq \hat{t}_n$. Therefore, for $\mathbf{a}^{i}=\bm{\alpha}_j$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
 	This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
 	Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
 	\begin{subequations}
 		\label{eq:lssvm22}
 		\begin{equation}
 		\label{eq:lssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
+		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
 		\end{equation}
 		\begin{equation}
 		\label{eq:stpart2}
@@ -380,14 +380,6 @@ Let us first consider the following lemma that establishes the convergence of th
 	\end{equation}
 	The proof now is the same as in Theorem \ref{th:nn_np}.
 \end{proof}
-Note that in order to build the \ac{roc} it is required to change the decision function \eqref{eq:sign} with the thresholded version
-\begin{equation}
-y_i = 
-\begin{cases}
-+1 \quad y(\mathbf{a}^{(i)})  \geq \gamma^* \\
--1 \quad y(\mathbf{a}^{(i)})  < \gamma^*.
-\end{cases}		
-\end{equation}
 
 %It is common practice in the literature \cite{Bishop2006,Suykens1999} to work with the dual formulation of the optimization problems \eqref{eq:svmS} to \eqref{eq:lssvm} by constructing the Lagrangian. 
 %In the dual formulation objective functions and constraints are expressed as functions of the kernel 
@@ -538,7 +530,7 @@ The proposed techniques can be exploited in order to provide not only an authent
 The first architecture we exploit is the \ac{rnn}. The \ac{rnn} is here trained in order to reproduce at the output attenuation vectors measured from the non-authentic area. We propose two attack strategies: a random generation attack and a manifold based attack.
 
 \subsection{Random generation attack}
-After that the \ac{rnn} has been trained with attenuation vectors measured from the non-authentic area, only attenuation vectors with the same statistical structure will be reproduced at the output with a reconstruction error $\epsilon$ (\ref{eq: rec err}) lower than $\gamma$. The idea is hence to generate a random attenuation vector $\bm{a}_{\rm test}$ and to feed it to the \ac{rnn}: if the output has a reconstruction error lower than $\gamma$ then $\bm{a}_{\rm test}$ is considered as belonging to the non-authentic area, otherwise the it is considered as a possible candidate for a successful attack. This vector is hence tested and, if the attack is not successful, we label it as belonging to the non-authentic area.
+After that the \ac{rnn} has been trained with attenuation vectors measured from the non-authentic area, only attenuation vectors with the same statistical structure will be reproduced at the output with a reconstruction error $\epsilon$ (\ref{eq: rec err}) lower than $\gamma$. The idea is hence to generate a random attenuation vector $\bm{a}_{\rm test}$ and to feed it to the \ac{rnn}: if the output has a reconstruction error lower than $\gamma$ then $\bm{a}_{\rm test}$ is considered as belonging to the non-authentic area, otherwise it is considered as a possible candidate for a successful attack. This vector is hence tested and, if the attack is not successful, we label it as belonging to the non-authentic area.
 
 As new randomly generated vectors are not successful or have a reconstruction error lower than $\gamma$ we gain information about the structure of the non-authentic area. We hence update the \ac{rnn} training in a mini-batch fashion when a sufficient number of new vectors (good results can be achieved with batch size of $m=3$ or $m=4$ new vectors per update \cite{bengio-12}) is obtained. These vectors are stored in matrix $\bm{A}_{\rm test}$ and when $m$ vectors populate the matrix mini-batch gradient descent is executed on the \ac{rnn} to update its parameters.
 
