@@ -28,15 +28,17 @@
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{mlp}{MLP}{multy-layer perceptron}
 \newacronym{mse}{MSE}{Mean Squared Error}
-\newacronym{nn}{NN}{Neural Network}
+\newacronym[\glslongpluralkey={neural networks}]{nn}{NN}{Neural Network}
 \newacronym{np}{N-P}{Neyman-Pearson}
 \newacronym{pdf}{PDF}{probability distribution function}
 \newacronym{pso}{PSO}{particle swarm optimization}
 \newacronym{rnn}{RNN}{replicator neural network}
 \newacronym{roc}{ROC}{receiver operating characteristic}
 \newacronym{rss}{RSS}{received signal strength}
-\newacronym{svm}{SVM}{Support Vector Machine}
+\newacronym[\glslongpluralkey={support vector machines}]{svm}{SVM}{support vector machine}
 \newacronym{ue}{UE}{user equipment}
+
+
 
 
 
@@ -83,9 +85,8 @@ Traditional authentication systems are based on upper-layer techniques such as c
 Traditional detection systems are based on \ac{np} lemma which rejects a hypothesis in favor of the other based on the comparison of the likelihood ratio with a suitably chosen threshold value. An example application of this criterion is \cite{Baracca-12}, where the \ac{np} framework has been exploited to implement an authentication system suited for multiple wiretap channels with correlated fading. A generalization of the \ac{np} framework is presented in \cite{Xiao-09}, where physical layer authentication is performed over a Rayleigh fading channels and detection is implemented via generalized likelihood ratio test. A further example is \cite{Pan-17}, where \ac{ml} algorithms have been exploited in order to find the best threshold needed for hypothesis testing.
 
 However, the knowledge of the channel statistics as well as its model may not be available. In this context, the computation of the likelihood functions needed for hypothesis testing can be estimated by the available data but may not be accurate. \ac{ml} techniques have been introduced as an alternative method to perform user authentication without requiring prior knowledge of the channel statistics. This issue has been tackled by \cite{xiao-2018}, where no assumption is made on the channel model and logistic regression has been proposed as alternative to hypothesis testing. In \cite{Wang-17}, a feed-forward neural network receives as input the Euclidean distance between successive channels and the Pearson coefficient as feature space to perform authentication. 
-%
- \hl{Literature overview on SVM to be added $(https://www.researchgate.net/publication/279246263_Robust_indoor_localization_and_tracking_using_GSM_fingerprints$
-; $https://ieeexplore.ieee.org/abstract/document/7037452/$)}.
+
+Other than \acp{nn}, also \acp{svm} have been used to classify channel features. In \cite{tian2015robust} the objective is to locate the user inside a building and the classification problem is multi-class: one class for each room. In \cite{pei2014channel} instead, the authors describe an authentication scheme in which a learning machine (an \ac{svm} and linear Fisher discriminant analysis) is first trained with channel feature vectors and then used to classify the sender as trusted or malicious. Note that neither \cite{pei2014channel} nor \cite{tian2015robust} analyse performance of their \ac{ml} approaches against the theoretical optimum \ac{np} criterion, which we investigate in this work.
 
 In this paper, we compare the performance of the authentication system based on \ac{np} optimality criterion, henceforth referred to as \ac{np} detector, with \ac{ml} based approaches. In particular, we investigate the performance of the \ac{ml}-based authentication systems implemented via \ac{nn} and via \ac{svm}. We consider two different \ac{nn} architectures: the multi-layer perceptron and the auto-encoder. For the multi-layer perceptron, we investigate two loss functions: the \ac{ce} and the \ac{mse}. We show that both loss functions guarantee the same performance of the optimal \ac{np} detector in terms of true positive and false negative rate. Further details about the architectures and the training objective function will be discussed in section \ref{sec:nn}.
 
