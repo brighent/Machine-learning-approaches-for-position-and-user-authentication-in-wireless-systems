@@ -57,7 +57,8 @@
 \author{ }
 \date{}
 
-\usepackage[autostyle]{csquotes}
+
+%\usepackage[autostyle]{csquotes}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \bibliography{bibliography}
 
@@ -724,8 +725,11 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 \newpage 
 
 
-\printbibliography
 
 %\bibliographystyle{IEEEtran}
 %\bibliography{bibliography.bib}
+\renewcommand*{\bibfont}{\footnotesize}
+
+\printbibliography
+
 \end{document}
