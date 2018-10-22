@@ -529,6 +529,7 @@ and consider
 \end{equation}
 The double product inside the curly brackets does not depend on the parameters $(\mathbf{w},b)$ since for every value they assume, the projection $\mathbf{w}^T \phi (\mathbf{a})$ spans the whole $\mathbb{R}$, for varying $\mathbf{a}$. Similarly, the third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
 \begin{equation}
+\label{eq:approx}
 	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
 \end{equation} 
 in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
@@ -646,31 +647,49 @@ This allows us to construct the manifold of the non-authentic area and hence to 
 
 In order to build the manifold of the training set we compute the outputs of the hidden layer when the vectors of the training set are fed as input. 
 
-\subsection{One-class \ac{svm} Attack}
+\subsection{\acl{oclssvm} Attack}
+The attacker trains a \ac{oclssvm} with the training data coming only from the non-authentic area and his objective is now to forge an attack value $\mathbf{a_{f}}$ that will be accepted as authentic by the authentication system. We propose an euristic approach  exploiting the fact that the decision function for the attacker's trained \ac{oclssvm} would be
+\begin{equation}
+\mathbf{a} \in
+	\begin{cases}
+		\mathcal{A}_1 \quad \text{if} \tilde{t} \geq \Lambda \\
+		\mathcal{A}_0 \quad \text{if} \tilde{t} < \Lambda.
+	\end{cases}	
+\end{equation} 
+This suggests that the attacker could start from the training point $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ and then moving along the direction of greatest decrease $\mathbf{d}$, given by
+\begin{equation}
+\label{eq:dDef}
+	\mathbf{d} \triangleq - \nabla_{\mathbf{a}} \tilde{t},
+\end{equation} 
+where $\nabla_{\mathbf{a}}$ is the gradient operator \wrt $\mathbf{a}$. Exploiting the dual formulation \cite{choi2009least} we can write
+\begin{equation}
+		\nabla_{\mathbf{a}} \tilde{t} = \sum_{j=1}^{S} u_j \nabla_{\mathbf{a}} k(\mathbf{a}_j,\mathbf{a}).
+\end{equation}
+Next, the attacker forge the point
+\begin{equation}
+	\mathbf{a}_f^{(1)} = \mathbf{a}_f^{(0)} + \delta \mathbf{d}, 	
+\end{equation}
+where $\delta$ is a parameter, and performs the attack. If it does not succeed, he re-trains the \ac{oclssvm} with this new information and repeats the attack until he eventually succeeds. This constitutes Algorithm \ref{alg:svm}.
 
 \begin{algorithm}[t]
+\label{alg:svm}
   \algsetup{linenosize=\tiny}
   \scriptsize
 
- \KwData{ Trained one-class \ac{svm}, step}
+ \KwData{ Training set, $\delta$}
  \KwResult{succesful attack vector }
  
 
  \Repeat{attack is succesful}{
-        select a random support vector \;
-        compute the gradient \;
-        move along the gradient of step \;
-        evaluate new point \;
-        \eIf{
-        	$\tilde{t} = -1$}
-        	{new point belongs to non-authentic area\;
-        	retrain \ac{svm}\;}
-        	{test new point for an attack\;
-        		\eIf{attack is succesful}
-        			{return new point}
-        			{new point belongs to non-authentic area\;
-        			 retrain \ac{svm}\;}}
-      
+ 		train a \ac{oclssvm} \;
+        select $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ \;
+        compute $\mathbf{d}$ from \eqref{eq:dDef} \;
+        compute $\mathbf{a}_f^{(1)} = \mathbf{a}_f^{(0)} + \delta \mathbf{d}$ \;
+        perform the attack \;
+        \If{
+        	attack is not succesful}
+        	{$\mathbf{a}_f^{(1)}$ belongs to non-authentic area\;
+        	add $\mathbf{a}_f^{(1)}$ to training set\;}
       }
     
  \caption{One-class \ac{svm} Attack}
