@@ -605,7 +605,7 @@ Notice that the \acp{bs} positioning problem could be solved without implementin
 \label{sec:attack}
 The proposed techniques can be exploited in order to provide not only an authentication system, but also for implementing an attack strategy. The idea is here to use attenuation values measured from the non-authentic area and to train a \ac{ml} architecture based on these values.
 
-The first architecture we exploit is the \ac{rnn}. The \ac{rnn} is here trained in order to reproduce at the output attenuation vectors measured from the non-authentic area. We propose two attack strategies: a random generation attack and a manifold based attack.
+The first architecture we exploit is the \ac{rnn}. The \ac{rnn} is here trained in order to reproduce at the output attenuation vectors measured from the non-authentic area. We propose two attack strategies: a random generation attack and a manifold based attack. We then design an attack strategy based on \ac{oclssvm}.
 
 \subsection{Random generation attack}
 After that the \ac{rnn} has been trained with attenuation vectors measured from the non-authentic area, only attenuation vectors with the same statistical structure will be reproduced at the output with a reconstruction error $\epsilon$ (\ref{eq: rec err}) lower than $\gamma$. The idea is hence to generate a random attenuation vector $\bm{a}_{\rm test}$ and to feed it to the \ac{rnn}: if the output has a reconstruction error lower than $\gamma$ then $\bm{a}_{\rm test}$ is considered as belonging to the non-authentic area, otherwise it is considered as a possible candidate for a successful attack. This vector is hence tested and, if the attack is not successful, we label it as belonging to the non-authentic area.
