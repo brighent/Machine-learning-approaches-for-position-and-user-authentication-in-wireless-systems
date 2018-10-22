@@ -652,8 +652,8 @@ The attacker trains a \ac{oclssvm} with the training data coming only from the n
 \begin{equation}
 \mathbf{a} \in
 	\begin{cases}
-		\mathcal{A}_1 \quad \text{if} \tilde{t} \geq \Lambda \\
-		\mathcal{A}_0 \quad \text{if} \tilde{t} < \Lambda.
+		\mathcal{A}_1 \quad \text{if} \quad \tilde{t} \geq \Lambda \\
+		\mathcal{A}_0 \quad \text{if} \quad \tilde{t} < \Lambda.
 	\end{cases}	
 \end{equation} 
 This suggests that the attacker could start from the training point $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ and then moving along the direction of greatest decrease $\mathbf{d}$, given by
@@ -665,7 +665,7 @@ where $\nabla_{\mathbf{a}}$ is the gradient operator \wrt $\mathbf{a}$. Exploiti
 \begin{equation}
 		\nabla_{\mathbf{a}} \tilde{t} = \sum_{j=1}^{S} u_j \nabla_{\mathbf{a}} k(\mathbf{a}_j,\mathbf{a}).
 \end{equation}
-Next, the attacker forge the point
+Next, the attacker forges the point
 \begin{equation}
 	\mathbf{a}_f^{(1)} = \mathbf{a}_f^{(0)} + \delta \mathbf{d}, 	
 \end{equation}
