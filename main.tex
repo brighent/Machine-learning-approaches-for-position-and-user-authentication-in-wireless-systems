@@ -30,6 +30,7 @@
 \newacronym{mse}{MSE}{Mean Squared Error}
 \newacronym[\glslongpluralkey={neural networks}]{nn}{NN}{Neural Network}
 \newacronym{np}{N-P}{Neyman-Pearson}
+\newacronym{oclssvm}{OCLSSVM}{one-class least-square \ac{svm}}
 \newacronym{pdf}{PDF}{probability distribution function}
 \newacronym{pso}{PSO}{particle swarm optimization}
 \newacronym{rnn}{RNN}{replicator neural network}
@@ -345,7 +346,7 @@ Let us first consider the following lemma that establishes the convergence of th
 	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} v_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)	\\
 	%							&	\sum_{k=1}^{M} \sum_{h=1}^{M} u_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)
 	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} u_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h) \\
-	\mathbf{w}\mathbf{w}^T =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
+	\mathbf{w}^T\mathbf{w} =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
 	\end{aligned}
 	\end{equation}
 	where we used the fact that the kernel function
@@ -368,7 +369,7 @@ Let us first consider the following lemma that establishes the convergence of th
 	where $\E_t(\mathbf{w},b) = \Exp{\left(y_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
 	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
 	\begin{equation}
-	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
+	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	< \infty.
 	\end{equation} 
 	The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
 	\begin{equation}
@@ -405,8 +406,21 @@ Let us first consider the following lemma that establishes the convergence of th
 
 In practice having learning points in both regions $\A{0}$ and $\A{1}$ may be difficult since \begin{enumerate*}[label=\alph*)] \item region $\A{1}$ wider and not necessarily well defined (being simply the complementary region of $\A{0}$) and \item the attacker may use multiple antennas and by beamforming and power allocation can induce attenuation estimates that not necessarily correspond to points in the region $\A{1}$. About point b), we will further discuss attack possibilities in Section \ref{sec:attack}.
 
-Due to inconsistencies of attenuation vector not belonging to region $\A{0}$, we propose here an authentication system that in the identification association (or learning) phase uses only samples obtained from region $\A{0}$. This problem can also be denoted as one-class classification since we know only samples taken from one of the classes of the classifier. We now present solutions implemented with both \ac{nn} and \ac{svm}.
+Due to inconsistencies of attenuation vector not belonging to region $\A{0}$, we propose here an authentication system that in the identification association (or learning) phase uses only samples obtained from region $\A{0}$. This problem can also be denoted as one-class classification since we know only samples taken from one of the classes of the classifier. 
+
+We now present solutions implemented with both \ac{nn} and \ac{svm}.
 \end{enumerate*} 
+
+\subsection{Decision rule with known statistics}\label{sec:oneClassOpt}
+In the one-class scenario we can no more use the likelihood \eqref{eq:lr}, since $p(\mathbf{a}|\mathcal{H}_1)$ is not known. Instead, the best we can do is to use a threshold on $p(\mathbf{a}|\mathcal{H}_0)$ as follows
+\begin{equation}
+\label{eq:oneClassDec}
+\mathbf{a} \in
+\begin{cases}
+\mathcal{A}_0 \quad \text{if } p(\mathbf{a}|\mathcal{H}_0) \geq \Lambda \\
+\mathcal{A}_1 \quad \text{if } p(\mathbf{a}|\mathcal{H}_0) < \Lambda. 
+\end{cases}
+\end{equation}
 
 \subsection{Replicator neural network}
 \label{sec:auto}
@@ -442,23 +456,83 @@ where $a_i$ denotes the $i^{\rm th}$ component of the vector. The authentication
 \end{cases}
 \end{equation}
 
-\subsection{One-Class Support Vector Machine}
-In this section we consider the one-class \ac{svm} as first introduced in \cite{Scholkopf2001estimating}. The one-class \ac{svm} defines the same decision function as in \eqref{eq:cases}, however the training optimization problem is slightly different:
+\subsection{\acl{oclssvm}}
+In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The \ac{oclssvm} defines the same decision function as in \eqref{eq:cases}, however the training optimization problem is slightly different:
 \begin{subequations}
 	\label{eq:oneClassSvm}
 	\begin{equation}
 	\label{eq:oneClass1}
-	\underset{\mathbf{w},\psi, b}{\text{min}} \quad f_o(\mathbf{w},\psi, b) \triangleq
-	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{1}{\nu S} \sum_{i=1}^S \xi_i + b 
+	\underset{\mathbf{w},e_i, b}{\text{min}} \quad f_o(\mathbf{w},\psi, b) \triangleq
+	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 + b 
 	\end{equation}
 	\begin{equation}
 	\label{eq:oneClassConstr}
-	\text{subject to}\, \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b \geq - \xi_i, \, \xi_i \geq 0,  \quad i = 1,\dots S, 
+	\text{subject to}\, \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b = - e_i,  \quad i = 1,\dots S, 
 	\end{equation}
 \end{subequations}
-where $\nu \in (0,1]$ is a hyper-parameter.
+where $C$ is a hyper-parameter.
 Note that in the one-class case, the bias parameter $b$ appears also in the objective function.
 
+We want to show that the \ac{oclssvm} is a machine that asymptotically approximate, in the mean-square sense, the optimal decision rule \eqref{eq:oneClassDec}.
+
+\begin{lemma}
+\label{lem:lem2}
+Given $S$ training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, problem \eqref{eq:oneClassSvm} is equivalent to 
+\begin{equation}
+		\underset{\mathbf{w},e_i, b}{\text{min}} \Exp{e_i}^2
+\end{equation}
+\end{lemma}
+\begin{proof}
+In the dual formulation of \eqref{eq:oneClassSvm} we can express $\mathbf{w}$ and $b$ as a function of the kernel and Langrange multipliers $\{u_j\}$ \cite{choi2009least}
+\begin{equation}
+\begin{aligned}
+\mathbf{w}^T\mathbf{w} &= \sum_{i=1}^{S} \sum_{j=1}^{S} u_i u_j k(\bm{\alpha}_i,\bm{\alpha}_j) \\
+b &= - \sum_{j=1}^{S} u_j k(\bm{\alpha}_i,\bm{\alpha}_j) - u_i/C  \quad i=1,\dots S.
+\end{aligned}		
+\end{equation}
+Using the Glivenko–Cantelli theorem as in Lemma \ref{lem:lem1} we can write
+\begin{equation}
+\begin{aligned}
+\lim_{S \to +\infty} &\frac{1}{S} \mathbf{w}^T\mathbf{w} < \infty \\
+\lim_{S \to +\infty} &\frac{1}{S}b < \infty.
+\end{aligned}		
+\end{equation}
+It follows that
+\begin{equation}
+	\underset{\mathbf{w},e_i, b}{\text{min}} \frac{1}{S} f_o(\mathbf{w},e_i, b) = 
+	\underset{\mathbf{w},e_i, b}{\text{min}} \frac{1}{S} \sum_{i=1}^S e_i^2 = \underset{\mathbf{w},e_i, b}{\text{min}} \Exp{e_i}^2,	
+\end{equation}
+where $e_i^2 = (\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b)^2 $, the last equality follows from the law of large numbers, and the expected value is carried out \wrt the training $\mathbf{a}^{(i)}$.
+\end{proof}
+
+Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distance between any point $\phi(\mathbf{a}^{(i)})$ and the hyperplane $\mathbf{w}^T \phi (\mathbf{a}) + b = 0$ defined in the transformed space by the \ac{oclssvm}. We claim that $|e_i|$ is inversely proportional to $p(\mathbf{a}|\mathcal{H}_0)$ and we will prove that this holds in the mean-square sense. A direct consequence is that the \ac{oclssvm} approximates asymptotically the optimal decision rule of Section \ref{sec:oneClassOpt}. 
+
+\begin{theorem}
+	\label{th:onelsnp}
+	Consider a \ac{oclssvm} with perfect training, \ie the training reaches a global minimum of $f_o(\mathbf{w},e_i,b)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classificator obtained by training the \ac{oclssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the optimal classificator \eqref{eq:oneClassDec}.
+\end{theorem}
+
+\begin{proof}
+Let us define the function 
+\begin{equation}
+	e(\mathbf{a},\mathbf{w},b) \triangleq \mathbf{w}^T \phi (\mathbf{a}) + b,	
+\end{equation}
+and consider 
+\begin{equation}
+	\begin{aligned}
+		&\underset{\mathbf{w},b}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right) ^2} = \\
+		&\underset{\mathbf{w},b}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
+		&\underset{\mathbf{w},b}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
+		-2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
+		+ \int_{\mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
+	\end{aligned}	
+\end{equation}
+The double product inside the curly brackets does not depend on the parameters $(\mathbf{w},b)$ since for every value they assume, the projection $\mathbf{w}^T \phi (\mathbf{a})$ spans the whole $\mathbb{R}$, for varying $\mathbf{a}$. Similarly, the third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
+\begin{equation}
+	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
+\end{equation} 
+in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
+\end{proof}
 
 \section{BSs' optimal position}\label{sec:bsPos}
 As attenuation maps are different at each \ac{bs} and depend on the surrounding environment in terms of shadowing effects the performance of the authentication system depends on the number of \acp{bs} and their position. In this section we derive an approach to optimally locate \acp{bs} so that the authentication system attains the best performance. 
