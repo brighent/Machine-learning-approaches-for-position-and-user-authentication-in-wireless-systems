@@ -123,14 +123,18 @@ In the second phase (authentication verification) the \ac{ue} transmits a known 
     L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)}) = \sqrt{(X_{\rm bs}^{(n)}-X_u)^2+(Y_{\rm bs}^{(n)}-Y_u)^2}.
 \end{equation}
 When a \ac{ue} transmits with power $P_{\rm tx}$, the received power at the $n^{\rm th}$ \ac{bs} is
-\begin{equation}
-    P_{\rm rc}^n[dB]= P_{\rm tx}[dB] -  a^{(n)}[dB],
+\begin{equation}\label{eq: rec pow}
+    P_{\rm rc}^{(n)}= \frac{P_{\rm tx}}{P_{\ell}^{(n)}}e^{s},
 \end{equation}
-where $a^{(n)}$ is the attenuation incurred by the transmitted signal to \ac{bs} $n$. The attenuation coefficient includes th effects of path-loss, shadowing and fading, i.e.
+where $P_{\ell}^{(n)}$ is the path-loss coefficient and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component. We can rewrite (\ref{eq: rec pow}) in dB as
+\begin{equation}
+    P_{\rm rc}^{(n)}[dB]= P_{\rm tx}[dB] -  a^{(n)}[dB],
+\end{equation}
+where $a^{(n)}$ is the attenuation incurred by the transmitted signal to \ac{bs} $n$. The attenuation coefficient includes the effects of path-loss, shadowing and fading, i.e.
 \begin{equation}
     \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
 \end{equation}
-where $\sigma_{a,n}^2=P_{\ell}^{(n)}-4.34s$ (\hl{citare}), $P_{\ell}^{(n)}$ is the path-loss coefficient and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component. For the path-loss we consider two scenarios: \ac{los} and non-\ac{los}.
+where $\sigma_{a,n}^2=P_{\ell}^{(n)}-4.34s$ accounts for the dB value of the path loss and shadowing components in (\ref{eq: rec pow}).  For the path-loss we consider two scenarios: \ac{los} and non-\ac{los}.
 
 For a \ac{los} link the path loss coefficinet in dB is modelled as
 \begin{equation}\label{eq:los}
@@ -143,7 +147,11 @@ For a  non-\ac{los} link the path loss coefficient in dB is defined as
     P_{\rm non-LOS,dB}^{(n)} = 40\log10\left (\frac{L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{10^3}\right ) + 21\log10\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
 
-We assume that fading and shadowing are time-invariant while fading is time dependent. The shadowing $s$ depends on positions $\bm{x}_{\rm ue}$ and $\bm{x}_{\rm bs}^{(n)}$ and is correlated at different \ac{ue} and \ac{bs} positions. \hl{aggiungere info}
+We assume that shadowing is time-invariant while fading is time dependent. We also assume that shadowing $s$ depends on positions $\bm{x}_{\rm ue}$ and $\bm{x}_{\rm bs}^{(n)}$ and is correlated at different \ac{ue} and \ac{bs} positions. The shadowing map for the area is generated as a multivariate Gaussian distribution with correlation matrix whose entry $(i,j)$ is given by the covariance between two points $\bm{x}_i$ and $\bm{x}_j$ in the space. This depends on their relative distance $d(\bm{x}_i,\bm{x}_j)$ as
+\begin{equation}\label{eq: coor mat}
+    c_s\left(d(\bm{x}_i,\bm{x}_j)\right) = \sigma_s^2e^{-\frac{d}{d_c}},
+\end{equation}
+where $d_c$ is the shadowing decorrelation distance. 
 
 \subsection{Decision rule with known statistics}\label{sec:auth}
 The authentication problem has a straightforward formulation as an hypothesis test. Let us define the two hypothesis: $\mathcal{H}_0$: the \ac{ue} is transmitting from area $\mathcal{A}_0$; $\mathcal{H}_1$: the \ac{ue} is transmitting from area $\mathcal{A}_1$.
@@ -211,7 +219,7 @@ In this Section we \begin{enumerate*}[label=\alph*)]
 
 In this Section we assume that the authentication system has access to both regions $\mathcal{A}_0$ and $\mathcal{A}_1$ and that during the authentication phase $S$ attenuation vectors $\ai, \ i=1,\dots S$, are collected, belonging to both regions. For each vector $\ai$ we define the identification function $t_i = -1$ if $\ai$ was obtained using a transmitter in region $\mathcal{A}_0$ and $t_i = 1$ if the transmitter was in region $\mathcal{A}_1$.
 
-We consider two learning strategies (based on the \ac{mse} and \ac{ce} for \ac{nn} \hl{Citare NN} and one learning strategy (the \ac{ls} approach) for \ac{svm} \cite{Suykens1999}.
+We consider two learning strategies (based on the \ac{mse} and \ac{ce}) for \ac{nn} \cite{Bishop2006} and one learning strategy (the \ac{ls} approach) for \ac{svm} \cite{Suykens1999}.
 
 
 \subsection{ MSE training}
@@ -422,6 +430,28 @@ In the one-class scenario we can no more use the likelihood \eqref{eq:lr}, since
 \end{cases}
 \end{equation}
 
+In fact, consider the probability of classification error
+\begin{equation}
+    P_e = P\left(\mathcal{H}_0|\mathcal{H}_1 \right)P\left( \mathcal{H}_1\right)+P\left(\mathcal{H}_1|\mathcal{H}_0 \right)P\left( \mathcal{H}_0\right).
+\end{equation}
+This can be rewritten as
+\begin{equation}
+   P_e = P\left( \mathcal{H}_1\right)\sum_{\bm{a} \in \mathcal{A}_0}P\left(\bm{a}|\mathcal{H}_1\right)+P\left( \mathcal{H}_0\right)\sum_{\bm{a} \in \mathcal{A}_1}P\left(\bm{a}|\mathcal{H}_0\right). 
+\end{equation}
+The probability of error for a given $\bm{a}$ is hence
+\begin{equation}\label{eq: disc}
+    P_e(\bm{a}) = P\left( \mathcal{H}_1\right)P\left(\bm{a}|\mathcal{H}_1\right)+P\left( \mathcal{H}_0\right)P\left(\bm{a}|\mathcal{H}_0\right).
+\end{equation}
+From (\ref{eq: disc}) we obtain an alternative form of the optimal Bayes discriminant function with decision rule
+\begin{equation}
+    \bm{a} \in 
+    \begin{cases}
+    \mathcal{A}_0 \quad \text{if } P\left( \mathcal{H}_0\right)P\left(\bm{a}|\mathcal{H}_0\right)-P\left( \mathcal{H}_1\right)P\left(\bm{a}|\mathcal{H}_1\right) \geq 0 \\
+\mathcal{A}_1 \quad \text{if }
+P\left( \mathcal{H}_0\right)P\left(\bm{a}|\mathcal{H}_0\right)-P\left( \mathcal{H}_1\right)P\left(\bm{a}|\mathcal{H}_1\right) < 0. 
+    \end{cases}
+\end{equation}
+However, since we do not know the statistics of the attenuation vectors in hypothesis $\mathcal{H}_1$ and the prior of both classes, we move all the unknown terms to the other side of the inequality obtaining (\ref{eq:oneClassDec}).
 \subsection{Replicator neural network}
 \label{sec:auto}
 
@@ -440,23 +470,39 @@ The $n^{\rm th}$ output $y_n^{(o)}$ of the output layer is obtained from
 where $\bm{w}_n^{(o)}$ is the $1\times M$ vector of weights assigned to the $n^{\rm th}$ output, $\bm{y}^{(h)}$ is the $M\times 1$ vector of the outputs of the hidden layer and $b_n^{(h)}$ is the $n^{\rm th}$ bias of the hidden layer.
 
 
-We here exploit the \ac{rnn} to implement the authentication system described in section \ref{sec:auth}. 
-
-Consider the input attenuation vector $\bm{a}$ and its replicated value $\hat{\bm{a}}$ at the output of the auto-encoder after training.
-Let us define the reconstruction error
+We here exploit the \ac{rnn} to implement the authentication system described in section \ref{sec:auth}. Consider the input attenuation vector $\bm{a}$ and its replicated value $\hat{\bm{a}}$ at the output of the auto-encoder after training.
+Let us define the reconstruction error for the attenuation vector $\bm{a}^{(n)}$
 \begin{equation}\label{eq: rec err}
-    \epsilon = \frac{1}{N}\sum_{i=1}^{N}|a_i-\hat{a}_i|^2,
+    \epsilon(\bm{a}^{(n)}) = \frac{1}{N}\sum_{i=1}^{N}|a^{(n)}_i-\hat{a}^{(n)}_i|^2,
 \end{equation}
-where $a_i$ denotes the $i^{\rm th}$ component of the vector. The authentication system performs a test comparing the reconstruction error $\epsilon$ with a threshold value $\gamma$ and chooses 
+where $a_i^{(n)}$ denotes the $i^{\rm th}$ component of the vector $\bm{a}^{(n)}$. The authentication system performs a test comparing the reconstruction error $\epsilon$ with a threshold value $\gamma$ and chooses 
 \begin{equation}
-\bm{a} \in
+\bm{a}^{(n)} \in
 \begin{cases}
-\mathcal{A}_0 \, \text{if} \, \epsilon < \gamma \\
-\mathcal{A}_1 \, \text{if} \, \epsilon \ge \gamma. 
+\mathcal{A}_0 \, \text{if} \, \epsilon(\bm{a}^{(n)}) < \gamma \\
+\mathcal{A}_1 \, \text{if} \, \epsilon(\bm{a}^{(n)}) \ge \gamma. 
 \end{cases}
 \end{equation}
+The performance of the obtained classificator are given by the following 
+\begin{theorem}
+    Consider a \ac{rnn} with perfect training, i.e., a \ac{rnn} with a sufficient number of neurons and a sufficient training such that each attenuation vector $\bm{a}^{(n)}$ belonging to the training class is replicated at the output with zero reconstruction error, i.e., $\epsilon(\bm{a}_n)=0$. Then the classificator obtained by training the \ac{rnn} and by thresholding the soft output $\tilde{\epsilon}(\bm{a}^{(n)}) = \sqrt{\frac{1}{N}\sum_{i=1}^{N}|a^{(n)}_i-\hat{a}^{(n)}_i|^2},$ is equivalent, in the \ac{mse} sense, to the optimal classificator \eqref{eq:oneClassDec}.
+\end{theorem}
+\begin{proof}
+Let us consider the \ac{mse} approximation of $\tilde{\epsilon}(\bm{a}^{(n)})$ being $1/p(\bm{a}^{(n)}|\mathcal{H}_0)$ and hence consider the minimization problem over the weight vector $\bm{w}$
+\begin{equation}
+	\begin{aligned}
+		&\underset{\mathbf{w}}{\text{min}}\,\, \Exp{ \left( \tilde{\epsilon}(\mathbf{a},\mathbf{w}) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right) ^2} = \\
+		&\underset{\mathbf{w}}{\text{min}} \int_{\bm{a} \in \mathcal{A}_0} \left[ \tilde{\epsilon}(\mathbf{a},\mathbf{w}) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
+		&\underset{\mathbf{w}}{\text{min}} \left\lbrace \int_{\bm{a} \in \mathcal{A}_0} \tilde{\epsilon}(\mathbf{a},\mathbf{w})^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
+		-2\int_{\bm{a} \in \mathcal{A}_0} \tilde{\epsilon}(\mathbf{a},\mathbf{w}) d\mathbf{a}
+		+ \int_{\bm{a} \in \mathcal{A}_0} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
+	\end{aligned}	
+\end{equation}
+We notice that the second term in brackets is the sum of the reconstruction error of the attenuation vectors of the training set, which is $0$ as we assumed perfect training and hence zero reconstruction error for each vector in the training set. The last term in brackets does not depend on the weight vector $\bm{w}$ and hence the only term that depends on $\bm{w}$ is the first one, which is the objective function of the training optimization problem. Noticing that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is equivalent to thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ we conclude that training the \ac{rnn} with $\epsilon$ loss function provides a classificator that approximates in the \ac{mse} sense the optimal one (\ref{eq:oneClassDec}).
+\end{proof}
 
-\subsection{\acl{oclssvm}}
+
+\subsection{\Acl{oclssvm}}
 In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The \ac{oclssvm} defines the same decision function as in \eqref{eq:cases}, however the training optimization problem is slightly different:
 \begin{subequations}
 	\label{eq:oneClassSvm}
@@ -535,71 +581,71 @@ The double product inside the curly brackets does not depend on the parameters $
 in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
 \end{proof}
 
-\section{BSs' optimal position}\label{sec:bsPos}
-As attenuation maps are different at each \ac{bs} and depend on the surrounding environment in terms of shadowing effects the performance of the authentication system depends on the number of \acp{bs} and their position. In this section we derive an approach to optimally locate \acp{bs} so that the authentication system attains the best performance. 
+% \section{BSs' optimal position}\label{sec:bsPos}
+% As attenuation maps are different at each \ac{bs} and depend on the surrounding environment in terms of shadowing effects the performance of the authentication system depends on the number of \acp{bs} and their position. In this section we derive an approach to optimally locate \acp{bs} so that the authentication system attains the best performance. 
 
-Consider a sufficiently large training set which is representative of the attenuation vectors measured from both $\mathcal{A}_0$ and $\mathcal{A}_1$. An \ac{mlp} trained with such a set is not likely to find a large number of outliers when tested. In this sense we can say that if a \ac{mlp} attains better performance that another one in the training phase, then it attains better performance also in the testing phase. We hence test different positions for $N_{\rm BS}$ \acp{bs} and, for each one, we train a \ac{mlp} with a sufficient number of training vectors and compute the minimum value obtained by the gradient descent algorithm used for training.
+% Consider a sufficiently large training set which is representative of the attenuation vectors measured from both $\mathcal{A}_0$ and $\mathcal{A}_1$. An \ac{mlp} trained with such a set is not likely to find a large number of outliers when tested. In this sense we can say that if a \ac{mlp} attains better performance that another one in the training phase, then it attains better performance also in the testing phase. We hence test different positions for $N_{\rm BS}$ \acp{bs} and, for each one, we train a \ac{mlp} with a sufficient number of training vectors and compute the minimum value obtained by the gradient descent algorithm used for training.
 
-Fig. \ref{fig:mseVSauc} shows the performance obtained with $8$ random positions for $N_{\rm BS}=5$ \acp{bs}. For all curves is reported the minimum \ac{mse} obtained during training and the corresponding \ac{auc} after testing. We see that \ac{mse} values can be divided in ranges, each one corresponding to different values of \ac{auc}. In particular we notice that lower ranges of \ac{mse} correspond to higher values of \ac{auc}. For \acp{mlp} attaining  \ac{mse} values within the same range we must instead also perform testing in order to choose the configuration with better classification performance. Hence, in order to find the optimal configuration we implement an iterative algorithm which, for each configuration, build a training set and trains a \ac{mlp} and updates the position of the \acp{bs} according to the obtained \ac{mse} value. When the difference between the current \ac{mse} value and that obtained at the previous iteration is smaller than a threshold value $\lambda_{\rm diff}$ then a testing set is built and the relative \ac{auc} values are computed. The configuration with higher \ac{auc} is then selected as the optimal one.
+% Fig. \ref{fig:mseVSauc} shows the performance obtained with $8$ random positions for $N_{\rm BS}=5$ \acp{bs}. For all curves is reported the minimum \ac{mse} obtained during training and the corresponding \ac{auc} after testing. We see that \ac{mse} values can be divided in ranges, each one corresponding to different values of \ac{auc}. In particular we notice that lower ranges of \ac{mse} correspond to higher values of \ac{auc}. For \acp{mlp} attaining  \ac{mse} values within the same range we must instead also perform testing in order to choose the configuration with better classification performance. Hence, in order to find the optimal configuration we implement an iterative algorithm which, for each configuration, build a training set and trains a \ac{mlp} and updates the position of the \acp{bs} according to the obtained \ac{mse} value. When the difference between the current \ac{mse} value and that obtained at the previous iteration is smaller than a threshold value $\lambda_{\rm diff}$ then a testing set is built and the relative \ac{auc} values are computed. The configuration with higher \ac{auc} is then selected as the optimal one.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{mseVSauc.eps}
-    \caption{\ac{roc} curves for different BS positions. Lower \ac{mse} are associated to higher \ac{auc}}
-    \label{fig:mseVSauc}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.5\columnwidth]{mseVSauc.eps}
+%     \caption{\ac{roc} curves for different BS positions. Lower \ac{mse} are associated to higher \ac{auc}}
+%     \label{fig:mseVSauc}
+% \end{figure}
 
-Notice however that the problem is non-convex as the map realization depends on the \acp{bs} position and on a random shadowing and fading realization. Therefore we exploit the \ac{pso} \cite{Kennedy-11}.
+% Notice however that the problem is non-convex as the map realization depends on the \acp{bs} position and on a random shadowing and fading realization. Therefore we exploit the \ac{pso} \cite{Kennedy-11}.
 
-\ac{pso} is an iterative optimization algorithm based on social behavior of animals (e.g. birds flocking and fish schools). Consider a particle as a set of positions for the \acp{bs} and consider a total number of $P$ particles. Each one is a possible candidate solution of the optimization problem. Each particle is described by its position $\bm{x}_p$, which is a $N_{\rm BS}$ dimensional vector containing the positions of the \acp{bs} and representing a possible solution, and its velocity $\bm{v}_p$.
-Starting from a random initialization of all the particles at each iteration both the positions $\bm{x}_p$ and the velocities $\bm{v}_p$ are updated. Two optimal values are defined in each iteration: the global optimal value found so far by the entire population and a local optimal value for each particle, i.e., the optimal value found by the individual $p$ up to the current iteration. We define as $\bm{o}_g$ the position of the the global optimal values and as $\bm{o}_p$ the position of the optimal value found by particle $p$ at the current iteration.
+% \ac{pso} is an iterative optimization algorithm based on social behavior of animals (e.g. birds flocking and fish schools). Consider a particle as a set of positions for the \acp{bs} and consider a total number of $P$ particles. Each one is a possible candidate solution of the optimization problem. Each particle is described by its position $\bm{x}_p$, which is a $N_{\rm BS}$ dimensional vector containing the positions of the \acp{bs} and representing a possible solution, and its velocity $\bm{v}_p$.
+% Starting from a random initialization of all the particles at each iteration both the positions $\bm{x}_p$ and the velocities $\bm{v}_p$ are updated. Two optimal values are defined in each iteration: the global optimal value found so far by the entire population and a local optimal value for each particle, i.e., the optimal value found by the individual $p$ up to the current iteration. We define as $\bm{o}_g$ the position of the the global optimal values and as $\bm{o}_p$ the position of the optimal value found by particle $p$ at the current iteration.
 
-The position and velocity of the particles are updated at iteration $t$ as
- \begin{equation}\label{eq: v up}
- \bm{v}_p(t) = w\bm{v}_p(t-1)+\phi_1(t)(\bm{o}_p(t-1)-\bm{x}_p(t-1))+\phi_2(t)(\bm{o}_g(t-1)-\bm{x}_p(t-1)), 
- \end{equation}
- \begin{equation}\label{eq: p up}
- \bm{x}_p(t) = \bm{x}_p(t-1) + \bm{v}_p(t),
- \end{equation}
-where $w$ is the inertia coefficient and $\phi_1$ and $\phi_2$ are random variables distributed respectively in $[0,c_1]$ and $[0,c_2]$, where $c_1$ and $c_2$ are defined as acceleration constants. The values of the inertia coefficient and of the acceleration constants are the parameters of the \ac{pso} problem. Typical values for this parameters are $w=0.7298$, $c_1=c_2=1.4961$ \cite{Kennedy-11}.
+% The position and velocity of the particles are updated at iteration $t$ as
+%  \begin{equation}\label{eq: v up}
+%  \bm{v}_p(t) = w\bm{v}_p(t-1)+\phi_1(t)(\bm{o}_p(t-1)-\bm{x}_p(t-1))+\phi_2(t)(\bm{o}_g(t-1)-\bm{x}_p(t-1)), 
+%  \end{equation}
+%  \begin{equation}\label{eq: p up}
+%  \bm{x}_p(t) = \bm{x}_p(t-1) + \bm{v}_p(t),
+%  \end{equation}
+% where $w$ is the inertia coefficient and $\phi_1$ and $\phi_2$ are random variables distributed respectively in $[0,c_1]$ and $[0,c_2]$, where $c_1$ and $c_2$ are defined as acceleration constants. The values of the inertia coefficient and of the acceleration constants are the parameters of the \ac{pso} problem. Typical values for this parameters are $w=0.7298$, $c_1=c_2=1.4961$ \cite{Kennedy-11}.
 
-The algorithm steps for \acp{bs} positioning are reported in Algorithm 1. We initialize $P$ particles with random positions for each of the $N_{\rm BS}$ in each particle. For each particle $p$ we then build and train a \ac{nn} and compute the achieved \ac{mse} value MSE$_p^{(0)}$. \ac{pso} is then exploited to iteratively update the position of the particles. Notice that in order to find the best local and global optimal positions \ac{mse} values at the current and previous iterations are compared. If this values are in the same range, i.e., if $|\rm{MSE}_p^{(it-1)}-\rm{MSE}_p^{(it)}|<\lambda_{\rm diff}$ then the \acp{nn}  are also tested and decision is taken based on the \ac{auc} values, otherwise decision is taken based on \ac{mse} values.
+% The algorithm steps for \acp{bs} positioning are reported in Algorithm 1. We initialize $P$ particles with random positions for each of the $N_{\rm BS}$ in each particle. For each particle $p$ we then build and train a \ac{nn} and compute the achieved \ac{mse} value MSE$_p^{(0)}$. \ac{pso} is then exploited to iteratively update the position of the particles. Notice that in order to find the best local and global optimal positions \ac{mse} values at the current and previous iterations are compared. If this values are in the same range, i.e., if $|\rm{MSE}_p^{(it-1)}-\rm{MSE}_p^{(it)}|<\lambda_{\rm diff}$ then the \acp{nn}  are also tested and decision is taken based on the \ac{auc} values, otherwise decision is taken based on \ac{mse} values.
 
-\begin{algorithm}[t]
-  \algsetup{linenosize=\tiny}
-  \scriptsize
+% \begin{algorithm}[t]
+%   \algsetup{linenosize=\tiny}
+%   \scriptsize
 
- \KwData{ number of particles $P$, $N_{\rm BS}$, $\lambda_{\rm diff}$}
- \KwResult{optimal position }
- Initialization: select random positions for the components of each particle\;
-                 build training set for each particle\;
-                 build and train a \ac{nn} for each particle and obtain the training performance $\rm{MSE}_p^{(0)}$, $p=1,...,N_p$\;
-                 $it = 0$\;
+%  \KwData{ number of particles $P$, $N_{\rm BS}$, $\lambda_{\rm diff}$}
+%  \KwResult{optimal position }
+%  Initialization: select random positions for the components of each particle\;
+%                  build training set for each particle\;
+%                  build and train a \ac{nn} for each particle and obtain the training performance $\rm{MSE}_p^{(0)}$, $p=1,...,N_p$\;
+%                  $it = 0$\;
 
- \Repeat{convergence of particles positions}{
-        $it = it + 1$\;
-        \For{$p=1,...,P$}{
-        update velocity and position vector of particle $p$ via (\ref{eq: v up}) and (\ref{eq: p up})\;
-        build a training set\;
-        build and test a \ac{nn} and compute $\rm{MSE}_p^{(it)}$\;
-        \eIf{$|\rm{MSE}_p^{(it-1)}-\rm{MSE}_p^{(it)}|<\lambda_{\rm diff}$}{
-        compute $\rm{AUC}_p^{(it-1)}$ and $\rm{AUC}_p^{(it)}$ for both \acp{nn}\;
-        update PSO vectors based on AUC$_p$\;
+%  \Repeat{convergence of particles positions}{
+%         $it = it + 1$\;
+%         \For{$p=1,...,P$}{
+%         update velocity and position vector of particle $p$ via (\ref{eq: v up}) and (\ref{eq: p up})\;
+%         build a training set\;
+%         build and test a \ac{nn} and compute $\rm{MSE}_p^{(it)}$\;
+%         \eIf{$|\rm{MSE}_p^{(it-1)}-\rm{MSE}_p^{(it)}|<\lambda_{\rm diff}$}{
+%         compute $\rm{AUC}_p^{(it-1)}$ and $\rm{AUC}_p^{(it)}$ for both \acp{nn}\;
+%         update PSO vectors based on AUC$_p$\;
         
-        }{
-        update PSO vectors based on MSE$_p$\;
-        }
+%         }{
+%         update PSO vectors based on MSE$_p$\;
+%         }
         
-        }
+%         }
       
-      }
+%       }
     
- \caption{BSs positioning algorithm}
-\end{algorithm}
+%  \caption{BSs positioning algorithm}
+% \end{algorithm}
 
-The position of the particle that achieves the global minimum \ac{mse} or maximum \ac{auc} at the end of the optimization problem is the best position for the \acp{bs}. Notice that, as the optimization problem is non-convex, solving \ac{pso} is similar to a multi-start  optimization considering $P$ different starting points, which is a standard method used to avoid local minimums. Hence as the number $P$ increases the probability of finding a local solution is reduced.
+% The position of the particle that achieves the global minimum \ac{mse} or maximum \ac{auc} at the end of the optimization problem is the best position for the \acp{bs}. Notice that, as the optimization problem is non-convex, solving \ac{pso} is similar to a multi-start  optimization considering $P$ different starting points, which is a standard method used to avoid local minimums. Hence as the number $P$ increases the probability of finding a local solution is reduced.
 
-Notice that the \acp{bs} positioning problem could be solved without implementing a \ac{nn} by mean of computation of the \acp{llr} for the different positions. However we showed in Section \ref{sec:shadow} that when considering multiple \acp{bs} and including shadowing effects the exact computation of the \ac{llr} curve requires more data than those needed for training a \ac{nn}. Hence the proposed solution is effective in terms of both authentication performance and number of needed data.
+% Notice that the \acp{bs} positioning problem could be solved without implementing a \ac{nn} by mean of computation of the \acp{llr} for the different positions. However we showed in Section \ref{sec:shadow} that when considering multiple \acp{bs} and including shadowing effects the exact computation of the \ac{llr} curve requires more data than those needed for training a \ac{nn}. Hence the proposed solution is effective in terms of both authentication performance and number of needed data.
 
 \section{Attack strategies}
 \label{sec:attack}
@@ -647,7 +693,38 @@ This allows us to construct the manifold of the non-authentic area and hence to 
 
 In order to build the manifold of the training set we compute the outputs of the hidden layer when the vectors of the training set are fed as input. 
 
-\subsection{\acl{oclssvm} Attack}
+\subsection{Gradient-based \ac{rnn} attack}
+Consider a block of $N_{block}$ randomly generated attenuation vectors.The idea is here to feed this vectors to the \ac{rnn} trained with attenuation vectors from $\mathcal{A}_1$ and to compute the reconstruction error for each random vector. Then the vector $\bm{a}_f$ with higher reconstruction error is selected as a starting point for a possible successful attack. Considering the loss function of the \ac{rnn} we know that a higher reconstruction error means an higher probability that the vector belongs to the authentic area. Hence we start from vector $\bm{a}_{\rm max}$ and we move in the direction of maximum reconstruction error increase given by the gradient of (\ref{eq: rec err}).
+The forged vector that will be used for the attack is hence
+\begin{equation}\label{eq: rnn attack}
+    \bm{a}_f = \bm{a}_{\rm max}+ \delta \nabla_{\mathbf{a}}\epsilon(\bm{a}_{\rm max}).
+\end{equation}
+If the forged vector is not successful the attacker improve the training of the network by considering $\bm{a}_f$ as belonging to the non-authentic region and generates a new attack. The algorithm steps are shown in Algorithm \ref{alg:rnnGrad}.
+
+\begin{algorithm}[t]
+\label{alg:rnnGrad}
+  \algsetup{linenosize=\tiny}
+  \scriptsize
+
+ \KwData{ trained attack \ac{rnn}, $\delta$}
+ \KwResult{successful attack vector }
+ 
+
+ \Repeat{attack is successful}{
+        generate a block $A$ of random vectors \;
+        select $\bm{a}_{\rm max} = \underset{\bm{a} \in \bm{A}}{\min}\epsilon(\bm{a})$ \;
+        generate attack $\mathbf{a}_f$ via (\ref{eq: rnn attack})\;
+        perform the attack \;
+        \If{
+        	attack is not succesful}
+        	{update training of the \ac{rnn} with $\mathbf{a}_f$\;}
+      }
+    
+ \caption{Gradient-based \ac{rnn} attack}
+\end{algorithm}
+
+
+\subsection{\Acl{oclssvm} Attack}
 The attacker trains a \ac{oclssvm} with the training data coming only from the non-authentic area and his objective is now to forge an attack value $\mathbf{a_{f}}$ that will be accepted as authentic by the authentication system. We propose an euristic approach  exploiting the fact that the decision function for the attacker's trained \ac{oclssvm} would be
 \begin{equation}
 \mathbf{a} \in
