@@ -561,7 +561,7 @@ Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distan
 \begin{proof}
 Let us define the function 
 \begin{equation}
-	e(\mathbf{a},\mathbf{w},b) \triangleq \mathbf{w}^T \phi (\mathbf{a}) + b,	
+	e(\mathbf{a},\mathbf{w},b) \triangleq \mathbf{w}^T  \phi (\mathbf{a}) + b,	
 \end{equation}
 and consider 
 \begin{equation}
@@ -569,11 +569,24 @@ and consider
 		&\underset{\mathbf{w},b}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right) ^2} = \\
 		&\underset{\mathbf{w},b}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
 		&\underset{\mathbf{w},b}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
-		-2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
+		-2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a}
 		+ \int_{\mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
 	\end{aligned}	
 \end{equation}
-The double product inside the curly brackets does not depend on the parameters $(\mathbf{w},b)$ since for every value they assume, the projection $\mathbf{w}^T \phi (\mathbf{a})$ spans the whole $\mathbb{R}$, for varying $\mathbf{a}$. Similarly, the third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
+Consider the integral in the double product
+\begin{equation}
+		\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a} =
+		\int_{\mathbb{R}^n} \mathbf{w} ^T \left[ \phi (\mathbf{a}) + \frac{\mathbf{w}}{||\mathbf{w}||^2} b  \right] d\mathbf{a},		
+\end{equation}
+and perform the change of variable
+\begin{equation}
+	\mathbf{z} \triangleq \phi (\mathbf{a}) + \frac{\mathbf{w}}{||\mathbf{w}||^2} b, 	
+\end{equation}
+we can write, with a little abuse of notation
+\begin{equation}
+	...	
+\end{equation}
+The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
 \begin{equation}
 \label{eq:approx}
 	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
