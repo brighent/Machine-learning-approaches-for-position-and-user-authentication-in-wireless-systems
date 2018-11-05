@@ -505,7 +505,7 @@ We notice that the second term in brackets is the sum of the reconstruction erro
 \subsection{\Acl{oclssvm}}
 In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The soft output of the \ac{oclssvm} is 
 \begin{equation}
-	\tilde{t}_o = \mathbf{w} \phi(\mathbf{a}^(i)) - \rho		
+	\tilde{t}_o = \mathbf{w} \phi(\mathbf{a}^{(i)}) - \rho		
 \end{equation} 
 while the decision function is the same as in \eqref{eq:cases}, with $\tilde{t}_o$ in place of $\tilde{t}$. The training optimization problem is instead:
 \begin{subequations}
@@ -575,7 +575,7 @@ It follows that
 where $e_i^2 = (\mathbf{w}^T \phi (\mathbf{a}^{(i)}) -\rho)^2 $, the last equality follows from the law of large numbers, and the expected value is carried out \wrt the training $\mathbf{a}^{(i)}$.
 \end{proof}
 
-Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distance between any point $\phi(\mathbf{a}^{(i)})$ and the hyperplane $\mathbf{w}^T \phi (\mathbf{a}) + b = 0$ defined in the transformed space by the \ac{oclssvm}. We claim that $|e_i|$ is inversely proportional to $p(\mathbf{a}|\mathcal{H}_0)$ and we will prove that this holds in the mean-square sense. A direct consequence is that the \ac{oclssvm} approximates asymptotically the optimal decision rule of Section \ref{sec:oneClassOpt}. 
+%Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distance between any point $\phi(\mathbf{a}^{(i)})$ and the hyperplane $\mathbf{w}^T \phi (\mathbf{a}) + b = 0$ defined in the transformed space by the \ac{oclssvm}. We claim that $|e_i|$ is inversely proportional to $p(\mathbf{a}|\mathcal{H}_0)$ and we will prove that this holds in the mean-square sense. A direct consequence is that the \ac{oclssvm} approximates asymptotically the optimal decision rule of Section \ref{sec:oneClassOpt}. 
 
 \begin{theorem}
 	\label{th:onelsnp}
@@ -583,33 +583,30 @@ Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distan
 \end{theorem}
 
 \begin{proof}
+Let $(\mathbf{w}^*,e_i^*, \rho^*)$ be the solution for problem \eqref{eq:oneClassSvm}. We note that $\rho^* >0$. If this was not the case, then we cold define the new triplet $(-\mathbf{w}^*,e_i^*, -\rho^*)$ providing a lower value for $f_o(\mathbf{w},e_i,\rho)$. This is because from \eqref{eq:oneClass1} the first two terms of the sum remain unchanged, while in the third term we are now subtracting a positive value, yielding
+\begin{equation}
+		f_o(-\mathbf{w}^*,e_i^*, -\rho^*) < f_o(\mathbf{w}^*,e_i^*, \rho^*).
+\end{equation} 
 Let us define the function 
 \begin{equation}
-	e(\mathbf{a},\mathbf{w},b) \triangleq \mathbf{w}^T  \phi (\mathbf{a}) + b,	
+	e(\mathbf{a},\mathbf{w},\rho) \triangleq \mathbf{w}^T  \phi (\mathbf{a}) - \rho,	
 \end{equation}
 and consider 
 \begin{equation}
 	\begin{aligned}
-		&\underset{\mathbf{w},b}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right) ^2} = \\
-		&\underset{\mathbf{w},b}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
+		&\underset{\mathbf{w},b}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},b) - \left(-\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
+		&\underset{\mathbf{w},b}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) + \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
 		&\underset{\mathbf{w},b}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
-		-2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a}
+		+2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a}
 		+ \int_{\mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
 	\end{aligned}	
 \end{equation}
 Consider the integral in the double product
 \begin{equation}
 		\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a} =
-		\int_{\mathbb{R}^n} \mathbf{w} ^T \left[ \phi (\mathbf{a}) + \frac{\mathbf{w}}{||\mathbf{w}||^2} b  \right] d\mathbf{a},		
+		\int_{\mathbb{R}^n} \mathbf{w} ^T  \phi (\mathbf{a})d\mathbf{a} - \int_{\mathbb{R}^n} \rho d\mathbf{a},		
 \end{equation}
-and perform the change of variable
-\begin{equation}
-	\mathbf{z} \triangleq \phi (\mathbf{a}) + \frac{\mathbf{w}}{||\mathbf{w}||^2} b, 	
-\end{equation}
-we can write, with a little abuse of notation
-\begin{equation}
-	...	
-\end{equation}
+
 The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
 \begin{equation}
 \label{eq:approx}
