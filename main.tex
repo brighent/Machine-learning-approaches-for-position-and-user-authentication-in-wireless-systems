@@ -606,13 +606,17 @@ Consider the integral in the double product
 		\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a} =
 		\int_{\mathbb{R}^n} \mathbf{w} ^T  \phi (\mathbf{a})d\mathbf{a} - \int_{\mathbb{R}^n} \rho d\mathbf{a},		
 \end{equation}
-
-The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
+For what concerns the second integral in the r.h.s. we can write
 \begin{equation}
-\label{eq:approx}
-	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
-\end{equation} 
-in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
+		\int_{\mathbb{R}^n} \rho d\mathbf{a} = \rho \int_{\mathbb{R}^n} d\mathbf{a} = \sign(\rho) \infty = + \infty,
+\end{equation}
+since we have shown that at the optimum $\rho^*>0$.
+%The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
+%\begin{equation}
+%\label{eq:approx}
+%	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
+%\end{equation} 
+%in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
 \end{proof}
 
 % \section{BSs' optimal position}\label{sec:bsPos}
