@@ -503,17 +503,21 @@ We notice that the second term in brackets is the sum of the reconstruction erro
 
 
 \subsection{\Acl{oclssvm}}
-In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The \ac{oclssvm} defines the same decision function as in \eqref{eq:cases}, however the training optimization problem is slightly different:
+In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The soft output of the \ac{oclssvm} is 
+\begin{equation}
+	\tilde{t}_o = \mathbf{w} \phi(\mathbf{a}^(i)) - \rho		
+\end{equation} 
+while the decision function is the same as in \eqref{eq:cases}, with $\tilde{t}_o$ in place of $\tilde{t}$. The training optimization problem is instead:
 \begin{subequations}
 	\label{eq:oneClassSvm}
 	\begin{equation}
 	\label{eq:oneClass1}
-	\underset{\mathbf{w},e_i, b}{\text{min}} \quad f_o(\mathbf{w},\psi, b) \triangleq
-	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 + b 
+	\underset{\mathbf{w},e_i, \rho}{\text{min}} \quad f_o(\mathbf{w},\psi, \rho) \triangleq
+	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 - \rho 
 	\end{equation}
 	\begin{equation}
 	\label{eq:oneClassConstr}
-	\text{subject to}\, \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b = - e_i,  \quad i = 1,\dots S, 
+	\text{subject to}\, \rho - \mathbf{w}^T \phi (\mathbf{a}^{(i)})  = e_i,  \quad i = 1,\dots S, 
 	\end{equation}
 \end{subequations}
 where $C$ is a hyper-parameter.
@@ -525,10 +529,24 @@ We want to show that the \ac{oclssvm} is a machine that asymptotically approxima
 \label{lem:lem2}
 Given $S$ training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, problem \eqref{eq:oneClassSvm} is equivalent to 
 \begin{equation}
-		\underset{\mathbf{w},e_i, b}{\text{min}} \Exp{e_i}^2
+		\underset{\mathbf{w},e_i, \rho}{\text{min}} \Exp{e_i}^2
 \end{equation}
 \end{lemma}
 \begin{proof}
+We first proceed as in the proof of Theorem \ref{th:lsnp} and re-write problem \eqref{eq:oneClassSvm} as
+	\begin{subequations}
+		\label{eq:oclssvm22}
+		\begin{equation}
+		\label{eq:oclssvm2}
+		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e,\rho) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j^2 - \rho  
+		\end{equation}
+		\begin{equation}
+		\label{eq:ocstpart2}
+		\text{subject to}\,  \rho - \mathbf{w}^T \phi (\mathbf{a}^{(i)})  = e_i,  \quad i = 1,\dots M, 
+		\end{equation}		
+	\end{subequations} 
+Note that differently from \eqref{eq:lssvm22} we have only $M$ constraints (and not $2M$) because we have target labels only of one class.
+
 In the dual formulation of \eqref{eq:oneClassSvm} we can express $\mathbf{w}$ and $b$ as a function of the kernel and Langrange multipliers $\{u_j\}$ \cite{choi2009least}
 \begin{equation}
 \begin{aligned}
