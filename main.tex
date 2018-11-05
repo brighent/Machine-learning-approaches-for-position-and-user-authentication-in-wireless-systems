@@ -594,10 +594,10 @@ Let us define the function
 and consider 
 \begin{equation}
 	\begin{aligned}
-		&\underset{\mathbf{w},b}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},b) - \left(-\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
-		&\underset{\mathbf{w},b}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) + \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
-		&\underset{\mathbf{w},b}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},b) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
-		+2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a}
+		&\underset{\mathbf{w},\rho}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},\rho) - \left(-\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
+		&\underset{\mathbf{w},\rho}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) + \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
+		&\underset{\mathbf{w},\rho}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},\rho) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
+		+2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},\rho) d\mathbf{a}
 		+ \int_{\mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
 	\end{aligned}	
 \end{equation}
@@ -608,7 +608,7 @@ Consider the integral in the double product
 \end{equation}
 For what concerns the second integral in the r.h.s. we can write
 \begin{equation}
-		\int_{\mathbb{R}^n} \rho d\mathbf{a} = \rho \int_{\mathbb{R}^n} d\mathbf{a} = \sign(\rho) \infty = + \infty,
+		\int_{\mathbb{R}^n} \rho d\mathbf{a} = \rho \int_{\mathbb{R}^n} d\mathbf{a} = \sign(\rho) (+\infty) = + \infty,
 \end{equation}
 since we have shown that at the optimum $\rho^*>0$.
 %The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
