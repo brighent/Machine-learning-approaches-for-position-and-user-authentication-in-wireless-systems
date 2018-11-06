@@ -556,7 +556,7 @@ We now solve \eqref{eq:oclssvm22} using the same steps as in \cite{choi2009least
 with $M+1$ unknowns and $M+1$ equations which therefore provides finite convergence values for $\{\rho,u_i\}_{i=1}^{i=M}$.
 In the dual formulation of \eqref{eq:oneClassSvm} we can express $\mathbf{w}$ as a function of the kernel and Langrange multipliers $\{u_j\}$ 
 \begin{equation}
-\mathbf{w}^T\mathbf{w} = \sum_{i=1}^{S} \sum_{j=1}^{S} u_i u_j k(\bm{\alpha}_i,\bm{\alpha}_j), 
+\mathbf{w}^T\mathbf{w} = \sum_{i=1}^{M} \sum_{j=1}^{M} u_i u_j k(\bm{\alpha}_i,\bm{\alpha}_j), 
 \end{equation}
 which, given the finiteness of the sum, converges.
 We can now write
@@ -778,7 +778,16 @@ This suggests that the attacker could start from the training point $\mathbf{a}_
 \end{equation} 
 where $\nabla_{\mathbf{a}}$ is the gradient operator \wrt $\mathbf{a}$. Exploiting the dual formulation \cite{choi2009least} we can write
 \begin{equation}
+\label{eq:gradient}
 		\nabla_{\mathbf{a}} \tilde{t} = \sum_{j=1}^{S} u_j \nabla_{\mathbf{a}} k(\mathbf{a}_j,\mathbf{a}).
+\end{equation}
+Using the radial-basis kernel
+\begin{equation}
+k(\mathbf{a}_j,\mathbf{a}_i) = e^{-\frac{||\mathbf{a}_j-\mathbf{a}_i||^2}{2\sigma^2}},
+\end{equation}
+the explicit expression for the gradient in \eqref{eq:gradient} is
+\begin{equation}
+	\nabla_{\mathbf{a}} \tilde{t} =\frac{1}{\sigma^2} \sum_{j=1}^{S} u_j k(\mathbf{a}_j,\mathbf{a}) (\mathbf{a}_j - \mathbf{a}).
 \end{equation}
 Next, the attacker forges the point
 \begin{equation}
