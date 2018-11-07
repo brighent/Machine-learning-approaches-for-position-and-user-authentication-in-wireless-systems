@@ -54,9 +54,9 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 
-\title{Machine learning approaches for position and user authentication in wireless systems}
-\author{ }
-\date{}
+\title{Machine Learning Approaches For Position And User Authentication In Wireless Systems}
+\author{\small Alessandro Brighente, Francesco Formaggio, Giorgio Maria Di Nunzio, and  Stefano Tomasin }
+\date{\today}
 
 
 %\usepackage[autostyle]{csquotes}
@@ -80,7 +80,7 @@ Physical layer security, authentication, neural network, auto-encoder, support v
 \end{IEEEkeywords}
 
 \glsresetall
-
+\clearpage
 \section{Introduction}
 Traditional authentication systems are based on upper-layer techniques such as cryptography. However, as the network latency requirement becomes stricter, the timely sharing of security keys in large and dense networks may not be supported by this type of networks. This is further complicated by the computational cost of key generation and detection. On the other hand, as the computational power of devices grows, the time spent in cracking a digital security key may be remarkably shortened \cite{Wang-16}. Physical layer techniques have been proposed as an alternative to digital key generation. These techniques exploit properties of the communication channel such as the \ac{rss} to distinguish radio transmitters. In this paper, we exploit area specific attenuation values to distinguish between a legitimate and non-legitimate area, implementing in such a way a location-based authentication system.
 
@@ -820,7 +820,9 @@ where $\delta$ is a parameter, and performs the attack. If it does not succeed, 
 \end{algorithm}
 
 
-\section{Numerical results: los scenario}\label{sec:res_los}
+\section{Numerical Results}
+
+\subsection{LOS scenario}\label{sec:res_los}
 In order to confirm the theoretical results obtained so far and compare the different solutions we test the performance of the authentication systems based on two measures: the \textit{true positive rate} and the \textit{false positive rate}. 
 
 Let us define as \textit{true positive} the number of \acp{ue} located in area $\mathcal{A}_0$ which are considered in area $\mathcal{A}_0$ by the authentication system, whereas we define as \textit{false positive} the number of \acp{ue} located in area $\mathcal{A}_1$ which are considered in area $\mathcal{A}_0$ by the authentication system. Furthermore let us define as \textit{true negative} the number of \acp{ue} located in area $\mathcal{A}_1$ which are considered in area $\mathcal{A}_1$ by the authentication system, whereas we define as \textit{false negative} the number of \acp{ue} located in area $\mathcal{A}_0$ which are considered in area $\mathcal{A}_1$ by the authentication system.
@@ -868,7 +870,8 @@ Fig. \ref{fig:ceVSmse} show the true positive rate vs. false positive rate obtai
 
 
 
-\section{Numerical results: non-los scenario}\label{sec:res_nLos}
+
+\subsection{No LOS Scenario}
 \subsection{Shadowing effects}\label{sec:shadow}
 In this section we consider the non-\ac{los} scenario and we show that the \ac{ml}-based solutions are convenient over the \ac{np}-based one.
 
