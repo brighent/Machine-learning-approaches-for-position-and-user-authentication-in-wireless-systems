@@ -377,7 +377,7 @@ Let us first consider the following lemma that establishes the convergence of th
 	where $\E_t(\mathbf{w},b) = \Exp{\left(y_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
 	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
 	\begin{equation}
-	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	< \infty.
+	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
 	\end{equation} 
 	The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
 	\begin{equation}
