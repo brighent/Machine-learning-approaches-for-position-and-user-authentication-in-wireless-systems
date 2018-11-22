@@ -794,7 +794,7 @@ In order to confirm the theoretical results obtained so far and compare the diff
 The attenuation value measured at the \ac{ap} for a user is given by (\ref{eq:los}), where we consider a unitary transmitting power for each user and a carrier frequency of $2.12$ GHz. The path-loss coefficient is $\nu=3$. 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_com_CE_MSE.eps}
+    \includegraphics[width=0.5\columnwidth]{res_com_CE_MSE_SVM.eps}
     \caption{True positive rate vs. false positive rate obtained in the LOS scenario with a single BS. Comparison between NP detector, MLP with MSE training and MLP with CE training with different number of neurons $N_h$ in the hidden layer.}
     \label{fig:ceVSmse}
 \end{figure}
@@ -838,7 +838,7 @@ Fig. \ref{fig:rnnMLP} compares the performance of the \ac{mlp}-based solution wi
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_NP_approx.eps}
+    \includegraphics[width=0.5\columnwidth]{res_NP_approx_SVM.eps}
     \caption{True positive rate vs. false positive rate for the attenuation map in Fig. \ref{fig:map}. Comparison between the \ac{np}-based and the \ac{mlp}-based detectors}
     \label{fig:trueMap}
 \end{figure}
@@ -868,9 +868,40 @@ Different fading realizations lead to different statistical characterization of 
 
 Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in non-\ac{los} scenario with fading effects. Different number of fading realizations for training a \ac{mlp} with \ac{mse} loss function has been considered. We notice that as the number $N_{\rm avg}$ of fading realizations used for training increases the performance of the network get closer to those obtained without considering the fading effects. Furthermore we notice that, as expected, with a larger number of \acp{ap} the performance of the system increase, as can be seen comparing the curve in Fig. \ref{fig:trueMap} and the 'No fading' curve in Fig. \ref{fig:faded}.
 
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\columnwidth]{Navg.eps}
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_SVM.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nFading.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nFading_SVM.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nFading_oneClass.eps}
     \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
     \label{fig:faded}
 \end{figure}
