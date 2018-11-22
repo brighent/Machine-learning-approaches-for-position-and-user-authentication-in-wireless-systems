@@ -577,10 +577,37 @@ We first proceed as in the proof of Theorem \ref{th:lsnp} and re-write problem \
 		\end{equation}		
 	\end{subequations} 
 Note that differently from \eqref{eq:lssvm22} we have only $M$ constraints (and not $2M$) because we have target labels only of one class.
-We now solve \eqref{eq:oclssvm22} using the same steps as in \cite{choi2009least} and we get the system of equations
+We now solve \eqref{eq:oclssvm22} using the same steps as in \cite{choi2009least}. Let us define the Lagrangian
+\begin{equation}
+	\mathcal{L} = 	\frac{1}{2} \mathbf{w}^T \mathbf{w} - \rho +
+	C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j^2 - 
+	\sum_{j=1}^{M} u_j \left[ \mathbf{w}^T \phi (\mathbf{a}^{(j)}) -\rho + e_j \right],
+\end{equation}
+and set to zero the derivatives w.r.t. optimization variables and multipliers $u_j$
+
+\begin{subequations}
+\begin{equation}
+\label{eq:derivatives1}
+\frac{\partial \mathcal{L}}{\partial \mathbf{w}}: \quad \mathbf{w} = \sum_{j=1}^{M} u_j \phi (\mathbf{a}^{(j)}), 		
+\end{equation}
+  \begin{equation}
+  \label{eq:derivatives2}
+  		\frac{\partial \mathcal{L}}{\partial \mathbf{e_j}}: \quad CS p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j = u_j \quad
+  		 j=1,\dots, M,
+  \end{equation}
+  \begin{equation}
+  \label{eq:derivatives3}
+  		\frac{\partial \mathcal{L}}{\partial \rho}: \quad \sum_{j=1}^{M} u_j = 1
+  \end{equation}
+  \begin{equation}
+  \label{eq:derivatives4}
+  	\frac{\partial \mathcal{L}}{\partial \mathbf{u_j}}:	\quad \phi (\mathbf{a}^{(j)}) \mathbf{w} + e_j - \rho = 0.
+  \end{equation}
+\end{subequations}
+Substituting \eqref{eq:derivatives1} and \eqref{eq:derivatives2} in \eqref{eq:derivatives4} we get the system of equations
 \begin{equation}
 \begin{aligned}
-	&\sum_{i=1}^{M}  u_i k( \mathbf{a}^{(i)},\mathbf{a}^{(j)}) - \rho + \frac{u_j}{Cp_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1)}=0 \quad j = 1,\dots, M\\
+	&\sum_{i=1}^{M}  u_i k( \mathbf{a}^{(i)},\mathbf{a}^{(j)}) - \rho + \frac{u_j}{SCp_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1)}=0 \quad j = 1,\dots, M\\
 	&\sum_{i=1}^{M}u_i=1,
 \end{aligned}	
 \end{equation}
@@ -624,6 +651,7 @@ Let us define the function
 \end{equation}
 and consider 
 \begin{equation}
+\label{eq:coreTheorem}
 	\begin{aligned}
 		&\underset{\mathbf{w},\rho}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},\rho) - \left(-\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
 		&\underset{\mathbf{w},\rho}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) + \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
@@ -641,7 +669,19 @@ For what concerns the second integral in the r.h.s. we can write
 \begin{equation}
 		\int_{\mathbb{R}^n} \rho d\mathbf{a} = \rho \int_{\mathbb{R}^n} d\mathbf{a} = \sign(\rho) (+\infty) = + \infty,
 \end{equation}
-since we have shown that at the optimum $\rho^*>0$.
+since we have shown that at the optimum $\rho^*>0$. Now, using \eqref{eq:derivatives1}, we can write the first integral as
+\begin{equation}
+\begin{aligned}
+		&\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},\rho) d\mathbf{a} = \int_{\mathbb{R}^n} \sum_{j=1}^{M} u_j k(\bm{a}_j,\bm{a})d\mathbf{a} \\
+		&= \sum_{j=1}^{M} u_j \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\mathbf{a} = \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\mathbf{a},
+\end{aligned},
+\end{equation}
+where we used \eqref{eq:derivatives3}.
+Note that the only term in the last line of \eqref{eq:coreTheorem} that depends on the optimization variables $\{\mathbf{w}, \rho \}$  is 
+\begin{equation}
+		\Exp{  e^2(\mathbf{a}, \mathbf{w}, \rho)} = \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},\rho) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a},
+\end{equation}
+which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function optimized by the \ac{lssvm}.
 %The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
 %\begin{equation}
 %\label{eq:approx}
@@ -737,6 +777,7 @@ The attacker trains a \ac{oclssvm} with the training data coming only from the n
 		\mathcal{A}_0 \quad \text{if} \quad \tilde{t} < \Lambda.
 	\end{cases}	
 \end{equation} 
+Moreover, from Theorem \ref{th:onelsnp} we know that the more $\tilde{t}$ decreases, the more $p(\mathbf{a}|\mathcal{H}_0)$ decreases as well.
 This suggests that the attacker could start from the training point $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ and then moving along the direction of greatest decrease $\mathbf{d}$, given by
 \begin{equation}
 \label{eq:dDef}
