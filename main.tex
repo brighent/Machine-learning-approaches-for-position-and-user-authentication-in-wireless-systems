@@ -237,18 +237,18 @@ In sections \ref{sec: mse_train} and \ref{sec: ce_train} we investigate the effe
 Note that this approach does not require the knowledge of the statistics of $\bm{y}$ under the two hypotheses, while instead it requires a large enough set of training points $S$ to converge. In the following we show that for $S$ large enough we obtain the same performance (\ac{fa} and \ac{md}) probabilities of the \ac{np} solution in the \ac{los} scenario of section \ref{sec:los}.
 
 \subsection{Support Vector Machine}\label{sec:svm}
-A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input vector $\bm{y}^{(0)} \in \mathbb{R}^N$ the \ac{svm} returns $\hat{t} = 1$ if $\bm{y}^{(0)}$ belongs to class 0 whereas $\hat{t}=-1$ if $\bm{y}^{(0)}$ belongs to class 1. It comprises the function $\tilde{t}: \mathbb{R}^N \to \mathbb{R}$ defined by
+A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input vector $\bm{y} \in \mathbb{R}^N$ the \ac{svm} returns $\hat{t} = 1$ if $\bm{y}$ belongs to class 0 whereas $\hat{t}=-1$ if $\bm{y}$ belongs to class 1. It comprises the function $\tilde{t}(\mathbf{y}): \mathbb{R}^N \to \mathbb{R}$ defined by
 \begin{equation}
 \label{eq:svm}
-\tilde{t} = \mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b,
+\tilde{t}(\mathbf{y}) = \mathbf{w}^T \phi (\bm{y}) + b,
 \end{equation}
 where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter, and the decision function is
 \begin{equation}
 \label{eq:cases}
 \hat{t} = 
 \begin{cases}
-+1 \quad \tilde{t}  \geq \gamma^* \\
--1 \quad \tilde{t}  < \gamma^*,
++1 \quad \tilde{t}(\mathbf{y})  \geq \gamma^* \\
+-1 \quad \tilde{t}(\mathbf{y})  < \gamma^*,
 \end{cases}		
 \end{equation} 
 where $\gamma^*$ is a fixed threshold and controls \ac{fa} and \ac{md} probabilities. Note that in the classical \ac{svm} formulation we have $\gamma^* = 0$.
@@ -331,7 +331,7 @@ For the learning phase of \ac{svm} we consider the \ac{lssvm}, an extension of t
 	\label{eq:lssvm}
 	\begin{equation}
 	\label{eq:lssvmOrig}
-	\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
+	\underset{\mathbf{w},e}{\text{min}} \quad f_l \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
 	\end{equation}
 	\begin{equation}
 	\label{eq:stpart}
@@ -342,9 +342,9 @@ For the learning phase of \ac{svm} we consider the \ac{lssvm}, an extension of t
 From the constraints in \eqref{eq:lssvm} and the fact that $t_i = \pm 1$ we have
 \begin{equation}
 \label{eq:els}
-e_i^2 = (1 - t_iy(\mathbf{a}^{(i)}) )^2 = (t_i - y(\mathbf{a}^{(i)}))^2,
+e_i^2 = (1 - t_i\tilde{t}(\mathbf{a}^{(i)}) )^2 = (t_i - \tilde{t}(\mathbf{a}^{(i)}))^2,
 \end{equation}
-that is the squared error between the soft output of the \ac{lssvm} $y(\mathbf{a}^i)$ and the correct training label $t_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classifiers. 
+that is the squared error between the soft output of the \ac{lssvm} $\tilde{t}(\mathbf{a}^i)$ and the correct training label $t_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classifiers. 
 
 Let us first consider the following lemma that establishes the convergence of the learning phase of \ac{svm}, as the training sample set becomes large.
 
@@ -365,7 +365,7 @@ Let us first consider the following lemma that establishes the convergence of th
 		\label{eq:lssvm22}
 		\begin{equation}
 		\label{eq:lssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_l \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
+		\underset{\mathbf{w},e}{\text{min}} \quad f_l' \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
 		\end{equation}
 		\begin{equation}
 		\label{eq:stpart2}
@@ -378,7 +378,7 @@ Let us first consider the following lemma that establishes the convergence of th
 	\end{subequations}
 	whose solution provides the convergence value (in probability) of vector $\bm{w}$. We write the Lagrangian
 	\begin{equation}
-	\mathcal{L}_1 = f_l - \sum_{k=1}^{M} v_k \left[ \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} \right] 
+	\mathcal{L}_1 = f_l' - \sum_{k=1}^{M} v_k \left[ \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} \right] 
 	- \sum_{k=1}^{M} u_k \left[- \mathbf{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + e_{j,-1} \right], 
 	\end{equation}
 	where $\{u_k,v_k\}_{k=1}^{M}$ are the Lagrangian multipliers. Let us set to zero the derivatives w.r.t. $\{\mathbf{w},b,e_{j,1},e_{j,-1}, v_j,u_j\}$
@@ -442,15 +442,15 @@ Let us first consider the following lemma that establishes the convergence of th
 
 \begin{theorem}
 	\label{th:lsnp}
-	Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l(\mathbf{w},e)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classifier obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classifier obtained via \ac{np} lemma.
+	Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $f_l$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classifier obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the classifier obtained via \ac{np} lemma.
 \end{theorem}
 \begin{proof}
 	From \eqref{eq:lssvmOrig} consider
 	\begin{equation}
 	\label{eq:lssvmDim1}
-	\lim_{S \to +\infty} \frac{1}{S} f_l(\mathbf{w},e) =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
+	\lim_{S \to +\infty} \frac{1}{S} f_l =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
 	\end{equation}
-	where $\E_t(\mathbf{w},b) = \Exp{\left(t_i - y(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
+	where $\E_t(\mathbf{w},b) = \Exp{\left(t_i - \tilde{t}(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
 	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
 	\begin{equation}
 	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
@@ -586,7 +586,7 @@ while the decision function is the same as in \eqref{eq:cases}, with $\tilde{t}_
 	\label{eq:oneClassSvm}
 	\begin{equation}
 	\label{eq:oneClass1}
-	\underset{\mathbf{w},e_i, \rho}{\text{min}} \quad f_o(\mathbf{w},e_i, \rho) \triangleq
+	\underset{\mathbf{w},e_i, \rho}{\text{min}} \quad f_o \triangleq
 	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 - \rho 
 	\end{equation}
 	\begin{equation}
@@ -612,7 +612,7 @@ We first proceed as in the proof of Theorem \ref{th:lsnp} and re-write problem \
 		\label{eq:oclssvm22}
 		\begin{equation}
 		\label{eq:oclssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e,\rho) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_j^2 - \rho  
+		\underset{\mathbf{w},e}{\text{min}} \quad f_0' = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_j^2 - \rho  
 		\end{equation}
 		\begin{equation}
 		\label{eq:ocstpart2}
