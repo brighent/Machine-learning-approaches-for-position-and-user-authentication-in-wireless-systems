@@ -827,7 +827,7 @@ where $\delta$ is a parameter, and performs the attack. If it does not succeed, 
 \end{algorithm}
 
 
-\section{Numerical Results}
+\section{Numerical Results: two class classifcation}
 
 \subsection{LOS scenario}\label{sec:res_los}
 In order to confirm the theoretical results obtained so far and compare the different solutions we test the performance of the \ac{irlv} systems in the scenario described in \ref{sec:los}.
@@ -848,7 +848,7 @@ Fig. \ref{fig:ceVSmse} show the \ac{fa} vs. the \ac{md} probabilities obtained b
 \subsection{No LOS Scenario}\label{sec:res_nLos}
 In this section we consider the non-\ac{los} scenario and we show that the \ac{ml}-based solutions are convenient over the \ac{np}-based one.
 
-Fig. \ref{fig:map} shows a realization of the attenuation map. A spatial grid has been created in order to take into account the shadowing spatial correlation over different locations in space. The network includes a single \ac{ap} located at the map center and a squared authentic area $\mathcal{A}_0$, delimited in figure by the red line. Furthermore we consider two \ac{los} paths, one parallel to the $x$ axis and one parallel to the $y$ axis and intersecting at the map center.
+Fig. \ref{fig:map} shows a realization of the attenuation map. A spatial grid has been created in order to take into account the shadowing spatial correlation over different positions. The network includes a single \ac{ap} located at the map center and a squared authentic area $\mathcal{A}_0$, delimited in figure by the red line. Furthermore we consider two \ac{los} paths, one parallel to the $x$ axis and one parallel to the $y$ axis and intersecting at the map center.
 
 Consider the \ac{llr} (\ref{eq:lr}). In the non-\ac{los} context the computation of the two area dependent probabilities has no closed-form solution. A numerical solution is obtained by sampling the attenuation values over the spatial grid of positions. Consider an attenuation value $\hat{a}$: the probability of measuring $\hat{a}$ given that the \ac{ue} is located in area $\mathcal{A}_0$ is given by the number of positions $(x_u,y_u)$ inside $\mathcal{A}_0$ where the measured attenuation $a(x_u,y_u)=\hat{a}$ over the total number of positions $(x_u,y_u)$ in the entire map with the same attenuation $\hat{a}$, i.e.
 \begin{equation}
@@ -860,10 +860,10 @@ An approximation of equation (\ref{eq:lr} is hence obtained as
 \end{equation}
 The approximation gets closer to the real value as the number of grid points over the map increases, as an higher number of points means a better statistical characterization of the attenuation over the map area.
 
-Fig. \ref{fig:trueMap} shows the true positive rate vs. the false positive rate obtained for the attenuation map in Fig. \ref{fig:map}. In particular we here compare the results obtained with approximation (\ref{eq:lrApp}) with the results obtained with the \ac{mse} trained \ac{mlp} with different number of neurons in the hidden layer.
-For the computation of (\ref{eq:lrApp}) we built a grid with $4.46 \cdot 10^6$ space points, whereas for training and testing the \ac{mlp} we used respectively $10^5$ and $10^6$ points. We notice that the \ac{mlp} achieves better results than the \ac{np}-based detector. This means that the considered number of grid points is not sufficient to approximate the optimal \ac{np} solution. Furthermore we tested the \ac{mlp} with $1,3$ and $10$ neurons at the hidden layer. We see that the performance with $1$ and $3$ neurons are the same, whereas with $10$ neurons we achieve the \ac{np} solution, based on the results of the previous section. 
+Fig. \ref{fig:trueMap} shows the true positive rate vs. the false positive rate obtained for the attenuation map in Fig. \ref{fig:map}. In particular we here compare the results obtained with approximation (\ref{eq:lrApp}) with the results obtained with the \ac{mse} trained \ac{mlp} with different number of neurons $N_h$ in the hidden layer and with \ac{svm}.
+In order to compute (\ref{eq:lrApp}) we built a grid with $4.46 \cdot 10^6$ space points, whereas for training and testing the \ac{mlp} and the \ac{svm} we used respectively $10^3$ and $10^6$ points. We notice that both the \ac{mlp} and the \ac{svm} achieve better results than the \ac{np}-based detector. This means that the considered number of grid points is not sufficient to approximate the optimal \ac{np} solution. Furthermore we tested the \ac{mlp} with $3$ and $10$ neurons at the hidden layer. We see that with $10$ neurons \ac{mlp} and \ac{svm} attain the same performance. 
 
-Comparing the number of grid points and the number of training points used for the \ac{mlp} we can hence conclude that the \ac{mlp}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points to achieve the optimal solution. Furthermore this implies that the \ac{mlp}-based \ac{irlv} system can be implemented without a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
+Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
 
 Consider the network in Fig. \ref{fig:mBS}. $N_{\rm bs}=5$ \acp{ap} gather attenuation values from the \acp{ue}. Each \ac{ap} has its own attenuation map given by path loss, shadowing and fading realization. Each \ac{ap} gathers the attenuation value of the transmitting \ac{ue} and sends it to the central unit, which builds the attenuation vector $\bm{a}$ that is used for discriminating the location of the considered \ac{ue}.
 
@@ -906,7 +906,7 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nTrain.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{Convergence of \ac{mlp}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{mlp} with $N_h = 6$ and with different training set size.}
     \label{fig:faded}
 \end{figure}
 
@@ -914,28 +914,31 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_SVM.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{Convergence of \ac{svm}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{svm} with different training set size.}
     \label{fig:faded}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nFading.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{mlp} with $N_h = 6$ and with different fading realizations.}
     \label{fig:faded}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nFading_SVM.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{svm} with different fading realizations.}
     \label{fig:faded}
 \end{figure}
+
+\section{Numerical Results: two class classification}
+We here present numerical results for the scenario where the available data for training comes only from one of the two regions. 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_ae_onNeur.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with different values of $N_h$}
     \label{fig:faded}
 \end{figure}
 
@@ -943,14 +946,14 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_oneClass.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{Convergence of \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$ and with different training set size.}
     \label{fig:faded}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nFading_oneClass.eps}
-    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$ and with different fading realizations.}
     \label{fig:faded}
 \end{figure}
 \newpage 
