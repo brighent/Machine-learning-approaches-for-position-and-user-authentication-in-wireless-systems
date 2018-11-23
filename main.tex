@@ -836,11 +836,11 @@ The attenuation value measured at the \ac{ap} for a user is given by (\ref{eq:lo
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_com_CE_MSE_SVM.eps}
-    \caption{True positive rate vs. false positive rate obtained in the LOS scenario with a single BS. Comparison between NP detector, MLP with MSE training and MLP with CE training with different number of neurons $N_h$ in the hidden layer.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ obtained in the LOS scenario with a single BS. Comparison between NP detector, \ac{mlp} with \ac{mse} training and CE training and \ac{svm}.}
     \label{fig:ceVSmse}
 \end{figure}
 
-Fig. \ref{fig:ceVSmse} show the \ac{fa} vs. the \ac{md} probabilities obtained by the \ac{irlv} system with $10^6$ training points and $10^6$ testing points. In particular we here compare the performance of the \ac{np} detector with the \ac{ce}-trained and with the \ac{mse}-trained \acp{mlp}. Furthermore we show the performance of the \acp{mlp} when the number of neurons in the hidden layer is $N_h=1,2 $ and $3$. We first notice that the \ac{ce}-trained and \ac{mse}-trained \acp{mlp} obtain the same performance when considering the same number of neurons in the hidden layer. This confirms that the two training methods are performing hypothesis testing in an equivalent manner. Furthermore we notice that as the number of neurons at the hidden layer grows the performance of the \ac{mlp} classifiers approach those obtained by the \ac{np} classifier, up to the point where they are the same with $N_h=3$ neurons. This shows that both \ac{ce}-trained and \ac{mse}-trained \acp{mlp} are performing the optimal \ac{np} test and that convergence is obtained with a small number of neurons.
+Fig. \ref{fig:ceVSmse} show the \ac{fa} vs. the \ac{md} probabilities obtained by the \ac{irlv} system with $10^6$ training points and $10^6$ testing points. In particular we here compare the performance of the \ac{np} detector with the \acp{mlp} with both \ac{mse} and \ac{ce} loss functions and \ac{svm}. Furthermore we show the performance of the \acp{mlp} with different number of neurons $N_h$ in the hidden layer. We first notice that the \ac{ce}-trained and \ac{mse}-trained \acp{mlp} obtain the same performance when considering the same number of neurons in the hidden layer. This confirms that the two training methods are performing hypothesis testing in an equivalent manner. Furthermore we notice that as the number of neurons at the hidden layer grows the performance of the \ac{mlp} classifiers approach those obtained by the \ac{np} classifier, up to the point where they are the same with $N_h=3$ neurons. This shows that both \ac{ce}-trained and \ac{mse}-trained \acp{mlp} are performing the optimal \ac{np} test and that convergence is obtained with a small number of neurons. Furthermore we notice that \ac{svm} attains the same performance of the \ac{mlp} with $N_h = 3$ and hence of the \ac{np} detector, confirming that hypothesis testing performed via \ac{svm} is optimal in the \ac{np} sense.
 
 
 
@@ -891,13 +891,6 @@ Fig. \ref{fig:rnnMLP} compares the performance of the \ac{mlp}-based solution wi
     \label{fig:mBS}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{RNNvsMLPnNeur.jpg}
-    \caption{True positive rate vs. false positive rate for the network configuration in Fig. \ref{fig:mBS}. Comparison between the \ac{mlp}-based and the \ac{ae}-based detectors with different number of neurons in the hidden layer.}
-    \label{fig:rnnMLP}
-\end{figure}
-
 
 \subsection{Fading effects}\label{sec:res_fading}
 Let us now include the fading effects. The attenuation in point $(x_u,y_u)$ is a Gaussian random variable with zero mean and variance given by the inverse of the value of the map in $(x_u,y_u)$.
@@ -939,6 +932,20 @@ Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in
     \label{fig:faded}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_ae_onNeur.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_oneClass.eps}
+    \caption{True positive rate vs. false positive rate in non-LOS scenario with fading effects. Comparison between training with different number of fading realizations.}
+    \label{fig:faded}
+\end{figure}
 
 \begin{figure}
     \centering
