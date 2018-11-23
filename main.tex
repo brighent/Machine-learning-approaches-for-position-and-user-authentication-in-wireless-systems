@@ -903,79 +903,74 @@ An approximation of equation (\ref{eq:lr} is hence obtained as
 \end{equation}
 The approximation gets closer to the real value as the number of grid points over the map increases, as an higher number of points means a better statistical characterization of the attenuation over the map area.
 
-Fig. \ref{fig:trueMap} shows the true positive rate vs. the false positive rate obtained for the attenuation map in Fig. \ref{fig:map}. In particular we here compare the results obtained with approximation (\ref{eq:lrApp}) with the results obtained with the \ac{mse} trained \ac{mlp} with different number of neurons $N_h$ in the hidden layer and with \ac{svm}.
+Fig. \ref{fig:trueMap} shows the \ac{md} probability vs. the \ac{fa} probability obtained for the attenuation map in Fig. \ref{fig:map}, where only path loss and shadowing are considered. In particular we here compare the results obtained with approximation (\ref{eq:lrApp}) with the results obtained with the \ac{mse} trained \ac{mlp} with different number of neurons $N_h$ in the hidden layer and with \ac{svm}.
 In order to compute (\ref{eq:lrApp}) we built a grid with $4.46 \cdot 10^6$ space points, whereas for training and testing the \ac{mlp} and the \ac{svm} we used respectively $10^3$ and $10^6$ points. We notice that both the \ac{mlp} and the \ac{svm} achieve better results than the \ac{np}-based detector. This means that the considered number of grid points is not sufficient to approximate the optimal \ac{np} solution. Furthermore we tested the \ac{mlp} with $3$ and $10$ neurons at the hidden layer. We see that with $10$ neurons \ac{mlp} and \ac{svm} attain the same performance. 
 
-Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
-
-Consider the network in Fig. \ref{fig:mBS}. $N_{\rm bs}=5$ \acp{ap} gather attenuation values from the \acp{ue}. Each \ac{ap} has its own attenuation map given by path loss, shadowing and fading realization. Each \ac{ap} gathers the attenuation value of the transmitting \ac{ue} and sends it to the central unit, which builds the attenuation vector $\bm{a}$ that is used for discriminating the location of the considered \ac{ue}.
-
-Fig. \ref{fig:rnnMLP} compares the performance of the \ac{mlp}-based solution with those of the \ac{ae}-based solution. Results have been obtained for the network configuration in Fig. \ref{fig:mBS}. Both architectures have been trained over a set of $10^5$ attenuation vectors and tested over the same set of $10^5$ attenuation vectors. Notice that the training set of the \ac{mlp} comprises attenuation vectors measured in both $\mathcal{A}_0$ and $\mathcal{A}_1$. The \ac{mlp} is trained with \ac{mse} loss function and we compare the results obtained with a number of neurons in the hidden layer from $1$ to $5$. The performance of the \ac{ae}-based solution are here presented for a number of neurons in the hidden layer from $1$ to $5$. Both architectures are composed by an input layer, a hidden layer and an output layer. Curves for the \ac{mlp} are obtained by varying the threshold value $\lambda$, whereas for \ac{ae} are obtained by varying the threshold value $\gamma$. We notice that the performance of the \ac{ae} with £4£ neurons in the hidden layer are better compared to those obtained with the \ac{ae} with $4$ and $5$ neurons in the hidden layer. This is due to the fact that the features extracted by $3$ neurons in the hidden layer better represent data in $\mathcal{A}_0$, whereas $4$ and $5$ neurons are over-representative. This confirms that the feature extraction process of the \ac{ae} is an efficient way to represent a set. We further notice that the performance of the \ac{ae} with $2$ neurons in the hidden layer are worse than those obtained with the \ac{ae} with $3$ neurons in the hidden layer. This is due to the fact that $2$ neurons are not sufficient for the feature extraction process to provide a good characterization of area $\mathcal{A}_0$. We notice that the performance obtained with the \ac{mlp}-solution are better than those obtained with the \ac{ae}. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{surfColorato.png}
-    \caption{Example of a realization of the attenuation map in the non-\ac{los} scenario considering only the shadowing effects.}
-    \label{fig:map}
-\end{figure}
-
-
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_NP_approx_SVM.eps}
     \caption{True positive rate vs. false positive rate for the attenuation map in Fig. \ref{fig:map}. Comparison between the \ac{np}-based and the \ac{mlp}-based detectors}
     \label{fig:trueMap}
 \end{figure}
 
-\begin{figure}
+Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{surfColorato.png}
+    \caption{Example of a realization of the attenuation map in the non-\ac{los} scenario considering only the shadowing effects.}
+    \label{fig:map}
+\end{figure}
+
+We now discuss the convergence of the \ac{ml}-based solution by considering the performance of the \ac{irlv} system for different training set size $k_t$. Fig.s \ref{fig:trainMLP} and \ref{fig:trainSVM} show the performance of the \ac{irlv} system for different $k_t$ values respectively for \ac{mlp} and \ac{svm}. We notice that in both cases the performance of the \ac{irlv} system increase with $k_t$. In particular we notice from \ref{fig:trainMLP} that with $10^4$ training points training converges, i.e., the performance of the system does not improve if we consider a larger training set.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain.eps}
+    \caption{Convergence of \ac{mlp}. $P_{\rm MD}$ vs. $P_{\rm FA}$ with $N_h = 6$ and with different training set size.}
+    \label{fig:trainMLP}
+\end{figure}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_SVM.eps}
+    \caption{Convergence of \ac{svm}. $P_{\rm MD}$ vs. $P_{\rm FA}$  with different training set size.}
+    \label{fig:trainSVM}
+\end{figure}
+
+
+\subsection{Fading effects}\label{sec:res_fading}
+Let us now include the fading effects. Consider the network in Fig. \ref{fig:mBS}. $N_{\rm bs}=5$ \acp{ap} gather attenuation values from the \acp{ue}. Each \ac{ap} has its own attenuation map given by path loss, shadowing and fading realization. Each \ac{ap} gathers the attenuation value of the transmitting \ac{ue} and sends it to the central unit, which builds the attenuation vector $\bm{a}$ that is used for discriminating the location of the considered \ac{ue}.
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.3\columnwidth]{scenario2.png}
     \caption{Scenario with multiple BSs: each one gathers the attenuation value of the transmitting user and passes it to the central unit that builds the attenuation vector $\bm{a}$ used for discriminating the location of the user.}
     \label{fig:mBS}
 \end{figure}
 
-
-\subsection{Fading effects}\label{sec:res_fading}
-Let us now include the fading effects. The attenuation in point $(x_u,y_u)$ is a Gaussian random variable with zero mean and variance given by the inverse of the value of the map in $(x_u,y_u)$.
-
-
-In order to compute the \ac{llr} in (\ref{eq:lr}) we should here consider a $N_{\rm AP}$-dimensional multivariate Gaussian distribution. However, as this equation has no closed-form solution and we showed in \ref{sec:shadow} that the \ac{mlp}-based solution achieves the optimal results of the \ac{np} detector with fewer points we implement the \ac{mlp}-based solution. A larger number of \acp{ap} means a larger feature space to be fed to the \ac{mlp}. We hence expect that the performance of the system increase with the number of \acp{ap}.
+In order to compute the \ac{llr} in (\ref{eq:lr}) we should here consider a $N_{\rm AP}$-dimensional multivariate Gaussian distribution. However, as this equation has no closed-form solution and we showed in \ref{sec:res_nLos} that the \ac{ml}-based solutions achieve the optimal results of the \ac{np} detector with a smaller number of training points we only show results on \ac{ml}-based solution.
 
 Different fading realizations lead to different statistical characterization of the attenuation values measured in both areas. Therefore training the \ac{mlp} over a single fading realization could lead to a non-optimal result in the successive realization. We hence propose to train and test the \ac{mlp} over $N_{\rm avg}$ fading realizations for each \ac{ap}.
 
-Fig. \ref{fig:faded} shows the true positive rate vs. the false positive rate in non-\ac{los} scenario with fading effects. Different number of fading realizations for training a \ac{mlp} with \ac{mse} loss function has been considered. We notice that as the number $N_{\rm avg}$ of fading realizations used for training increases the performance of the network get closer to those obtained without considering the fading effects. Furthermore we notice that, as expected, with a larger number of \acp{ap} the performance of the system increase, as can be seen comparing the curve in Fig. \ref{fig:trueMap} and the 'No fading' curve in Fig. \ref{fig:faded}.
+Fig. \ref{fig:faded} shows the \ac{md} probability vs. the \ac{fa} probability in non-\ac{los} scenario with fading effects. Different number of fading realizations for training a \ac{mlp} with \ac{mse} loss function has been considered. We notice that as the number $N_{\rm avg}$ of fading realizations used for training increases the performance of the network get closer to those obtained without considering the fading effects. Furthermore we notice that, as expected, with a larger number of \acp{ap} the performance of the system increase, as can be seen comparing the curve in Fig. \ref{fig:trueMap} and the 'No fading' curve in Fig. \ref{fig:faded}.
 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain.eps}
-    \caption{Convergence of \ac{mlp}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{mlp} with $N_h = 6$ and with different training set size.}
-    \label{fig:faded}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_SVM.eps}
-    \caption{Convergence of \ac{svm}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{svm} with different training set size.}
-    \label{fig:faded}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nFading.eps}
     \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{mlp} with $N_h = 6$ and with different fading realizations.}
     \label{fig:faded}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_avg_nFading_SVM.eps}
     \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{svm} with different fading realizations.}
     \label{fig:faded}
 \end{figure}
 
-\section{Numerical Results: two class classification}
+\section{Numerical Results: one class classification}
 We here present numerical results for the scenario where the available data for training comes only from one of the two regions. 
 
 \begin{figure}
