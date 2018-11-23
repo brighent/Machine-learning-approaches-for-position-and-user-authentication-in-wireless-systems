@@ -365,7 +365,7 @@ Let us first consider the following lemma that establishes the convergence of th
 		\label{eq:lssvm22}
 		\begin{equation}
 		\label{eq:lssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_l(\mathbf{w},e) = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
+		\underset{\mathbf{w},e}{\text{min}} \quad f_l \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
 		\end{equation}
 		\begin{equation}
 		\label{eq:stpart2}
@@ -376,24 +376,67 @@ Let us first consider the following lemma that establishes the convergence of th
 		\quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
 		\end{equation}
 	\end{subequations}
-	whose solution provides the convergence value (in probability) of vector $\bm{w}$. 
-	Note that while the original problem \eqref{eq:lssvm}, as $S \to \infty$, has infinite constraints, the equivalent formulation \eqref{eq:lssvm22} includes a finite number $2M$ of constraints.
-	
-	We now solve \eqref{eq:lssvm22} with the dual formulation following the same steps used for the \ac{lssvm} in \cite{Suykens1999} with minor modifications. In particular, when building the Lagrangian we need to introduce two sets of multipliers: $v_k$ for \eqref{eq:stpart2} and $u_k$ for \eqref{eq:stpart3}, $k=1,\dots, M$. Then, by deriving with respect to $\mathbf{w}$ and setting to 0, we obtain 
+	whose solution provides the convergence value (in probability) of vector $\bm{w}$. We write the Lagrangian
+	\begin{equation}
+	\mathcal{L}_1 = f_l - \sum_{k=1}^{M} v_k \left[ \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} \right] 
+	- \sum_{k=1}^{M} u_k \left[- \mathbf{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + e_{j,-1} \right], 
+	\end{equation}
+	where $\{u_k,v_k\}_{k=1}^{M}$ are the Lagrangian multipliers. Let us set to zero the derivatives w.r.t. $\{\mathbf{w},b,e_{j,1},e_{j,-1}, v_j,u_j\}$
+	\begin{subequations}
+		\begin{equation}
+		\label{eq:deriv1_1}
+		\frac{\partial \mathcal{L}_1}{ \partial \mathbf{w}}: \quad \mathbf{w} = \sum_{k=1}^{M} (u_k - v_k) \phi (\bm{\alpha}_k),
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_2}
+		\frac{\partial \mathcal{L}_1}{\partial b}: \quad \sum_{k=1}^{M} (u_k - v_k) = 0 ,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_3}
+		\frac{\partial \mathcal{L}_1}{\partial e_{j,1}}: \quad v_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1} \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_4}
+		\frac{\partial \mathcal{L}_1}{\partial e_{j,-1}}: \quad u_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1) e_{j,-1} \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_5}
+		\frac{\partial \mathcal{L}_1}{\partial v_j}: \quad \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} = 0 \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_6}
+		\frac{\partial \mathcal{L}_1}{\partial u_j}: \quad - \mathbf{w}^T \phi (\bm{\alpha}_j) - b - 1 + e_{j,-1} = 0 \quad j=1\dots M.
+		\end{equation}
+	\end{subequations}
+	Substituting \eqref{eq:deriv1_1}, \eqref{eq:deriv1_3} and \eqref{eq:deriv1_4} in \eqref{eq:deriv1_5} and \eqref{eq:deriv1_6} we get the system of equations
+	\begin{subequations}
+		\label{eq:system1}
+		\begin{equation}
+		\sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) + b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1)} = 0
+		\quad j=1\dots M
+		\end{equation}
+		\begin{equation}
+		- \sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) - b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1)} = 0
+		\quad j=1,\dots, M
+		\end{equation}
+		\begin{equation}
+		\sum_{k=1}^{M} (u_k - v_k) = 0.
+		\end{equation}
+	\end{subequations}
+	\eqref{eq:system1} is a system with $2M + 1$ equations, linear in the $2M + 1$ unknowns $\{u_k,v_k,b\}_{k=1}^{k=M}$ and therefore has finite solution. In particular, using \eqref{eq:deriv1_1}, we have
 	\begin{equation}
 	\label{eq:wSolution}
-	\begin{aligned}
-	%	\mathbf{w}\mathbf{w}^T =& \sum_{k=1}^{M} \sum_{h=1}^{M} v_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h)	
-	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} v_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)	\\
-	%							&	\sum_{k=1}^{M} \sum_{h=1}^{M} u_k u_h k(\bm{\alpha}_k,\bm{\alpha}_h)
-	%								- \sum_{k=1}^{M} \sum_{h=1}^{M} u_k v_h k(\bm{\alpha}_k,\bm{\alpha}_h) \\
-	\mathbf{w}^T\mathbf{w} =&  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
-	\end{aligned}
+	\mathbf{w}^T\mathbf{w} =  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
 	\end{equation}
 	where we used the fact that the kernel function
 	\begin{equation}
 	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
-	\end{equation} is symmetric \wrt its inputs. We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
+	\end{equation}
+	 is symmetric \wrt its inputs. 
+	
+%	Note that while the original problem \eqref{eq:lssvm}, as $S \to \infty$, has infinite constraints, the equivalent formulation \eqref{eq:lssvm22} includes a finite number $2M$ of constraints.
+	
+	We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
 	
 \end{proof}
 
