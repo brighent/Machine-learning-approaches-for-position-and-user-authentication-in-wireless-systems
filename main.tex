@@ -12,6 +12,7 @@
 \usepackage[acronym,shortcuts]{glossaries}
 \usepackage{graphicx}
 \usepackage{graphics}
+\usepackage{comment}
 \usepackage[inline]{enumitem}
 \makeglossaries
 %%% Glossaries/Acronyms
@@ -21,6 +22,7 @@
 \newacronym{ap}{AP}{access point}
 \newacronym{ce}{CE}{cross entropy}
 \newacronym{fa}{FA}{false alarm}
+\newacronym{gnss}{GNSS}{global navigation satellite systems}
 \newacronym{irlv}{IRLV}{in-region location verification}
 \newacronym{kl}{K-L}{Kullback-Leibler}
 \newacronym{ls}{LS}{least-squares}
@@ -37,6 +39,7 @@
 \newacronym{pdf}{PDF}{probability distribution function}
 \newacronym{pso}{PSO}{particle swarm optimization}
 \newacronym{roc}{ROC}{receiver operating characteristic}
+\newacronym{roi}{ROI}{region of interest}
 \newacronym{rss}{RSS}{received signal strength}
 \newacronym[\glslongpluralkey={support vector machines}]{svm}{SVM}{support vector machine}
 \newacronym{ue}{UE}{user equipment}
@@ -56,7 +59,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 
-\title{Machine Learning Approaches For Position And In Region Location Verification In Wireless Systems}
+\title{Machine Learning For In-Region Location Verification In Wireless Networks}
 \author{\small Alessandro Brighente, Francesco Formaggio, Giorgio Maria Di Nunzio, and  Stefano Tomasin }
 \date{\today}
 
@@ -74,41 +77,43 @@
 \sloppy
 
 \begin{abstract}
-We here consider the problem of \ac{irlv}, i.e., verify whether a user is inside an application specific verification region. The system is implemented based on the channel features of the messages sent from a \ac{ue} over a wireless link and received by a set of \acp{ap}. We first exploit the \ac{np} optimal criterion to formulate the problem as hypothesis testing. Secondly, we implement the \ac{irlv} system by exploiting  \ac{ml} techniques, namely the \acp{nn} and the \ac{svm}. We then show how the output of the \ac{nn} trained with two different loss functions, namely the \ac{mse} and the \ac{ce}, are related to the \ac{np} optimal hypothesis testing. The same result is derived for \ac{svm}. By introducing a realistic channel model we then show that the proposed \ac{ml} implementation of the authentication system is convenient respect to the \ac{np} test. The problem of one class classification, i.e. when available training data comes from only one of the two regions, is then addressed with both \ac{nn} and \ac{svm}. Lastly we discuss possible attack strategies.
+\Ac{irlv} aims at verifying whether a user is inside an specific region, and in wireless networks it can exploit the features of the channel between the user to be verified and the set of trusted access points. As \ac{irlv} is an hypothesis testing problem we can resort to the \ac{np} theorem, when channel statistics are known. By removing the channel knowledge assumption we instead consider \ac{ml} solutions based on either \acp{nn} or \ac{svm} to learn channel features characteristics of the region of interest. We show that \ac{ml} approaches are \ac{np}-optimal for sufficiently complex machines and long enough training. For finite training \ac{ml} turns out to be more accurate than then \ac{np} applied on estimated channel statistics. Two specific security issues are then addressed. First, the attacker can forge channel by suitable transmit signal processing, thus we explore the one-class classification problem, both under the knowledge of legitimate channel statistics and by \ac{ml}, concluding that conventional \ac{ml} solutions based on the auto-encoder and one-class \ac{svm} are not optimal, even under asymptotic conditions. Second, advanced attacks based on the use of \ac{ml} techniques by the attacker are considered, which exploit the gradient of the function implemented by the machines. Numerical results are provided to support the results in a realistic cellular scenario, including shadowing and fading effects for the channel description.
 \end{abstract}
 
 \begin{IEEEkeywords}
-In-region location verification, neural network, auto-encoder, support vector machine
+In-region location verification, machine learning, neural network, auto-encoder, support vector machine.
 \end{IEEEkeywords}
 
 \glsresetall
 \clearpage
 \section{Introduction}
-\Ac{irlv} systems allow to verify the location of the user and to implement location-based granting systems, e.g. location based access control, media streaming, social networking. Location information without verification provides ample opportunity to attacks the service granting system, as location information can be easily spoofed. Hence we provide a system which not only grants access to the network service only to a legitimate area, but also enhances the security by verifying the correctness of the information. Location verification systems aim at verifying the position of devices in a mobile communication network, with applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. Various approaches have been proposed for location verification, typically based on the measurement of the distance between the transmitter and other users or anchor nodes belonging to the network infrastructure. An example is given by \cite{yan2016location}, where \ac{rss} is measured at the \ac{ap} and used as metric to distinguish among regions. We focus here on the \ac{irlv} problem, i.e., the problem of deciding if a message coming from a terminal over a wireless network has been originated from a specific physical area, e.g., a safe room, or not \cite{Zeng-survey}.
 
-The \ac{irlv} systems has a solution as hypothesis testing problem based on \ac{np} lemma \cite{Neyman289}, which rejects a hypothesis in favor of the other based on the comparison of the \ac{llr} of the area dependent probability distributions with a suitably chosen threshold value. Among proposed solutions, distance bounding techniques with rapid exchanges of packets between the verifier and the prover has been proposed in \cite{Brands}, also using radio-frequency and ultrasound signals \cite{Sastry}, whereas solutions based on the use of anchor nodes and increasing transmit power by the sender has been proposed in \cite{Vora}. More recently, a delay-based verification technique has been proposed  in \cite{7145434}, leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays.  
+Location verification systems aim at verifying the location of the user, which can be used to implement location-based granting systems, e.g., location-based access control, media streaming, social networking. Location information without verification provides ample opportunity to attack the service granting system, since the location information can be easily manipulated either by tampering the hardware/software for location reporting or by spoofing the \ac{gnss} signal outside the user device. Location verification systems aim at verifying the position of devices in a mobile communication network, with applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature various solutions are available for location verification, that leverage the features of the wireless channel over which communication occurs. One approach provides the measurement of the distance between the user and other network nodes. An example is given by \cite{yan2016location}, where \ac{rss} is exploited. Moreover, location verification is similar to the  {\em user authentication} problem addressed at the physical layer, where  channel measurements are  processed to verify the identity of the message sender \cite{7270404}. 
 
-The knowledge of the channel statistics, as well as its model, may not be available. In this context, the computation of the likelihood functions needed for hypothesis testing can be estimated by the available data but may not be accurate. \ac{ml} techniques have been introduced as an alternative method to perform user location verification without requiring prior knowledge of the channel statistics. This issue has been tackled by \cite{xiao-2018}, where no assumption is made on the channel model and logistic regression has been proposed as an alternative to hypothesis testing. In \cite{tian2015robust} the objective is to locate the user inside a building and a multi-class classification problem is solved via \ac{svm}. Note that neither  \cite{xiao-2018}  nor \cite{tian2015robust} analyze performance of their \ac{ml} approaches against the theoretical optimum \ac{np} criterion, which we investigate in this work.
+We focus here on the \ac{irlv} problem, that aims at verifying whether a user is inside an specific \ac{roi}, by exploiting the features of the channel between the user to be verified and the set of trusted \acp{ap} \cite{Zeng-survey}. Among solutions presented in the literature, distance bounding techniques with rapid exchanges of packets between the verifier and the prover has been proposed in \cite{Brands}, also using radio-frequency and ultrasound signals \cite{Sastry}, whereas solutions based on the use of anchor nodes and increasing transmit power by the sender has been proposed in \cite{Vora}. More recently, a delay-based verification technique has been proposed  in \cite{7145434}, leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays.  
 
-In this paper, we compare the performance of the \ac{irlv} system based on \ac{np} optimality criterion with the \ac{ml} based approaches. In particular, we investigate the performance of the \ac{ml}-based \ac{irlv} systems implemented via \ac{nn} and via \ac{svm}. We consider two different \ac{nn} architectures: the multi-layer perceptron and the auto-encoder. For the multi-layer perceptron, we investigate two loss functions: the \ac{ce} and the \ac{mse}. We show that both loss functions guarantee the same performance of the optimal \ac{np} detector in terms of error probabilities. Further details about the architectures and the training objective function will be discussed in section \ref{sec:nn}.
+Some of the proposed techniques partially neglect wireless channel phenomena (such as shadowing and fading) that make  problematic the estimation of distance measurements through the wireless communication signal \colorbox{yellow}{citare}. Other approaches instead assume specific channel statistics \cite{quaglia} that again may be not accurate due to to changing configurations of the environment, their dependency on unknown parameters and use of advanced signal processing techniques by the attacker. Indeed, if the channel statistics both inside and outside the \ac{roi} are known to the network infrastructure, the optimal solution to the \ac{irlv} problem is provided by the \ac{np} theorem \cite{Cover-book}, that provides the most powerful test for a given significance level. 
 
-In section \ref{sec:auto} we consider the problem of performing hypothesis testing when samples from one of the two classes are available and no information on the other class can be obtained. The auto-encoder \ac{nn} is proposed as solution for this problem.
+However, as observed, the knowledge of the channel statistics may not be available. One solution in this case is to a) estimate the channel statistics and b) apply the \ac{np} theorem on the estimated statistics. However, as confirmed also in this paper this approach may not be accurate. As an alternative \ac{ml} techniques  can be exploited, as they are more flexible and exploit the available training data to optimize directly the decision process, rather than going through the two-step solution. In  \cite{xiao-2018}, no assumption is made on the channel model and logistic regression has been proposed as an alternative to hypothesis testing. In \cite{tian2015robust} the objective is to locate the user inside a building and a multi-class classification problem is solved via \ac{svm}. Note that neither  \cite{xiao-2018}  nor \cite{tian2015robust} analyze performance of their \ac{ml} approaches against the theoretical optimum \ac{np} criterion.
 
-In section \ref{sec:svm}, we introduce the \ac{svm} and we show how to exploit it to implement an \ac{irlv} system. Furthermore, we show that the output of such a system is related to the \ac{np} lemma.
+In this paper, by removing the channel knowledge assumption we instead consider \ac{ml} solutions based on either \acp{nn} or \ac{svm} to learn channel features characteristics of the region of interest. For the multi-layer perceptron, we investigate two loss functions: the \ac{ce} and the \ac{mse}, while for \ac{svm} we consider its \ac{ls} implementation.  We show these \ac{ml} approaches are \ac{np}-optimal for sufficiently complex machines and long enough training. For finite training \ac{ml} turns out to be more accurate than then \ac{np} applied on estimate channel statistics. 
 
-In sections \ref{sec:res_los}, \ref{sec:res_nLos} and \ref{sec:res_fading} we confirm via numerical results the theoretical parts of the previous section and investigate the performance of the different implementations of the \ac{irlv} system.
+Two specific security issues are then addressed. First, the attacker can forge channel by suitable transmit signal processing, thus we explore the one-class classification problem, both under the knowledge of legitimate channel statistics and by \ac{ml}, concluding that conventional \ac{ml} solutions based on the auto-encoder and one-class \ac{svm} are not optimal, even under asymptotic conditions. Second, advanced attacks based on the use of \ac{ml} techniques by the attacker are considered, which exploit the gradient of the function implemented by the machines. Numerical results are provided to support the results in a realistic cellular scenario, including shadowing and fading effects for the channel description. We show that in simple scenario a small number of neurons and a short training already provide close-to-optimal performance, and then assess the one-class \ac{irlv} approach, as well as the advanced attack strategies based on \ac{ml}.
 
-The contribution of this paper can be summarized as follows:
+The contributions of this paper are here summarized:
 \begin{itemize}
-    \item We propose an implementation of a physical layer-based \ac{irlv} system which exploits \ac{ml} techniques to perform hypothesis testing;
-    \item We show that the performance obtained with this \ac{ml} techniques are optimal in a \ac{np} sense;
+    \item We propose a  physical layer-based \ac{irlv} system which exploits \ac{ml} techniques to perform hypothesis testing;
+    \item We show that the \ac{ml} techniques provides the most powerful test for a given significance level, as the \ac{np} test;
     \item We compare different \ac{ml} techniques and show how these can be exploited to implement different levels of the \ac{irlv} system, from authentication to attacks.
 \end{itemize}
 
-The following notation will be used throughout the paper: bold letters $\bm{x}$ refer to vectors, whereas capital bold letters $\bm{H}$ refer to matrices, $\mathbb{E}[]$ denotes the expected value, $e_i$ denotes the all zero vector except for component $i$ which is equal to $1$ and $(\cdot)^T$ denotes the transpose.
+The rest of the paper is organized as follows. Section II introduces the system model for the \ac{irlv} problem, detailing the channel model assumed in this paper and summarizing the \ac{np} results under the knowledge of channel statistics. Section III describes the considered \ac{ml} approaches for \ac{irlv}, namely the multi-layer perceptron \ac{nn} and the \ac{svm}, with their training approaches basen on \ac{mse} or \ac{ce} for the \ac{nn}, and on the \ac{ls} approach for \ac{svm}. In Section IV we propose the one-class classification approach, where only the channel statistics for the legitimate user inside the \ac{roi} are available for training: both the an auto-encoder \ac{nn} and the \ac{mse} \ac{svm} are considered and their performance is compared with the test with knowledge of channel statistics imposing a given \ac{fa} probability. Advanced attack strategies, based on the use of \ac{ml} by the attacker are proposed in Section V. Numerical results comparing the various techniques in a cellular scenario are shown and discussed in Section VI. Lastly, the main conclusions are outlined in Section VII.
+
+The following notation is used throughout the paper: bold letters $\bm{x}$ refer to vectors, whereas capital bold letters $\bm{H}$ refer to matrices, $\mathbb{E}[]$ denotes the expected value, $e_i$ denotes the all zero vector except for component $i$ which is equal to $1$ and $(\cdot)^T$ denotes the transpose.
 
 \section{System Model}
-We consider a cellular system with $N_{\rm AP}$ \acp{ap} covering a region $\mathcal{A}$ over a plane. We propose a location authentication system able to determine if a \ac{ue} is transmitting from within an {\em authorized} sub-region $\mathcal{A}_0$ of the region $\mathcal{A}$. The authentication process exploits the features of the channel between the \ac{ue} and the \acp{ap} and, in particular, the location dependency of these features, allowing to distinguish between a transmission from the region $\mathcal{A_0}$ and a transmission from the complementary region $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. Among the various features (e.g. power, impulse response, phase offset) we consider here a narrowband transmission and we focus on the power received by the \acp{ap} upon \ac{ue} transmission.
+
+We consider a cellular system with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a location authentication system able to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ within   $\mathcal{A}$. The authentication process exploits the features of the channel between the \ac{ue} and the \acp{ap} and, in particular, the location dependency of these features, allowing to distinguish between a transmission from the region $\mathcal{A_0}$ and a transmission from the complementary region $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. Among the various features (e.g. power, impulse response, phase offset) we consider here a narrowband transmission and we focus on the power received by the \acp{ap} upon \ac{ue} transmission.
 
 In details, the location authentication procedure encompasses two phases. In the first phase (authentication identification), the \ac{ue} transmits a training signal (known at the \acp{ap}) from various points within region $\mathcal{A}_0$, and the \acp{ap} estimate the attenuation incurred by the transmission and store them in association with $\mathcal{A}_0$. In this phase some external authentication technique must be used to ensure that the \ac{ue} is in region $\mathcal{A}_0$. Similarly the \ac{ue} transmits a training signal from the complementary area $\mathcal{A}_1$ and the \acp{ap} store the attenuation values  associated to $\mathcal{A}_1$.
 
@@ -557,6 +562,10 @@ where the subscript $n$ denotes the $n^{\rm th}$ component of the vectors. The \
 \mathcal{A}_1 \quad \text{if} \quad \epsilon(\bm{a}^{(n)}) \ge \gamma. 
 \end{cases}
 \end{equation}
+
+About the optimality of the autoencoder, we observe that it can be seen as a quantization (or compression process) that quantizes an $N$-dimensional signal into an $M$-dimensional signal. In order to minimize the \ac{mse} of the reconstruction error, inputs with higher probability will have smaller quantization regions. Moreover, as the number of quantization points goes to infinity (since the quantization indices are in the continuous $M$-dimensional space) all points in the same quantization region will have approximately the same probability. However, quantization error for points within each region will be different for each points, in particular being zero for the quantization point and higher at the edges of the quantization region. Thus we can conclude that even with infinite training and an infinite number of neurons the autoecoder can not provide as output the \ac{pdf} of the input, as required by the optimal decision rule. On the other hand, input points with a smaller \ac{pdf} belong to larger quantization regions for which the reconstruction error is {\em on average} larger, thus on average the output provided by the autoencoder is monotonically decreasing with the \ac{pdf} of the input point. 
+
+\begin{comment}
 The performance of the obtained classifier are given by the following 
 \begin{theorem}
     Consider a \ac{ae} with perfect training, i.e., a \ac{ae} with a sufficient number of neurons and a sufficient training. Then the classifier obtained by training the \ac{ae} and by thresholding the soft output $\tilde{\epsilon}(\bm{a}^{(n)}) = \sqrt{\frac{1}{N}\sum_{i=1}^{N}|a^{(n)}_i-\hat{a}^{(n)}_i|^2},$ is equivalent, in the \ac{mse} sense, to the optimal classifier \eqref{eq:oneClassDec}.
@@ -574,7 +583,7 @@ Let us consider the \ac{mse} approximation of $\tilde{\epsilon}(\bm{a}^{(n)})$ b
 \end{equation}
 We notice that the second term in brackets is the sum of the reconstruction error of the attenuation vectors over $\mathbb{R}^{n}$. Since different regions of $\mathbb{R}^n$ are characterized by different features and since the \ac{ae} is able to reconstruct, with small reconstruction error, only those vectors with features similar to those of the training set we can assume that the summation of the reconstruction errors over all possible feature spaces goes to infinity. The second integral does not hence depend on $\bm{w}$ as for each value of $\bm{w}$ it goes to infinity. The last term in brackets does not depend on the weight vector $\bm{w}$ and hence the only term that depends on $\bm{w}$ is the first one, which is the objective function of the training optimization problem. Noticing that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is equivalent to thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ we conclude that training the \ac{ae} with $\epsilon$ loss function provides a classifier that approximates in the \ac{mse} sense the optimal one (\ref{eq:oneClassDec}).
 \end{proof}
-
+\end{comment}
 
 \subsection{\Acl{oclssvm}}
 In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The soft output of the \ac{oclssvm} is 
@@ -597,6 +606,12 @@ while the decision function is the same as in \eqref{eq:cases}, with $\tilde{t}_
 where $C$ is a hyper-parameter.
 Note that in the one-class case, the bias parameter $b$ appears also in the objective function.
 
+
+Also in this case we observe that the one-class \ac{svm} is suboptimal, as it does not provides a monotone function of the \ac{pdf} of the input points. In fact, it is not necessary that each training point further away from the bound of the classification region is less probability and the direction $\bm{w}$ is obtained by an ensemble elaboration of the \ac{pdf} of the input rather then been a point-wise function of it. Still, by resorting to the Chernoff bound we can conclude that by minimizing the \ac{mse} we also minimize the upper bound the probability of false alarm, thus although not optimal, the optimization process goes in the right direction.
+
+
+
+\begin{comment}
 We want to show that the \ac{oclssvm} is a machine that asymptotically approximate, in the mean-square sense, the optimal decision rule \eqref{eq:oneClassDec}.
 
 \begin{lemma}
@@ -732,61 +747,53 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 %\end{equation} 
 %in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
 \end{proof}
-
+\end{comment}
 
 \section{Attack strategies}
 \label{sec:attack}
 The proposed techniques can be exploited in order to provide not only an \ac{irlv} system, but also for implementing an attack strategy. The idea is here to use attenuation values measured from the non-authentic area and to train a \ac{ml} architecture based on these values.
 
-Consider a training set set large enough to cover the statistical description of the non-legitimate area $\mathcal{A}_1$. The attenuation vector with the highest reconstruction error in the \ac{ae} case or with the largest value of $\tilde{t}_o$ in the \ac{oclssvm} case can be considered at the border of the region $\mathcal{A}_1$, and hence nearer to region $\mathcal{A}_1$. In the next section we show two gradient based algorithms exploiting \ac{ae} and \ac{oclssvm} in order to forge attenuation vectors that can be considered as authentic by the \ac{irlv} system.
+Consider a training set set large enough to cover the statistical description of the non-legitimate area $\mathcal{A}_1$. The attenuation vector with the highest reconstruction error in the \ac{ae} case or with the largest value of $\tilde{t}_o$ in the \ac{oclssvm} case can be considered at the border of the region $\mathcal{A}_1$, and hence nearer to region $\mathcal{A}_0$. In the next section we describe two attack strategies exploiting this property of the \ac{ml} algorithms: the former attack is the filter attack, which exploits the one class trained \ac{ml} algorithms to select proper attack vectors; the latter is the gradient based attack, which exploits the loss function of \ac{ml} algorithms in order to forge attenuation vectors that can be considered as authentic by the \ac{irlv} system.
 
-% \subsection{Random generation attack}
-% After that the \ac{ae} has been trained with attenuation vectors measured from the non-authentic area, only attenuation vectors with the same statistical structure will be reproduced at the output with a reconstruction error $\epsilon$ (\ref{eq: rec err}) lower than $\gamma$. The idea is hence to generate a random attenuation vector $\bm{a}_{\rm test}$ and to feed it to the \ac{ae}: if the output has a reconstruction error lower than $\gamma$ then $\bm{a}_{\rm test}$ is considered as belonging to the non-authentic area, otherwise it is considered as a possible candidate for a successful attack. This vector is hence tested and, if the attack is not successful, we label it as belonging to the non-authentic area.
+\subsection{Filter Attack}
+As before stated the one class classification involves training the \ac{ml} algorithms with attenuation vectors measured from one of the two available classes. We here propose an attack strategy which trains the \ac{ml} algorithms with attenuation vectors measured from the non-legitimate area $\mathcal{A}_1$. However not all attenuation vectors measured in the non-legitimate area shall be considered as non legitimate by the defense. Hence training of the \ac{ml} algorithms is here performed as an iterative process over the number of training values. In particular, consider an attenuation vector $\bm{a}_{\mathcal{A}_1}$ measured in area $\mathcal{A}_1$ This vector could be a possible successful attack and is hence tested. If the attack is not successful $\bm{a}_{\mathcal{A}_1}$ is used for training the \ac{ml} algorithm. Once the algorithm is trained it is able to discriminate from vectors belonging to the two areas, with an uncertainty which is given by the number of training vectors used up to the considered point. At this point we generate a number $n_{\rm x}$ of spatial coordinates located in area $\mathcal{A}_1$ and we measure the attenuation values incurred by each position. We then filter this set of vectors with the \ac{ml} algorithm and select as a possible attack the vector which is more likely to belong to class $\mathcal{A}_0$ (i.e., the one with highest reconstruction error for the \ac{ae} and with largest $\tilde{t}_0$ for the \ac{oclssvm}). If the selected vector is not a successful attack then it is used for updating the training of the \ac{ml} algorithm. This process is repeated until a successful attack vector is generated. The algorithm steps are shown in Algorithm \ref{alg:filter}.
 
-% As new randomly generated vectors are not successful or have a reconstruction error lower than $\gamma$ we gain information about the structure of the non-authentic area. We hence update the \ac{ae} training in a mini-batch fashion when a sufficient number of new vectors (good results can be achieved with batch size of $m=3$ or $m=4$ new vectors per update \cite{bengio-12}) is obtained. These vectors are stored in matrix $\bm{A}_{\rm test}$ and when $m$ vectors populate the matrix mini-batch gradient descent is executed on the \ac{ae} to update its parameters.
+\begin{algorithm}[t]
+\label{alg:filter}
+  \algsetup{linenosize=\tiny}
+  \scriptsize
 
-% The algorithm steps are reported in Algorithm 2.
-
-% \begin{algorithm}[t]
-%   \algsetup{linenosize=\tiny}
-%   \scriptsize
-
-%  \KwData{ weight and bias vectors of the trained RNN}
-%  \KwResult{authentic attenuation vector }
+ \KwData{ $\bm{a}_{\mathcal{A}_1}$}
+ \KwResult{successful attack vector }
  
 
-%  \Repeat{authentic attenuation vector has been obtained}{
-%         generate random attenuation vector $\bm{a}_{\rm test}$\;
-%         compute reconstruction error $\epsilon$ of $\bm{a}_{\rm test}$ via (\ref{eq: rec err})\;
-%         \eIf{$\epsilon < \gamma$}{$\bm{a}_{\rm test}$ belongs to non-authentic area\;
-%         store $\bm{a}_{\rm test}$ in $\bm{A}_{\rm test}$\;}
-%         {test $\bm{a}_{\rm test}$ for an attack\;
-%         \eIf{attack is successful}{return $\bm{a}_{\rm test}$}
-%         {store $\bm{a}_{\rm test}$ in $\bm{A}_{\rm test}$\;}
-%         }
-%         \If{size($\bm{A_{\rm test}}) = m$}{update RNN training via mini-batch gradient descent\;
-%         delete vectors from $\bm{A}_{\rm test}$\;}
-      
-%       }
+ \Repeat{attack is successful}{
+        \eIf{first attack}{
+        test $\bm{a}_{\mathcal{A}_1}$\;
+        \If{attack $\neq$ successful}{
+        build and train the \ac{ml} architecture with $\bm{a}_{\mathcal{A}_1}$\;
+        }
+        }
+        {
+        build set $\bm{A}$ of randomly selected attenuation vectors from $\mathcal{A}_1$\;
+        $\bm{a}_{\mathcal{A}_1} = \underset{\bm{a} \in \bm{A}}{\max} \quad \rm{loss} \, \rm{function}$ $(\bm{A})$\;
+        \If{attack $\neq$ successful}{
+       update training with $\bm{a}_{\mathcal{A}_1}$
+       }
+      }
+      }
     
-%  \caption{Random generation attack}
-% \end{algorithm}
+ \caption{Filter attack}
+\end{algorithm}
 
-
-% \subsection{Manifold based attack}
-% The second attack strategy exploits the encoding properties of the \ac{ae}. Consider an optimal-compression \ac{ae} \cite{hecht-95} and let $\Phi:[0,1]^M \to \mathbb{D}$ be a smooth orientation-preserving diffeomorphism of the unit cube $[0,1]^M \subset \mathbb{R}^M$ onto the data manifold $\mathbb{D} \subset \mathbb{R}^N$. The natural coordinates of a point $\bm{x}$ on $\mathbb{D}$ are defined as the Cartesian coordinates of its pre-image $\Phi^{-1}(\bm{x})$ on the cube. From the theorem in \cite{hecht-95} we know that a \ac{ae} configured to perform a reconstruction of a value on the data manifold $\mathbb{D}$ within a \ac{mse} $\epsilon$ outputs at the hidden layer neurons the natural coordinates of the given input.
-
-% This allows us to construct the manifold of the non-authentic area and hence to generate data that are certainly out of the training area, reducing hence the time needed to generate vectors that do not have the same characteristics of those used for training.
-
-% In order to build the manifold of the training set we compute the outputs of the hidden layer when the vectors of the training set are fed as input. 
 
 \subsection{Gradient-based \ac{ae} attack}
-Consider the \ac{ae} trained with attenuation vectors from $\mathcal{A}_1$ and their corresponding reconstruction errors. The vector $\bm{a}_{\rm max}$ with highest reconstruction error is selected as a starting point for a possible successful attack. In order to find a direction toward which move the values of $\bm{a}_{\rm max}$ in order to further increment the probability of a successful attack we consider the loss function of the \ac{ae}: knowing that a higher reconstruction error means an higher probability that the vector belongs to the authentic area we perform a gradient ascent algorithm based on the reconstruction error function $\epsilon(\bm{a}_{\rm max})$ (\ref{eq: rec err}) . 
-The forged vector that will be used for the attack is hence
+Consider the set $\bm{A}$ of the attenuation vectors from $\mathcal{A}_1$ used for training the attacker \ac{ae}. The vector with highest reconstruction error is selected as a starting point for a possible successful attack. In order to find a direction toward which move the values of the attenuation vector to increment the probability of a successful attack, knowing that a higher reconstruction error means an higher probability of the vector belonging to the authentic area $\mathcal{A}_0$, we perform a gradient ascent algorithm based on the reconstruction error function (\ref{eq: rec err}) . 
+Starting from the attenuation vector with highest reconstruction error we perform various steps of the gradient algorithm and, for each step we exploit the forged vector as a possible attack. Considering the first attack as $\bm{a}_f^{(0)}=\underset{\bm{a} \in \bm{A}}{\max}$ the attack vector at iteration $q$ is
 \begin{equation}\label{eq: rnn attack}
-    \bm{a}_f = \bm{a}_{\rm max}+ \delta \nabla_{\mathbf{a}}\epsilon(\bm{a}_{\rm max}).
+    \bm{a}_f^{(q)} = \bm{a}_f^{(q-1)}+ \delta \nabla_{\mathbf{a}}\epsilon(\bm{a}_f^{(q-1)}).
 \end{equation}
-If the forged vector is not successful the attacker improves the training of the network by considering $\bm{a}_f$ as belonging to the non-authentic region. Once training is updated the new $\bm{a}_{\rm max}$ is computed and a new step of the gradient ascent is performed. The algorithm steps are shown in Algorithm \ref{alg:rnnGrad}.
+The gradient ascent algorithm continues up to the point where the attack is successful or when the reconstruction error is lower then the one obtained in the previous step, i.e., $\epsilon(\bm{a}_f^{(q)}) < \bm{a}_f^{(q-1)}$. When the algorithm stops due to the second case the training of the \ac{ae} is updated with $\bm{a}_f^{(q-1)}$. The new training set is hence updated as $\bm{A} = \bm{A} \cup \bm{a}_f^{(q)}$ and the attenuation vector with highest reconstruction error obtained by the updated \ac{ae} is selected as the new starting point of the gradient algorithm. The algorithm steps are shown in Algorithm \ref{alg:rnnGrad}.
 
 \begin{algorithm}[t]
 \label{alg:rnnGrad}
@@ -798,13 +805,19 @@ If the forged vector is not successful the attacker improves the training of the
  
 
  \Repeat{attack is successful}{
-        select $\bm{a}_{\rm max} = \underset{\bm{a} \in \bm{A}}{\max}\epsilon(\bm{a})$ \;
-        generate attack $\mathbf{a}_f$ via (\ref{eq: rnn attack})\;
+        select $\bm{a}_f^{(0)} = \underset{\bm{a} \in \bm{A}}{\max}\epsilon(\bm{a})$ \;
+        test $\bm{a}_f^{(0)}$ as attack \;
+        \If{$a_f^{(0)}$ is not successful}{
+        \Repeat{attack is successful or $\epsilon(\bm{a}_f^{(q)}) < \bm{a}_f^{(q-1)}$}
+        {
+        generate attack $\mathbf{a}_f^{(q)}$ via (\ref{eq: rnn attack})\;
         perform the attack \;
-        \If{
-        	attack is not successful}
-        	{$\bm{A}=\{\bm{A},\bm{a}_f\}$\;
+    
+      }
+      \If{attack is not successful $\&$ $\epsilon(\bm{a}_f^{(q)}) < \bm{a}_f^{(q-1)}$}
+        	{$\bm{A}=\{\bm{A},\bm{a}_f^{(q)}\}$\;
             update training of the \ac{ae} \;}
+            }
       }
     
  \caption{Gradient-based \ac{ae} attack}
@@ -873,9 +886,9 @@ where $\delta$ is a parameter, and performs the attack. If it does not succeed, 
 \section{Numerical Results: two class classifcation}
 
 \subsection{LOS scenario}\label{sec:res_los}
-In order to confirm the theoretical results obtained so far and compare the different solutions we test the performance of the \ac{irlv} systems in the scenario described in \ref{sec:los}.
+In order to confirm the theoretical results obtained in previous sections and to compare the different solutions we test the performance of the \ac{irlv} systems in the scenario described in \ref{sec:los}.
 
-The attenuation value measured at the \ac{ap} for a user is given by (\ref{eq:los}), where we consider a unitary transmitting power for each user and a carrier frequency of $2.12$ GHz. The path-loss coefficient is $\nu=3$. 
+The attenuation value measured by the single \ac{ap} for a user is given by (\ref{eq:los}), where we consider a unitary transmitting power for each user and a carrier frequency of $2.12$ GHz. The path-loss coefficient is $\nu=3$. 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_com_CE_MSE_SVM.eps}
@@ -883,37 +896,13 @@ The attenuation value measured at the \ac{ap} for a user is given by (\ref{eq:lo
     \label{fig:ceVSmse}
 \end{figure}
 
-Fig. \ref{fig:ceVSmse} show the \ac{fa} vs. the \ac{md} probabilities obtained by the \ac{irlv} system with $10^6$ training points and $10^6$ testing points. In particular we here compare the performance of the \ac{np} detector with the \acp{mlp} with both \ac{mse} and \ac{ce} loss functions and \ac{svm}. Furthermore we show the performance of the \acp{mlp} with different number of neurons $N_h$ in the hidden layer. We first notice that the \ac{ce}-trained and \ac{mse}-trained \acp{mlp} obtain the same performance when considering the same number of neurons in the hidden layer. This confirms that the two training methods are performing hypothesis testing in an equivalent manner. Furthermore we notice that as the number of neurons at the hidden layer grows the performance of the \ac{mlp} classifiers approach those obtained by the \ac{np} classifier, up to the point where they are the same with $N_h=3$ neurons. This shows that both \ac{ce}-trained and \ac{mse}-trained \acp{mlp} are performing the optimal \ac{np} test and that convergence is obtained with a small number of neurons. Furthermore we notice that \ac{svm} attains the same performance of the \ac{mlp} with $N_h = 3$ and hence of the \ac{np} detector, confirming that hypothesis testing performed via \ac{svm} is optimal in the \ac{np} sense.
+Fig. \ref{fig:ceVSmse} shows the \ac{fa} vs. the \ac{md} probabilities obtained by the \ac{irlv} system with $10^6$ training points. In particular we here compare the performance of the \ac{np} detector with the \ac{ml} algorithms. Results for \ac{mlp} are reported for both \ac{mse} and \ac{ce} loss functions. Furthermore we show the performance of the \acp{mlp} with different number of neurons $N_h$ in the hidden layer. We first notice that the \ac{ce}-trained and the \ac{mse}-trained \acp{mlp} obtain the same performance when considering the same number of neurons $N_h$. This confirms that the two training methods are performing hypothesis testing in an equivalent manner. Furthermore we notice that as the number of neurons in the hidden layer grows the performance of the \ac{mlp} classifiers approach those obtained by the \ac{np} classifier, up to the point where they coincide with $N_h=3$ neurons. This shows that both \ac{ce}-trained and \ac{mse}-trained \acp{mlp} at convergence are performing the optimal \ac{np} test and that convergence is obtained with a small number of neurons. Furthermore we notice that the \ac{svm} attains the same performance of the \ac{mlp} with $N_h = 3$ and hence of the \ac{np} detector, confirming that hypothesis testing performed via \ac{svm} is optimal in the \ac{np} sense.
 
 
 
 
 \subsection{No LOS Scenario}\label{sec:res_nLos}
-In this section we consider the non-\ac{los} scenario and we show that the \ac{ml}-based solutions are convenient over the \ac{np}-based one.
-
-Fig. \ref{fig:map} shows a realization of the attenuation map. A spatial grid has been created in order to take into account the shadowing spatial correlation over different positions. The network includes a single \ac{ap} located at the map center and a squared authentic area $\mathcal{A}_0$, delimited in figure by the red line. Furthermore we consider two \ac{los} paths, one parallel to the $x$ axis and one parallel to the $y$ axis and intersecting at the map center.
-
-Consider the \ac{llr} (\ref{eq:lr}). In the non-\ac{los} context the computation of the two area dependent probabilities has no closed-form solution. A numerical solution is obtained by sampling the attenuation values over the spatial grid of positions. Consider an attenuation value $\hat{a}$: the probability of measuring $\hat{a}$ given that the \ac{ue} is located in area $\mathcal{A}_0$ is given by the number of positions $(x_u,y_u)$ inside $\mathcal{A}_0$ where the measured attenuation $a(x_u,y_u)=\hat{a}$ over the total number of positions $(x_u,y_u)$ in the entire map with the same attenuation $\hat{a}$, i.e.
-\begin{equation}
-    \mathbb{P}(\hat{a}|\mathcal{A}_0) \approx \frac{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_0 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}{\text{total number of positions} \, (x_u,y_u) \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}
-\end{equation}
-An approximation of equation (\ref{eq:lr} is hence obtained as
-\begin{equation}\label{eq:lrApp}
-    \mathcal{L} \approx \frac{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_0 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_1 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}
-\end{equation}
-The approximation gets closer to the real value as the number of grid points over the map increases, as an higher number of points means a better statistical characterization of the attenuation over the map area.
-
-Fig. \ref{fig:trueMap} shows the \ac{md} probability vs. the \ac{fa} probability obtained for the attenuation map in Fig. \ref{fig:map}, where only path loss and shadowing are considered. In particular we here compare the results obtained with approximation (\ref{eq:lrApp}) with the results obtained with the \ac{mse} trained \ac{mlp} with different number of neurons $N_h$ in the hidden layer and with \ac{svm}.
-In order to compute (\ref{eq:lrApp}) we built a grid with $4.46 \cdot 10^6$ space points, whereas for training and testing the \ac{mlp} and the \ac{svm} we used respectively $10^3$ and $10^6$ points. We notice that both the \ac{mlp} and the \ac{svm} achieve better results than the \ac{np}-based detector. This means that the considered number of grid points is not sufficient to approximate the optimal \ac{np} solution. Furthermore we tested the \ac{mlp} with $3$ and $10$ neurons at the hidden layer. We see that with $10$ neurons \ac{mlp} and \ac{svm} attain the same performance. 
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.5\columnwidth]{res_NP_approx_SVM.eps}
-    \caption{True positive rate vs. false positive rate for the attenuation map in Fig. \ref{fig:map}. Comparison between the \ac{np}-based and the \ac{mlp}-based detectors}
-    \label{fig:trueMap}
-\end{figure}
-
-Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
+In this section we consider the no-\ac{los} scenario and we show that the \ac{ml}-based solutions are convenient over the \ac{np}-based one.
 
 \begin{figure}[t]
     \centering
@@ -922,26 +911,34 @@ Comparing the number of grid points and the number of training points used for t
     \label{fig:map}
 \end{figure}
 
-We now discuss the convergence of the \ac{ml}-based solution by considering the performance of the \ac{irlv} system for different training set size $k_t$. Fig.s \ref{fig:trainMLP} and \ref{fig:trainSVM} show the performance of the \ac{irlv} system for different $k_t$ values respectively for \ac{mlp} and \ac{svm}. We notice that in both cases the performance of the \ac{irlv} system increase with $k_t$. In particular we notice from \ref{fig:trainMLP} that with $10^4$ training points training converges, i.e., the performance of the system does not improve if we consider a larger training set.
+Fig. \ref{fig:map} shows a realization of the attenuation map. A spatial grid has been created in order to take into account the shadowing spatial correlation over different positions. The network includes a single \ac{ap} located at the map center and a squared authentic area $\mathcal{A}_0$, delimited in figure by the red line. Furthermore we consider two \ac{los} paths, one parallel to the $x$ axis and one parallel to the $y$ axis and intersecting at the map center.
+
+Consider the \ac{llr} (\ref{eq:lr}). In the no-\ac{los} context the computation of the two area dependent probabilities has no closed-form solution. A numerical solution is obtained by sampling the attenuation values over the spatial grid of positions and computing the area dependent distributions of the attenuation values. Consider an attenuation value $\hat{a}$: the probability of measuring $\hat{a}$ given that the \ac{ue} is located in area $\mathcal{A}_0$ is given by the number of positions $(x_u,y_u) \in \mathcal{A}_0$ where the measured attenuation $a(x_u,y_u)=\hat{a}$ over the total number of positions $(x_u,y_u)$ in the entire map having the same attenuation $\hat{a}$, i.e.
+\begin{equation}
+    \mathbb{P}(\hat{a}|\mathcal{A}_0) \approx \frac{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_0 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}{\text{total number of positions} \, (x_u,y_u) \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}
+\end{equation}
+With the same reasoning we compute $\mathbb{P}(\hat{a}|\mathcal{A}_1)$, and an approximation of equation (\ref{eq:lr} is hence obtained as
+\begin{equation}\label{eq:lrApp}
+    \mathcal{L} \approx \frac{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_0 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_1 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}
+\end{equation}
+The value computed by (\ref{eq:lrApp}) gets closer to the real value as the number of grid points over the map increases, as an higher number of points means a better statistical characterization of the attenuation over the map area.
+
+Fig. \ref{fig:trueMap} shows the \ac{md} probability vs. the \ac{fa} probability obtained for the attenuation map in Fig. \ref{fig:map}, where only path loss and shadowing are considered. In particular we here compare the results obtained by (\ref{eq:lrApp}) with the results obtained with \ac{ml}-based approaches. \Ac{mlp} si trained with \ac{mse} loss function and results are shown for different number of neurons $N_h$ in the hidden layer.
+
+In order to compute (\ref{eq:lrApp}) we built a grid with $4.46 \cdot 10^6$ space points, whereas for training the \ac{mlp} and the \ac{svm} we used $10^3$ points. We notice that both the \ac{mlp} and the \ac{svm} achieve better results than the \ac{np}-based detector. This means that the considered number of grid points is not sufficient to approximate the optimal \ac{np} solution. Furthermore we tested the \ac{mlp} with $3$ and $10$ neurons at the hidden layer. We see that with $N_h=10$ the \ac{mlp} and the \ac{svm} attain the same performance. 
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain.eps}
-    \caption{Convergence of \ac{mlp}. $P_{\rm MD}$ vs. $P_{\rm FA}$ with $N_h = 6$ and with different training set size.}
-    \label{fig:trainMLP}
+    \includegraphics[width=0.5\columnwidth]{res_NP_approx_SVM.eps}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for the attenuation map in Fig. \ref{fig:map}. Comparison between the \ac{np}-based and the \ac{ml}-based detectors}
+    \label{fig:trueMap}
 \end{figure}
 
+Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_SVM.eps}
-    \caption{Convergence of \ac{svm}. $P_{\rm MD}$ vs. $P_{\rm FA}$  with different training set size.}
-    \label{fig:trainSVM}
-\end{figure}
+\subsection{Fading Effects}\label{sec:res_fading}
 
-
-\subsection{Fading effects}\label{sec:res_fading}
-Let us now include the fading effects. Consider the network in Fig. \ref{fig:mBS}. $N_{\rm bs}=5$ \acp{ap} gather attenuation values from the \acp{ue}. Each \ac{ap} has its own attenuation map given by path loss, shadowing and fading realization. Each \ac{ap} gathers the attenuation value of the transmitting \ac{ue} and sends it to the central unit, which builds the attenuation vector $\bm{a}$ that is used for discriminating the location of the considered \ac{ue}.
+Consider the network in Fig. \ref{fig:mBS}. $N_{\rm ap}=5$ \acp{ap} gather attenuation values from the \acp{ue}. Each \ac{ap} gathers the attenuation value of the transmitting \ac{ue} and sends it to the central unit, which builds the attenuation vector $\bm{a}$ that is used for \ac{irlv}. In order to compute the \ac{llr} in (\ref{eq:lr}) we should here consider a $N_{\rm AP}$-dimensional multivariate Gaussian distribution. However, as the \ac{llr} equation in this case has no closed-form solution and since we showed in \ref{sec:res_nLos} that the \ac{ml}-based solutions achieve the optimal results of the \ac{np} detector with a smaller number of training points, we only show here results for the \ac{ml}-based solutions.
 
 \begin{figure}[t]
     \centering
@@ -949,51 +946,69 @@ Let us now include the fading effects. Consider the network in Fig. \ref{fig:mBS
     \caption{Scenario with multiple BSs: each one gathers the attenuation value of the transmitting user and passes it to the central unit that builds the attenuation vector $\bm{a}$ used for discriminating the location of the user.}
     \label{fig:mBS}
 \end{figure}
-
-In order to compute the \ac{llr} in (\ref{eq:lr}) we should here consider a $N_{\rm AP}$-dimensional multivariate Gaussian distribution. However, as this equation has no closed-form solution and we showed in \ref{sec:res_nLos} that the \ac{ml}-based solutions achieve the optimal results of the \ac{np} detector with a smaller number of training points we only show results on \ac{ml}-based solution.
-
-Different fading realizations lead to different statistical characterization of the attenuation values measured in both areas. Therefore training the \ac{mlp} over a single fading realization could lead to a non-optimal result in the successive realization. We hence propose to train and test the \ac{mlp} over $N_{\rm avg}$ fading realizations for each \ac{ap}.
-
-Fig. \ref{fig:faded} shows the \ac{md} probability vs. the \ac{fa} probability in non-\ac{los} scenario with fading effects. Different number of fading realizations for training a \ac{mlp} with \ac{mse} loss function has been considered. We notice that as the number $N_{\rm avg}$ of fading realizations used for training increases the performance of the network get closer to those obtained without considering the fading effects. Furthermore we notice that, as expected, with a larger number of \acp{ap} the performance of the system increase, as can be seen comparing the curve in Fig. \ref{fig:trueMap} and the 'No fading' curve in Fig. \ref{fig:faded}.
-
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nFading.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{mlp} with $N_h = 6$ and with different fading realizations.}
-    \label{fig:faded}
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_kf1.eps}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for different training set size and $k_f=1$ fading realization. The \ac{mlp} is implemented with $N_h = 10$ and \ac{ce} loss function}
+    \label{fig:kf1}
 \end{figure}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nFading_SVM.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{svm} with different fading realizations.}
-    \label{fig:faded}
+    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_kf10.eps}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for different training set size and $k_f=10$ fading realizations. The \ac{mlp} is implemented with $N_h = 10$ and \ac{ce} loss function}
+    \label{fig:kf10}
 \end{figure}
 
-\section{Numerical Results: one class classification}
+In order to build the training set we consider $n_x$ spatial points $\bm{x}_{\rm ue}$, each one representing the coordinates of the position of a \ac{ue}, uniformly distributed over the attenuation map. Consider a realization of the shadowing map as depicted in Fig. \ref{fig:map}. A single position $\bm{x}_{\rm ue}$ is associated to a single shadowing value, however since we also include fading effects, the attenuation vectors measured by the \acp{ap} in different time instants for $\bm{x}_{\rm ue}$ assume different value, do to the independent fading realizations. We define the size of the training set as the value $k_t = n_x \cdot k_f$, which considers $n_x$ spatial coordinates and $k_f$ fading realizations for each $\bm{x}_{\rm ue}$.
+
+We consider and compare two realizations of the training set: the former considering a single fading realization for each spatial coordinate; the latter considering $k_f > 1$ fading realization for each spatial coordinate. 
+
+Fig.s \ref{fig:kf1} and \ref{fig:kf10} show the effect of $k_f$ on the \ac{irlv} system performance. In particular, they show the $P_{\rm MD}$ vs. $P_{\rm FA}$ for different numbers of considered spatial coordinates and fixed $k_f$. Results are reported in solid line for the \ac{mlp} and in dashed line for the \ac{svm} . The \ac{mlp} has been implemented with $N_h=10$ and \ac{ce} loss function. Different markers denote different training set size values $k_t$. Comparing the performance in the two figures we notice that, for a given training set value $k_t$, performance get worse as the number of fading realization increase. However we also notice that, for a given number of spatial position $n_x$, performance are better if we consider a larger number of fading realizations. Furthermore we see that, for a large enough training set, performance for different values $k_f$ are approximately the same. This implies that, if the training set is large enough, the \ac{ml} algorithms are also robust to noise, as they are able to average out the fading component affecting a single position and ensuring the same performance for the two differently built training sets. 
+
+
+\section{Numerical Results: One Class Classification}
 We here present numerical results for the scenario where the available data for training comes only from one of the two regions. 
 
-\begin{figure}
+Considering the \ac{ae}, the performance of the \ac{irlv} system depend on the compressing capability of the \ac{ae} and hence on the number of neurons $N_h$ in the hidden layer. Consider the scenario depicted in Fig. \ref{fig:mBS}, where the \ac{irlv} system procedure is the same described in previous sections. Fig. \ref{fig:aeNh} shows the $P_{\rm FA}$ vs. the $P_{\rm MD}$ probabilities for the \ac{ae} for different number of neurons $N_h$. The \ac{ae} has been trained with $k_t=10^4$ training vectors. Fading effects are not considered in this case. We see that for the \ac{ae} increasing the number of neurons $N_h$ do not lead to better \ac{irlv} system performance as seen for the \ac{mlp}. In fact we notice that the best performance are obtained for $N_h=2$ and that the performance get worse are $N_h$ further increases. This is due to the fact that the \ac{ae} is performing compression of the attenuation vectors and hence needs to extract an optimal number of features from the input values. From Fig. \ref{fig:aeNh} we can conclude that the optimal number of features to be extracted is $2$, whereas considering a larger number of features is over-representative of the input model and hence lead to worse system performance.
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{res_ae_onNeur.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with different values of $N_h$}
-    \label{fig:faded}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for the \ac{ae} with different values of $N_h$, $k_t=10^4$ and no fading.}
+    \label{fig:aeNh}
 \end{figure}
 
+\subsection{Fading Effects}
+We here consider the effect of the training set size $k_t$ on the system performance for the one class classification based \ac{irlv}. Consider the scenario depicted in Fig. \ref{fig:mBS} where the \ac{irlv} system gathers attenuation vectors as described in the previous sections. For the one class classification the training set is built only with attenuation vectors collected from user located in area $\mathcal{A}_0$, whereas the testing set is composed by both attenuation vectors measured from area $\mathcal{A}_0$ and area $\mathcal{A}_1$. As for \ref{sec:res_fading} we consider a training set with size $k_t = n_x \cdot k_f$ and we test and compare the training sets created with $k_f=1$ and $k_f >1$.
 
-\begin{figure}
+Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show the performance of the \ac{irlv} system for both \ac{ae} and \ac{oclssvm} respectively for $k_f = 1$ and $k_f = 10$. In particular, they show the $P_{\rm MD}$ vs. $P_{\rm FA}$ for different numbers of considered spatial coordinates and fixed $k_f$. Results are reported in solid line for the \ac{ae} and in dashed line for the \ac{oclssvm} . The \ac{ae} has been implemented with $N_h=2$. Different markers denote different training set size values $k_t$.
+
+We first notice that the \ac{ae} is less sensitive to the training set size, as different values of $k_t$ attains the same performance for $k_f=1$ and approximately the same performance for $k_f = 10$. Furthermore we notice that, for values $P_{\rm FA} > 10^{-1}$ the \ac{oclssvm} attains lower values of $P_{\rm MD}$. Comparing the performance obtained by the two algorithms for fixed $k_t$ and different $k_f$ values we notice that the \ac{ae} is not sensitive to noise, as the error probabilities are almost the same in the two figures. Instead we notice that the \ac{oclssvm} is more sensitive to noise when the training set size is small. In fact we notice that for $k_t=10^2$ performance are different for $k_f=1$ and $k_f=10$. Instead, when $k_t$ grows, performance are almost the same for both values of $k_f$. Furthermore we notice that, when the training set size is small it is convenient to build the training set for the \ac{oclssvm} considering a single time instant for each $\bm{x}_{\rm ue}$, i.e, with $k_f = 1$. Differently from what obtained for the two class case, we see that with \ac{oclssvm}, by fixing the value $n_x$ the performance obtained for different values of $k_f$ are almost the same, meaning that it is not convenient in terms of error probabilities to measure different fading realizations for all the spatial positions.
+
+Comparing the results obtained for the one class classification with those obtained by the two class classification (Fig.s \ref{fig:kf1} and \ref{fig:kf10}) we notice that the performance obtained by the \ac{svm}-based algorithms the one class classification performs better than two class when considering large training sets for both values of $k_f = 10$ and $P_{\rm FA}>10^{-1}$. When considering the \ac{nn}-based algorithms we see that one class classification performs better than the two-class for small training set size and viceversa for larger $k_t$ values and $P_{\rm FA} > 10^{-1}$. This result holds for both values of $k_f$. Furthermore we see that the \ac{oclssvm} attains better performance than those obtained by the \ac{mlp} when considering the same values of $n_x$ and $k_f$ and $P_{\rm FA}> 10^{-1}$.
+
+
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nTrain_oneClass.eps}
-    \caption{Convergence of \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$ and with different training set size.}
-    \label{fig:faded}
+    \includegraphics[width=0.5\columnwidth]{res_avgnTrain_oneClass_kf1.eps}
+    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set size and $k_f=10$ fading realizations.}
+    \label{fig:kf1Oc}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\columnwidth]{res_avg_nFading_oneClass.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$ and with different fading realizations.}
-    \label{fig:faded}
+    \includegraphics[width=0.5\columnwidth]{res_avgnTrain_oneClass_kf10.eps}
+    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set size and $k_f=10$ fading realizations.}
+    \label{fig:kf10Oc}
 \end{figure}
+
+\section{Numerical Results: Attack Strategies}
+Consider the scenario depicted in Fig. \ref{fig:mBS}, where $N_{\rm AP}=5$ \acp{ap} gather attenuation vectors from the transmitting users. Consider attenuation vectors composed by path loss and shadowing, where fading effects are not taken into account. Both attack and defense are trained with one class classifier, respectively trained with attenuation vectors measured from $\mathcal{A}_1$ and $\mathcal{A}_0$. In order to test the attacks we fix a \ac{fa} probability at the defense side, such that the threshold value needed for classification is given. We compare attacks and defense both implemented via \ac{ae} and \ac{oclssvm}. 
+
+In order to test the proposed attack strategies we compare them with random attacks, i.e., where attenuation vectors appointed for attack are selected by randomly choosing a position in the non legitimate area $\mathcal{A}_1$. In particular we consider two different random attacks: the former generates random positions in the overall area $\mathcal{A}_1$, the latter generates random positions in the portion of area $\mathcal{A}_1$ which is at the border of the legitimate area $\mathcal{A}_0$. 
+
+
 \newpage 
 
 
