@@ -51,7 +51,7 @@
 \newcommand{\ie}{i.e., }
 \newcommand{\wrt}{w.r.t. }
 \newcommand{\Exp}[1]{\mathbb{E}\left[#1\right]}
-\newcommand{\ai}{\mathbf{a}^{(i)}}
+\newcommand{\ai}{\bm{a}^{(i)}}
 \newcommand{\A}[1]{\mathcal{A}_#1}
 
 \DeclareMathOperator{\sign}{sign}
@@ -109,167 +109,139 @@ The contributions of this paper are here summarized:
 
 The rest of the paper is organized as follows. Section II introduces the system model for the \ac{irlv} problem, detailing the channel model assumed in this paper and summarizing the \ac{np} results under the knowledge of channel statistics. Section III describes the considered \ac{ml} approaches for \ac{irlv}, namely the multi-layer perceptron \ac{nn} and the \ac{svm}, with their training approaches basen on \ac{mse} or \ac{ce} for the \ac{nn}, and on the \ac{ls} approach for \ac{svm}. In Section IV we propose the one-class classification approach, where only the channel statistics for the legitimate user inside the \ac{roi} are available for training: both the an auto-encoder \ac{nn} and the \ac{mse} \ac{svm} are considered and their performance is compared with the test with knowledge of channel statistics imposing a given \ac{fa} probability. Advanced attack strategies, based on the use of \ac{ml} by the attacker are proposed in Section V. Numerical results comparing the various techniques in a cellular scenario are shown and discussed in Section VI. Lastly, the main conclusions are outlined in Section VII.
 
-The following notation is used throughout the paper: bold letters $\bm{x}$ refer to vectors, whereas capital bold letters $\bm{H}$ refer to matrices, $\mathbb{E}[]$ denotes the expected value, $e_i$ denotes the all zero vector except for component $i$ which is equal to $1$ and $(\cdot)^T$ denotes the transpose.
+The following notation is used throughout the paper: bold letters $\bm{x}$ refer to vectors, whereas capital bold letters $\bm{H}$ refer to matrices, $\mathbb{E}[]$ denotes the expected value, $e_i$ denotes the all zero vector except for component $i$ which is equal to $1$ and $(\cdot)^T$ denotes the transpose. $\log(x)$ denotes the \colorbox{yellow}{...} base logarithm
 
 \section{System Model}
 
-We consider a cellular system with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a location authentication system able to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ within   $\mathcal{A}$. The authentication process exploits the features of the channel between the \ac{ue} and the \acp{ap} and, in particular, the location dependency of these features, allowing to distinguish between a transmission from the region $\mathcal{A_0}$ and a transmission from the complementary region $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. Among the various features (e.g. power, impulse response, phase offset) we consider here a narrowband transmission and we focus on the power received by the \acp{ap} upon \ac{ue} transmission.
-
-In details, the location authentication procedure encompasses two phases. In the first phase (authentication identification), the \ac{ue} transmits a training signal (known at the \acp{ap}) from various points within region $\mathcal{A}_0$, and the \acp{ap} estimate the attenuation incurred by the transmission and store them in association with $\mathcal{A}_0$. In this phase some external authentication technique must be used to ensure that the \ac{ue} is in region $\mathcal{A}_0$. Similarly the \ac{ue} transmits a training signal from the complementary area $\mathcal{A}_1$ and the \acp{ap} store the attenuation values  associated to $\mathcal{A}_1$.
-
-In the second phase (authentication verification), the \ac{ue} transmits a known training sequence from any points in $\mathcal{A}$, and the \acp{ap} must decide whether the \ac{ue} is in region $\mathcal{A}_0$ or $\mathcal{A}_1$.
-
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\columnwidth]{irlv.png}
-    \caption{Caption}
-    \label{fig:my_label}
+    \includegraphics[width=0.8\columnwidth]{irlv.JPG}
+    \caption{The considered \ac{irlv} scenario.}
+    \label{fig1}
 \end{figure}
 
-\subsection{Channel model}
+With reference to Fig. \ref{fig1} We consider a cellular system with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a \ac{irlv} system to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ within   $\mathcal{A}$. The complementary region to the \ac{roi} is  $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. The authentication process exploits the location dependency of the features of the channel between the \ac{ue} and the \acp{ap}.  Among the various features (e.g., power, impulse response, phase offset) for the sake of a simpler exposition we consider a narrowband transmission and we focus on the power attenuation along the channel between the  \acp{ap} and the \ac{ue}. Extensions of the technique to more elaborate channel features is straightforward and its evaluation is left for future study.
 
-Let us denote as $\bm{x}_{\rm bs}^{(n)} =(X_{\rm bs}^{(n)},Y_{\rm bs}^{(n)})$ the position of the $n^{\rm th}$ \ac{ap}. For a \ac{ue} located at $\bm{x}_{\rm ue}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is
-\begin{equation}
-    L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)}) = \sqrt{(X_{\rm bs}^{(n)}-X_u)^2+(Y_{\rm bs}^{(n)}-Y_u)^2}.
-\end{equation}
-When a \ac{ue} transmits with power $P_{\rm tx}$, the received power at the $n^{\rm th}$ \ac{ap} is
+The exploitation of the channel features is obtained by letting the \ac{ue} transmit a training signal, known at the \acp{ap}, from which the \acp{ap} can estimate the received power, from which a measure of the attenuation incurred along the channel is obtained. We assume that the attenuation estimation is perfect, thus not affected by noise or interference: this can be achieved by using a long enough training signal.
+
+
+
+
+\subsection{Channel Model}
+
+
+When the \ac{ue} transmits with power $P_{\rm tx}$, the received power at the $n^{\rm th}$ \ac{ap} is
 \begin{equation}\label{eq: rec pow}
     P_{\rm rc}^{(n)}= \frac{P_{\rm tx}}{a^{(n)}},
 \end{equation}
-where $a^{(n)}$ is the attenuation incurred by the transmitted signal to \ac{ap} $n$. The channel model for path loss and shadowing is derived from \cite{3gpp}. The attenuation coefficient includes the effects of path-loss, shadowing and fading, i.e.
+where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue} and the \ac{ap} $n$. The channel model for path loss and shadowing is derived from \cite{3gpp}. The attenuation coefficient includes the effects of path-loss, shadowing and fading. In particular, assuming Rayleigh fading we have 
 \begin{equation}
     \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
 \end{equation}
-The value $\sigma_{a,n}^2={P_{\ell}^{(n)}}e^{s}$ accounts for the path loss and shadowing components,  where $P_{\ell}^{(n)}$ is the path-loss coefficient and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component.
+where $\sigma_{a,n}^2={P_{\ell}^{(n)}}e^{s}$ accounts for the path loss and shadowing components, as $P_{\ell}^{(n)}$ is the path-loss coefficient and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component.
 
-For the path-loss we consider two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link the path loss in dB is modelled as
+The  path loss and shadowing modes are  derived from \cite{3gpp}. In particular, let us denote as $\bm{x}_{\rm bs}^{(n)} =(X_{\rm bs}^{(n)},Y_{\rm bs}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm ue}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)}) = \sqrt{(X_{\rm bs}^{(n)}-X_u)^2+(Y_{\rm bs}^{(n)}-Y_u)^2}$. For the path-loss we consider two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link the path loss in dB is modelled as
 \begin{equation}\label{eq:los}
-    P_{\ell,LOS}^{(n)} = 10 \nu \log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{c}\right),
+    P_{\ell,{\rm LOS}}^{(n)} = 10 \nu \log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{c}\right),
 \end{equation}
 where $\nu$ is the path loss coefficient, $f$ is the carrier frequency and $c$ is the speed of light. 
-
 For a  non-\ac{los} link the path loss coefficient in dB is defined as
 \begin{equation}
-    P_{\ell, non-LOS}^{(n)} = 40\log10\left (\frac{L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{10^3}\right ) + 21\log10\left(\frac{f}{10^6}\right) + 80.
+    P_{\ell, {\rm NLOS}}^{(n)} = 40\log_{10}\left (\frac{L(\bm{x}_{\rm ue},\bm{x}_{\rm bs}^{(n)})}{10^3}\right ) + 21\log_{10}\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
 
-We assume that shadowing is time-invariant while fading is time dependent. We also assume that shadowing $s$ depends on positions $\bm{x}_{\rm ue}$ and $\bm{x}_{\rm bs}^{(n)}$ and is correlated at different \ac{ue} and \ac{ap} positions. The shadowing map for the area is generated as a multivariate Gaussian distribution with correlation matrix whose entry $(i,j)$ is given by the covariance between two points $\bm{x}_i$ and $\bm{x}_j$ in the space. This depends on their relative distance $L(\bm{x}_i,\bm{x}_j)$ as
-\begin{equation}\label{eq: coor mat}
-    \left[ \Sigma \right]_{i,j}= \sigma_s^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}},
-\end{equation}
-where $d_c$ is the shadowing decorrelation distance. 
+The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma^2_s$. Moreover, the shadowing parameters of two \acp{ue} located at positions $\bm{x}_i$ $\bm{x}_j$ and transmitting to the same \ac{ap} are correlated Gaussian variables with correlation $\sigma_s^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance. 
 
-\subsection{Decision rule with known statistics}\label{sec:auth}
-The \ac{irlv} problem has a straightforward formulation as an hypothesis test. Let us define the two hypothesis: $\mathcal{H}_0$, i.e., the \ac{ue} is transmitting from area $\mathcal{A}_0$; $\mathcal{H}_1$, i.e., the \ac{ue} is transmitting from area $\mathcal{A}_1$.
+Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
 
-Given the attenuation vector $\bm{a}$ we want to determine which of the two hypothesis is more likely to be true in order to implement the aforementioned \ac{irlv} system. However, due to the random nature of the channel (including fading), a given estimated authentication vector $\bm{a}$ can not be univocally associated to one of the two regions. Instead, we indicate with $p(\bm{a}|\mathcal{H}_i)$ the probability of estimating the vector $\bm{a}$ given that hypothesis $\mathcal{H}_i$ is verified (i.e., the \ac{ue} is in region $\mathcal{A}_i$).
-Assuming that these conditional distributions are known we can compute the \ac{llr}
+\subsection{\ac{irlv} With Known Channel Statistics}\label{sec:auth}
+
+The \ac{irlv} problem can be seen as an hypothesis test between the two hypothesis (events):
+\begin{itemize}
+    \item $\mathcal{H}_0$: the \ac{ue} is transmitting from area $\mathcal{A}_0$;
+    \item $\mathcal{H}_1$: the \ac{ue} is transmitting from area $\mathcal{A}_1$.
+\end{itemize}
+Given vector $\bm{a} = [a^{(1)}, \ldots, a^{(N_{\rm AP})}]$ collecting the attenuation estimates at all the \acp{ap}, we aim  at determining the most likely hypothesis, in order to perform  \ac{irlv}. While a few measurements of path-loss would allow by triangulation to establish the exact position of the \ac{ue}, the presence of shadowing and fading makes the \ac{irlv} more problematic and in general prone to errors. Let us indicate with $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the decision taken at the \acp{ap} on the two hypothesis, and let $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the ground true, i.e., the effective location of the \ac{ue}. We have two possible errors: \acp{fa}, which occur when the \ac{ue}  is classified as outside the \ac{roi}, while being inside it, and \acp{md}, which occur when the \ac{ue}  is classified as inside the \ac{roi}, while being outside of it. We also indicate the \ac{fa} probability  as $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H = \mathcal H_0)$ and the \ac{md} probability as $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H = \mathcal H_1)$.
+
+Now, let  $p(\bm{a}|\mathcal{H}_i)$ be the probability of estimating the vector $\bm{a}$ given that  $\mathcal{H} = \mathcal{H}_i$. The \ac{llr} for the considered hypothesis is defined as 
 \begin{equation}\label{eq:lr}
-    \mathcal{L}^{(\bm{a})}=\log\left(\frac{p(\bm{a}|\mathcal{H}_0)}{p(\bm{a}|\mathcal{H}_1)}\right).
+    {\mathcal M}(\bm{a})=\log\left(\frac{p(\bm{a}|\mathcal{H}_0)}{p(\bm{a}|\mathcal{H}_1)}\right).
 \end{equation}
-According to the \ac{np} lemma, the most powerful test is obtained by comparing $\mathcal{L}^{(\bm{a})}$ with a threshold value $\Lambda$ i.e., deciding for hypothesis $\mathcal{H}_1$ if $\mathcal{L}^{(\bm{a})} \le \Lambda$ and for hypothesis $\mathcal{H}_0$ if $\mathcal{L}^{(\bm{a})} > \Lambda$. Let us define two error probabilities: the \ac{fa} probability, i.e. the probability  that a legitimate user is classified as non-legitimate $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H_0)$; the \ac{md} probability, i.e., the probability that a non-legitimate user is classified as legitimate, $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H_1)$. The \ac{np} lemma ensures that, for a given \ac{fa} probability, the minimum \ac{md} probability is obtained comparing $\mathcal{L}^{(\bm{a})}$ with $\Lambda$, where $\Lambda$ is chosen according to the desired \ac{fa} probability.
-
-Since in practice the statistics $p(\bm{a}|\mathcal{H}_i)$ are not available, we propose to use a \ac{ml} approach to perform the \ac{irlv}. To this end we briefly describe here the \ac{nn} and the \ac{svm} that will be used in the next sections.
+According to the \ac{np} theorem, the most powerful test is obtained by comparing $\mathcal{M}(\bm{a})$ with a threshold value $\Lambda$, i.e., deciding for hypothesis $\mathcal{H}_1$ if $\mathcal{M}(\bm{a}) \le \Lambda$ and for hypothesis $\mathcal{H}_0$ if $\mathcal{M}(\bm{a}) > \Lambda$. This procedures  provides the minimum \ac{md} probability for a given  \ac{fa} probability.
 
 \subsection{Example of \ac{np} Test}\label{sec:los}
-Consider the \ac{los} scenario. Let us define the overall network area as a circle $\mathcal{C}$ with radius $R_{\rm out}$ and consider a single \ac{ap} located at the center of $\mathcal{C}$. Consider the legitimate area $\mathcal{A}_{0}$ as a rectangle of height $H$ and length $L$ and with nearest point to the center of $\mathcal{C}$ at a distance $R_{\rm min}$. The non-legitimate area is $\mathcal{A}_1 = \mathcal{C} \setminus \mathcal{A}_0$.
 
-Since we stated that in the \ac{los} scenario the attenuation incurred by a \ac{ue} only depends on its relative distance to the \ac{ap} we can here compute a closed form solution for the \ac{llr} in (\ref{eq:lr}) and hence compare the machine learning-based solutions to the \ac{np} classification.
+We provide here an example of application of the \ac{np} theorem to a simplified scenario. Consider the overall network area as a circle $\mathcal{C}$ with radius $R_{\rm out}$ and assume a single \ac{ap} ($N_{\rm ap} =1$) located at the center of $\mathcal{C}$. The \ac{roi} $\mathcal{A}_{0}$ is a rectangle of height $H$ and length $L$ and with nearest point to the center of $\mathcal{C}$ at a distance $R_{\rm min}$. The channel model includes only path-loss (without shadowing and fading), in a \ac{los} scenario, therefore $a$ is given by (\ref{eq:los}). We notice that the attenuation is a deterministic function of the distance $R$, hence once an attenuation value is measured by the \ac{ap} the system computes the distance from the \ac{ap} and the \ac{ue}.
+\begin{equation}
+    R = \frac{c\sqrt[\leftroot{-3}\uproot{3}\nu]a}{f 4 \pi}
+\end{equation}
 
-Consider a \ac{ue} $u$ transmitting a message to the \ac{ap} located at a distance $R_0$ from the \ac{ap}. The probability othat $u$ is located at a distance $R\le R_0$ in $\mathcal{A}_0$ is
+ The probability that the \ac{ue} is located at a distance $R\le R_0$ in $\mathcal{A}_0$ is
 \begin{equation}\label{eq:cdf}
-     \mathbb{P}(R \le R_0|\mathcal{A}_0) = \frac{1}{|\mathcal{A}_0|}\int_{R_{\rm min}}^{R_0} R a(R) dR,
+     F(R_0) = \mathbb{P}(R \le R_0|\mathcal{A}_0) = \frac{1}{|\mathcal{A}_0|}\int_{R_{\rm min}}^{R_0} \rho  \zeta(\rho ) d\rho ,
 \end{equation}
-where $a(R)$ denotes the angle of the circular sector located at distance $R$ intersecting area $\mathcal{A}_0$.
-
-By taking the derivative of (\ref{eq:cdf}) respect to $R_0$ we obtain the \ac{pdf} of $u$ transmitting from a distance $R_0$ given that it is located in $\mathcal{A}_0$ as
+where $\zeta(\rho )$ denotes the angle of the circular sector located at distance $\rho$ intersecting area $\mathcal{A}_0$. By taking the derivative of (\ref{eq:cdf}) respect to $R_0$ we obtain the \ac{pdf} of $R_0$ given that the \ac{ue} is located in $\mathcal{A}_0$, i.e.,
+\begin{equation}\label{eq: num}
+    p_{R|\mathcal{A}_0}(R_0 |\mathcal{A}_0) = \frac{1}{|\mathcal{A}_0|}R_0 \zeta(R_0).
+\end{equation}
+Following the same reasoning and considering that the length of the arc of circle with radius $R_0$ located in $\mathcal{A}_1$ is $2\pi - \zeta(R_0)$, we obtain the \ac{pdf} of  $R$ given that the \ac{ue} is located in $\mathcal{A}_1$ as
+\begin{equation}\label{eq: den}
+     p_{R|\mathcal{A}_1}(R_0 |\mathcal{A}_1) = \frac{1}{|\mathcal{A}_1|}R_0 \left(2\pi-\zeta(R_0)\right),
+\end{equation}
+From (\ref{eq: num}) and (\ref{eq: den}) we obtain the \ac{llr} as a function of the \ac{ue}'s distance from the \ac{ap} as
 \begin{equation}
-    p(R_0|\mathcal{A}_0) = \frac{1}{|\mathcal{A}_0|}R_0a(R_0).
-\end{equation}
-Following the same reasoning and considering that the length of the arc of circle with radius $R_0$ located in $\mathcal{A}_1$ is $2\pi - a(R_0)$, we obtain the \ac{pdf} of $u$ being at a distance $R_0$ given that it is located in $\mathcal{A}_1$ as
-\begin{equation}
-     p(R_0|\mathcal{A}_1) = \frac{1}{|\mathcal{A}_1|}R_0\left(2\pi-a(R_0)\right),
-\end{equation}
-from which we obtain the closed form solution for (\ref{eq:lr}) 
-\begin{equation}
-    \mathcal{L}=\log\left(\frac{|\mathcal{A}_1|a(R_0)}{|\mathcal{A}_0|\left(2\pi-a(R_0)\right)}\right),
+    \mathcal{M}(R_0) = \frac{|\mathcal{A}_1|\zeta(R_0)}{|\mathcal{A}_0|\left(2\pi-\zeta(R_0)\right)}
 \end{equation}
 
+\section{\Ac{irlv} by Machine Learning Approaches}
 
-\section{\Ac{irlv} by machine learning approaches}
-The \ac{np} approach requires the knowledge of the conditional \acp{pdf} of the observed channel feature. When these are not available, as typically occurs in practical systems, we can resort to \ac{ml} approaches. Note that these solutions do not explicitly evaluate the \ac{pdf} needed to compute the \ac{llr}, rather directly implement the primitive by which the decision is taken.
 
-In this Section we \begin{enumerate*}[label=\alph*)]
-\item briefly review the \ac{mlp} \ac{nn} and the \ac{svm}, \item a describe how to learn the decision function with both \ac{mlp} and \ac{svm} and \item show that in asymptotic conditions (infinite training) the \ac{mlp} and \ac{svm} functions approximate the Neyman-Pearson optimal \ac{llr} function.
-\end{enumerate*}
+The application of the \ac{np} theorem requires the knowledge of the conditional channel statistics $p(\bm{a}|\mathcal{H}_i)$ at the \acp{ap}, which can be hard to obtain, also because a-priori assumptions on their expressions may be quite unrealistic. 
+ Therefore, we propose to use a \ac{ml} approach that requires two phases:
+\begin{itemize}
+    \item {\em Learning phase}:  by some external \ac{irlv} technique the \acp{ap} know where the \ac{ue} is and  collect $S$ attenuation vector estimates from inside and outside the \ac{roi};
+    \item {\em Exploitation phase}: the \ac{ap} at verifying the location of an un-trusted \ac{ue} by the attenuation's estimate. 
+\end{itemize}
 
-In this Section we assume that the \ac{irlv} system has access to both regions $\mathcal{A}_0$ and $\mathcal{A}_1$ and that during the authentication phase $S$ attenuation vectors $\ai, \ i=1,\dots S$  belonging to both regions are collected. Depending on the \ac{ml} approach we define for each vector $\ai$ an identification function $t_i = -1$ if $\ai$ was obtained from a \ac{ue} located in region $\mathcal{A}_0$ and $t_i = 1$ if the \ac{ue} was in region $\mathcal{A}_1$ for both \ac{mlp} with \ac{mse} training and \ac{svm}. For \ac{mlp} with \ac{ce} loss function we instead define the identification function $t_i^{(CE)}=0$ if $\ai$ was obtained from a \ac{ue} located in region $\mathcal{A}_0$ and $t_i^{(CE)}= 1$ if the \ac{ue} was in region $\mathcal{A}_1$. The vector $\bm{t}=[t_1,...,t_S]$ is defined as the vector of the labels of the attenuation vectors. By using these training vectors and labels we aim at building a function
-\begin{equation}
-    \hat{t} = f(\bm{y}) \,,
-\end{equation}
-that for an attenuation vector $\bm{y}$ returns the closest possible value to the identification function.
+In general in the learning phase the \ac{ml}   \ac{irlv} system is trained with attenuation vectors associated to both regions $\mathcal{A}_0$ and $\mathcal{A}_1$. For  attenuation vector $\ai$,  $i=1, \ldots, S$,  collected during the learning phase, we have an associated identification function $t_i$, where $t_i= -1$ if the trusted \ac{ue} is in region $\mathcal{A}_0$ and $t_i = 1$ if the trusted \ac{ue} is in region $\mathcal{A}_1$. Vector $\bm{t}=[t_1, \ldots, t_S]$ collects the labels of all the  attenuation vectors in the training phase. The \ac{irlv} algorithm can be seen as  a deterministic function $\hat{t} = f(\bm{a})\in \{-1, 1\}$ that provides a decision for each attenuation vector $\bm{a}$ observed in the {\em exploitation phase}. In the training phase the function  $f(\cdot)$ is designed according to both $\bm{a}^{(i)}$, $i=1, \ldots, S$, and  $\bm{t}$.
 
-We consider two learning strategies (based on the \ac{mse} and \ac{ce}) for \ac{mlp} \cite{Bishop2006} and one learning strategy (the \ac{ls} approach) for \ac{svm} \cite{Suykens1999}.
+Note that our solution does not explicitly evaluate the \ac{pdf} needed to compute the \ac{llr}, rather directly implement the primitive by which the decision is taken.
 
-\subsection{Neural networks}\label{sec:nn}
+In the rest of this Section we  briefly review the \ac{mlp} \ac{nn} and the \ac{svm}, describe the learning process  and show that in asymptotic conditions (infinite attenuation vectors in the learning phase and complex machines) the \ac{mlp} and \ac{svm} functions approximate the \ac{llr} function.
+  
+\subsection{Neural Networks}\label{sec:nn}
 
-A \ac{nn} is a function of the type $\mathbb{R}^N \to \mathbb{R}^O$ which maps a set of $N$ real values into $O$ real values. A \ac{nn} processes the input in stages, named layers, where the output of one layer is the input of the next layer. For a \ac{nn} with $L-1$ layers the first layer (layer $0$) is named after input layer, the last layer (layer $L-1$) is named after output layer and the other layers are named after hidden layers. In this work we only consider feedforward \acp{nn}, i.e., networks where no loops between the output of the neurons are present. This architecture is also known as \ac{mlp}
+A \ac{nn} is a function of the type $\mathbb{R}^N \to \mathbb{R}^O$ which maps a set of $N$ real values into $O$ real values. A \ac{nn} processes the input in stages, named layers, where the output of one layer is the input of the next layer. For a \ac{nn} with $L-1$ layers the first layer (layer $0$) is named after input layer, the last layer (layer $L-1$) is named after output layer and the other layers are named after hidden layers. In this work we only consider feedforward \acp{nn}, i.e., networks where no loop between the output of the neurons is present, an architecture  also known as \ac{mlp}. For a in-depth description of \acp{nn} please refer for example to \cite{goodfellow}.
 
 Layer $L-1$ has $N^{(\ell-1)}$ outputs obtained by processing the inputs with $N^{(\ell-1)}$ functions named neurons. The output of the $n^{\rm th}$ neuron of the $\ell^{\rm th}$ layer is
 \begin{equation}\label{eq:nonLin}
 y_n^{(\ell)} = \psi\left( \bm{w}_n^{(\ell -1)}\bm{y}^{(\ell-1)}+b_n^{(\ell)} \right),
 \end{equation}
-i.e., a mapping via an activation function $\psi$ of the weighted linear combination with weights $\bm{w}_n^{(\ell -1)}\in \mathbb{R}^{1\times N^{(\ell-1)}}$ of the outputs $\bm{y}^{(\ell-1)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$ of the previous layer plus a bias $b_n^{(\ell)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$. The \ac{nn} input is $\bm{y}^{(0)}$ while its output is $\bm{y}^{(L-1)}$. 
+i.e., the mapping by $\psi(\cdot)$ (the {\em activation function}) of the weighted linear combination with weights $\bm{w}_n^{(\ell -1)}\in \mathbb{R}^{1\times N^{(\ell-1)}}$ of the outputs $\bm{y}^{(\ell-1)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$ of the previous layer plus a bias $b_n^{(\ell)} \in \mathbb{R}^{N^{(\ell-1)} \times 1 }$. The \ac{nn} input is $\bm{y}^{(0)}$ while its output is $\bm{y}^{(L-1)}$. Various options are available in the literature for the activation functions \cite{goodfellow}. While the activation functions are typically fixed, the vectors $\bm{w}_n^{(\ell -1)}$ must be properly chosen to perform the desired hypothesis testing. 
 
-The activation function of the input layer is the identity function. The activation function of the hidden layers is the sigmoid function
+The output of the \ac{nn} is the scalar $y^{(L-1)}_1$ of the unique neuron in the output layer. For \ac{irlv} the input to the \ac{nn} is the attenuation vector $\bm{a}$ and the  test function is obtained by thresholding $y^{(L-1)}$, therefore
 \begin{equation}
-\psi^{(\ell)}(x) = \frac{1}{1-e^{-x}},
+    f(\bm{a}) = \begin{cases}
+    1 & y^{(L-1)}_1 > \lambda \\
+    0 & y^{(L-1)}_1 \leq \lambda.
+    \end{cases}
 \end{equation}
-whereas the activation function of the output layer is 
+Different values of $\lambda$ provide different values of \ac{fa} and \ac{md} probabilities for this \ac{irlv} test.
+   
+
+
+\subsection{\ac{nn} MSE Design}
+\label{sec: mse_train}
+
+Let $\tilde{\bm{t}} = [y_1^{(L-1)}(\bm{a}^{(1)}), \ldots,  y_1^{(L-1)}(\bm{a}^{(S)})]$ be the vector of the soft output values of the \ac{mlp}  obtained with the $S$ training attenuation vectors. The \ac{mlp} training is performed via gradient descent minimizing the \ac{mse} 
 \begin{equation}
-\psi^{(L-1)}(x)=\tanh^{-1}(x) = \frac{1}{2} \left( \frac{1+x}{1-x} \right).
-\end{equation}
-
-
-The vectors $\bm{w}_n^{(\ell)}$ and the scalars $b_n^{(\ell)}$ must be properly chosen for the desired purposes of the \ac{mlp}.
-
-Since the output of the \ac{mlp} $y^{(L-1)}$ is a continuous value in a range defined by the loss function (${-1,1}$ for \ac{mse} loss and ${0,1}$ for \ac{ce} loss), in order to perform classification, a suitable threshold value $\lambda$ must be chosen, such that the input vector $\bm{y}^{(0)}$ is classified as
-$\mathcal{H}_0$ if $\bm{y}^{(L-1)} > \lambda$ and as $\mathcal{H}_1$ if $\bm{y}^{(L-1)} \le \lambda$.
-
-
-In sections \ref{sec: mse_train} and \ref{sec: ce_train} we investigate the effects of training the \ac{mlp} with two different loss functions: the \ac{mse} and the \ac{ce}.
-
-Note that this approach does not require the knowledge of the statistics of $\bm{y}$ under the two hypotheses, while instead it requires a large enough set of training points $S$ to converge. In the following we show that for $S$ large enough we obtain the same performance (\ac{fa} and \ac{md}) probabilities of the \ac{np} solution in the \ac{los} scenario of section \ref{sec:los}.
-
-\subsection{Support Vector Machine}\label{sec:svm}
-A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification, \ie given the input vector $\bm{y} \in \mathbb{R}^N$ the \ac{svm} returns $\hat{t} = 1$ if $\bm{y}$ belongs to class 0 whereas $\hat{t}=-1$ if $\bm{y}$ belongs to class 1. It comprises the function $\tilde{t}(\mathbf{y}): \mathbb{R}^N \to \mathbb{R}$ defined by
-\begin{equation}
-\label{eq:svm}
-\tilde{t}(\mathbf{y}) = \mathbf{w}^T \phi (\bm{y}) + b,
-\end{equation}
-where $\phi: \mathbb{R}^N \to \mathbb{R}^K$ is a feature-space transformation function, $\mathbf{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter, and the decision function is
-\begin{equation}
-\label{eq:cases}
-\hat{t} = 
-\begin{cases}
-+1 \quad \tilde{t}(\mathbf{y})  \geq \gamma^* \\
--1 \quad \tilde{t}(\mathbf{y})  < \gamma^*,
-\end{cases}		
-\end{equation} 
-where $\gamma^*$ is a fixed threshold and controls \ac{fa} and \ac{md} probabilities. Note that in the classical \ac{svm} formulation we have $\gamma^* = 0$.
-
-While the feature-space transformation function is typically fixed, the vector $\mathbf{w}$ must be properly chosen to perform the desired classification. 
-
-\subsection{ MSE training \label{sec: mse_train}}
-Let us define as $\tilde{\bm{y}}_{\rm MSE}$ the vector of the output values of the \ac{mlp}, whose $i^{\rm th}$ component is the output of the \ac{mlp} obtained with the $i^{\rm th}$ training vector. The \ac{mlp} training is performed via gradient descent minimizing the \ac{mse}, defined as
-\begin{equation}
-MSE = \mathbb{E}[||\tilde{\bm{y}}_{\rm MSE}-\bm{t}||^2].
+\Gamma = \mathbb{E}[||\tilde{\bm{t}}-\bm{t}||^2].
 \end{equation}
 
 We now prove the connection of \ac{mse} training with the \ac{np} theorem.
 \begin{theorem}
 \label{th:nn_np}
-Consider a \ac{mlp} with perfect training and a sufficient number of parameters such that training reaches a global minimum. Then the classifier obtained by training the \ac{nn} via \ac{mse} is equivalent to the classifier obtained via \ac{np} lemma.
+Consider a \ac{mlp} with perfect training and a sufficient number of parameters such that training reaches a global minimum. Then the hypothesis test obtained by training the \ac{nn} via \ac{mse} is equivalent to the hypothesis test obtained via \ac{np} lemma.
 \end{theorem}
 \begin{proof}
 It has been shown in \cite{Ruck-90} that a \ac{mlp} trained via \ac{mse} implements a function that is the minimum \ac{mse} approximation of the Bayes optimal discriminant function
@@ -291,7 +263,9 @@ By imposing a threshold $\lambda$ on $g_0(\bm{a})$ and reorganizing we obtain
 which is equivalent to the \ac{np} criterion.
 \end{proof}
 
-\subsection{CE training \label{sec: ce_train}}
+\subsection{\ac{nn} CE Design}
+\label{sec: ce_train}
+ 
 In this case the \ac{mlp} training is performed via gradient descent minimizing the \ac{ce} defined as
 \begin{equation}\label{eq:ce}
 CE = -\sum_{i=1}^{S}\left(t_i\log\left(\tilde{y}_i^{\rm CE}\right)+\left(1-t_i\right)\log\left(1-\tilde{y}_i^{\rm CE}\right) \right),
@@ -329,121 +303,57 @@ which can be rewritten as
 We hence obtained the same formulation of (\ref{eq:bayesDisc}) and, by following the same steps of the proof of Theorem 1, we see that imposing a threshold on the output of the \ac{ce}-trained \ac{mlp} is equivalent to hypothesis testing performed via \ac{np} lemma.
 \end{proof}
 
+\subsection{Support Vector Machine}\label{sec:svm}
+A \ac{svm} \cite{Bishop2006} is a supervised learning model that can be used for classification and regression. We focus here on binary classification to solve the \ac{irlv} problem. The \ac{svm} solution comprises the function $\tilde{t}(\bm{a}): \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}$ defined by
+\begin{equation}
+\label{eq:svm}
+\tilde{t}(\bm{a}) = \bm{w}^T \phi (\bm{a}) + b,
+\end{equation}
+where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter, and the decision function is
+\begin{equation}
+\label{eq:cases}
+f(\bm{a}) = 
+\begin{cases}
++1 \quad \tilde{t}(\bm{a})  \geq \gamma^* \\
+-1 \quad \tilde{t}(\bm{a})  < \gamma^*,
+\end{cases}		
+\end{equation} 
+where $\gamma^*$ is a suitable threshold that controls \ac{fa} and \ac{md} probabilities. Note that in the classical \ac{svm} formulation we have $\gamma^* = 0$.
 
-\subsection{Least-Squares approach for \ac{svm}}
+While the feature-space transformation function is typically fixed, the vector $\bm{w}$ must be properly chosen to perform the desired hypothesis testing. 
+
+\subsection{\ac{svm} LS Training}
 For the learning phase of \ac{svm} we consider the \ac{lssvm}, an extension of the \ac{svm} first introduced in \cite{Suykens1999}. In \cite{Yevs} it is shown that  \ac{svm} and \ac{lssvm} are equivalent under mild conditions. Learning in \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
 	\label{eq:lssvm}
 	\begin{equation}
 	\label{eq:lssvmOrig}
-	\underset{\mathbf{w},e}{\text{min}} \quad f_l \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
+	\underset{\bm{w},e}{\text{min}} \quad f_l \triangleq \frac{1}{2} \bm{w}^T \bm{w} + C \frac{1}{2} \sum_{i=1}^S e_i ^2 
 	\end{equation}
 	\begin{equation}
 	\label{eq:stpart}
-	\text{subject to}\,  t_i[\mathbf{w}^T \phi (\mathbf{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
+	\text{subject to}\,  t_i[\bm{w}^T \phi (\bm{a}^{(i)}) + b] = 1- e_i\quad i = 1 ,\dots,S.
 	\end{equation}
 \end{subequations}
 
 From the constraints in \eqref{eq:lssvm} and the fact that $t_i = \pm 1$ we have
 \begin{equation}
 \label{eq:els}
-e_i^2 = (1 - t_i\tilde{t}(\mathbf{a}^{(i)}) )^2 = (t_i - \tilde{t}(\mathbf{a}^{(i)}))^2,
+e_i^2 = (1 - t_i\tilde{t}(\bm{a}^{(i)}) )^2 = (t_i - \tilde{t}(\bm{a}^{(i)}))^2,
 \end{equation}
-that is the squared error between the soft output of the \ac{lssvm} $\tilde{t}(\mathbf{a}^i)$ and the correct training label $t_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classifiers. 
+that is the squared error between the soft output of the \ac{lssvm} $\tilde{t}(\bm{a}^i)$ and the correct training label $t_i$. We now prove the equivalence between the \ac{lssvm} and \ac{np} classifiers. 
 
 Let us first consider the following lemma that establishes the convergence of the learning phase of \ac{svm}, as the training sample set becomes large.
 
 \begin{lemma}
 	\label{lem:lem1}
-	For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability to a vector of finite norm $||\mathbf{w}||_2 = \mathbf{w}^T\mathbf{w}$.
+	For training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, the vector $\bm{w}$ of the \ac{lssvm} converges in probability to a vector of finite norm $||\bm{w}||_2 = \bm{w}^T\bm{w}$.
 \end{lemma}
 
 \begin{proof}
-	Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j, t)$, with $t \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $t_i$, $i=1, \ldots, S$.
-	
-	By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,t)$ training vectors $\bm{\alpha}_j$ with associated true value $t$ in any training sequence.
-	All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,t)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
-	Note that in the training ensemble there could be two equal instances $\mathbf{a}^{(m)}=\mathbf{a}^{(n)}=\bm{\alpha}_j$, but with different labels $t_m \neq t_n$. Therefore, for $\mathbf{a}^{i}=\bm{\alpha}_j$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
-	This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
-	Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
-	\begin{subequations}
-		\label{eq:lssvm22}
-		\begin{equation}
-		\label{eq:lssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_l' \triangleq \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
-		\end{equation}
-		\begin{equation}
-		\label{eq:stpart2}
-		\text{subject to}\,  [\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,1}\quad j = 1 ,\dots,M.
-		\end{equation}
-		\begin{equation}
-		\label{eq:stpart3}
-		\quad  -[\mathbf{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
-		\end{equation}
-	\end{subequations}
-	whose solution provides the convergence value (in probability) of vector $\bm{w}$. We write the Lagrangian
-	\begin{equation}
-	\mathcal{L}_1 = f_l' - \sum_{k=1}^{M} v_k \left[ \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} \right] 
-	- \sum_{k=1}^{M} u_k \left[- \mathbf{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + e_{j,-1} \right], 
-	\end{equation}
-	where $\{u_k,v_k\}_{k=1}^{M}$ are the Lagrangian multipliers. Let us set to zero the derivatives w.r.t. $\{\mathbf{w},b,e_{j,1},e_{j,-1}, v_j,u_j\}$
-	\begin{subequations}
-		\begin{equation}
-		\label{eq:deriv1_1}
-		\frac{\partial \mathcal{L}_1}{ \partial \mathbf{w}}: \quad \mathbf{w} = \sum_{k=1}^{M} (u_k - v_k) \phi (\bm{\alpha}_k),
-		\end{equation}
-		\begin{equation}
-		\label{eq:deriv1_2}
-		\frac{\partial \mathcal{L}_1}{\partial b}: \quad \sum_{k=1}^{M} (u_k - v_k) = 0 ,
-		\end{equation}
-		\begin{equation}
-		\label{eq:deriv1_3}
-		\frac{\partial \mathcal{L}_1}{\partial e_{j,1}}: \quad v_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1} \quad j=1\dots M,
-		\end{equation}
-		\begin{equation}
-		\label{eq:deriv1_4}
-		\frac{\partial \mathcal{L}_1}{\partial e_{j,-1}}: \quad u_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1) e_{j,-1} \quad j=1\dots M,
-		\end{equation}
-		\begin{equation}
-		\label{eq:deriv1_5}
-		\frac{\partial \mathcal{L}_1}{\partial v_j}: \quad \mathbf{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} = 0 \quad j=1\dots M,
-		\end{equation}
-		\begin{equation}
-		\label{eq:deriv1_6}
-		\frac{\partial \mathcal{L}_1}{\partial u_j}: \quad - \mathbf{w}^T \phi (\bm{\alpha}_j) - b - 1 + e_{j,-1} = 0 \quad j=1\dots M.
-		\end{equation}
-	\end{subequations}
-	Substituting \eqref{eq:deriv1_1}, \eqref{eq:deriv1_3} and \eqref{eq:deriv1_4} in \eqref{eq:deriv1_5} and \eqref{eq:deriv1_6} we get the system of equations
-	\begin{subequations}
-		\label{eq:system1}
-		\begin{equation}
-		\sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) + b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1)} = 0
-		\quad j=1\dots M
-		\end{equation}
-		\begin{equation}
-		- \sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) - b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1)} = 0
-		\quad j=1,\dots, M
-		\end{equation}
-		\begin{equation}
-		\sum_{k=1}^{M} (u_k - v_k) = 0.
-		\end{equation}
-	\end{subequations}
-	\eqref{eq:system1} is a system with $2M + 1$ equations, linear in the $2M + 1$ unknowns $\{u_k,v_k,b\}_{k=1}^{k=M}$ and therefore has finite solution. In particular, using \eqref{eq:deriv1_1}, we have
-	\begin{equation}
-	\label{eq:wSolution}
-	\mathbf{w}^T\mathbf{w} =  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
-	\end{equation}
-	where we used the fact that the kernel function
-	\begin{equation}
-	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
-	\end{equation}
-	 is symmetric \wrt its inputs. 
-	
-%	Note that while the original problem \eqref{eq:lssvm}, as $S \to \infty$, has infinite constraints, the equivalent formulation \eqref{eq:lssvm22} includes a finite number $2M$ of constraints.
-	
-	We conclude that $\mathbf{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
-	
+See the Appendix.
 \end{proof}
+ 
 
 \begin{theorem}
 	\label{th:lsnp}
@@ -453,23 +363,23 @@ Let us first consider the following lemma that establishes the convergence of th
 	From \eqref{eq:lssvmOrig} consider
 	\begin{equation}
 	\label{eq:lssvmDim1}
-	\lim_{S \to +\infty} \frac{1}{S} f_l =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\mathbf{w},b),
+	\lim_{S \to +\infty} \frac{1}{S} f_l =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\bm{w},b),
 	\end{equation}
-	where $\E_t(\mathbf{w},b) = \Exp{\left(t_i - \tilde{t}(\mathbf{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\mathbf{a}^{(i)}$. 
-	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\mathbf{w}$ converges to a finite norm, we can write
+	where $\E_t(\bm{w},b) = \Exp{\left(t_i - \tilde{t}(\bm{a}^{(i)})\right)^2} $ is the expected value carried out \wrt the training points $\bm{a}^{(i)}$. 
+	The first equality of \eqref{eq:lssvmDim1} comes from Lemma 1: since $\bm{w}$ converges to a finite norm, we can write
 	\begin{equation}
-	\lim_{S\to \infty} \frac{1}{S} \mathbf{w} \mathbf{w}^T 	= 0.
+	\lim_{S\to \infty} \frac{1}{S} \bm{w} \bm{w}^T 	= 0.
 	\end{equation} 
 	The last equality comes from the strong law of large numbers. In the limit, the optimization problem \eqref{eq:lssvm} is equivalent to
 	\begin{equation}
 	\label{eq:lsInf}
 	\begin{aligned}
-	& \underset{\mathbf{w},b}{\text{min}} & &  \E_t(\mathbf{w},b), & 
+	& \underset{\bm{w},b}{\text{min}} & &  \E_t(\bm{w},b), & 
 	\end{aligned}	
 	\end{equation}
-	where we dropped the constraints in \eqref{eq:lssvm} by substitution using \eqref{eq:els}. The optimization problem is the same as in the \ac{nn} case and from \cite{Ruck-90} we have that the couple $(\mathbf{w}^*,b^*)$ minimizing \eqref{eq:lsInf} and parametrizing \eqref{eq:svm} is such that
+	where we dropped the constraints in \eqref{eq:lssvm} by substitution using \eqref{eq:els}. The optimization problem is the same as in the \ac{nn} case and from \cite{Ruck-90} we have that the couple $(\bm{w}^*,b^*)$ minimizing \eqref{eq:lsInf} and parametrizing \eqref{eq:svm} is such that
 	\begin{equation}
-	y(\mathbf{a}^i;\mathbf{w}^*,b^*)  \approx \mathbb{P}(\mathcal{H}_0|\mathbf{a}^{(i)}) - \mathbb{P}(\mathcal{H}_1|\mathbf{a}^{(i)}).
+	y(\bm{a}^i;\bm{w}^*,b^*)  \approx \mathbb{P}(\mathcal{H}_0|\bm{a}^{(i)}) - \mathbb{P}(\mathcal{H}_1|\bm{a}^{(i)}).
 	\end{equation}
 	The proof now is the same as in Theorem \ref{th:nn_np}.
 \end{proof}
@@ -477,16 +387,16 @@ Let us first consider the following lemma that establishes the convergence of th
 %It is common practice in the literature \cite{Bishop2006,Suykens1999} to work with the dual formulation of the optimization problems \eqref{eq:svmS} to \eqref{eq:lssvm} by constructing the Lagrangian. 
 %In the dual formulation objective functions and constraints are expressed as functions of the kernel 
 %\begin{equation}
-%	\psi(\mathbf{r}_i,\mathbf{r}_j) = \phi (\mathbf{r}_i)^T \phi(\mathbf{r}_j),	
+%	\psi(\bm{r}_i,\bm{r}_j) = \phi (\bm{r}_i)^T \phi(\bm{r}_j),	
 %\end{equation}
 %without explicitly defining the function $\phi(\cdot)$. 
 %The output of $\phi(\cdot)$ can now be of infinite dimension, like with the radial kernel family
 %\begin{equation}
-%	\psi(\mathbf{r}_i,\mathbf{r}_j; \sigma) = \exp \left( \frac{|| \mathbf{r}_i - \mathbf{r}_j ||^2}{2\sigma^2} \right).
+%	\psi(\bm{r}_i,\bm{r}_j; \sigma) = \exp \left( \frac{|| \bm{r}_i - \bm{r}_j ||^2}{2\sigma^2} \right).
 %\end{equation}
 %In this case, Theorem \ref{th:lsnp} holds only if
 %\begin{equation}
-%	\lim_{S \to +\infty} \frac{1}{S} \mathbf{w}^T \mathbf{w} < +\infty.	
+%	\lim_{S \to +\infty} \frac{1}{S} \bm{w}^T \bm{w} < +\infty.	
 %\end{equation} 
 %However, if we let $C \to +\infty$ in \eqref{eq:lssvm}
 
@@ -501,7 +411,7 @@ We now discuss the one-class classification problem implemented via both \ac{nn}
 \end{enumerate*} 
 
 \subsection{Decision rule with known statistics}\label{sec:oneClassOpt}
-In the one-class scenario the \ac{llr} \eqref{eq:lr} can not be used as discriminant function, as $p(\mathbf{a}|\mathcal{H}_1)$ is not known.
+In the one-class scenario the \ac{llr} \eqref{eq:lr} can not be used as discriminant function, as $p(\bm{a}|\mathcal{H}_1)$ is not known.
 
 Consider the probability of classification error
 \begin{equation}
@@ -527,10 +437,10 @@ P\left( \mathcal{H}_0\right)P\left(\bm{a}|\mathcal{H}_0\right)-P\left( \mathcal{
 However, since we do not know the statistics of the attenuation vectors in hypothesis $\mathcal{H}_1$ and the prior of both classes, we move all the unknown terms to the right side of the inequality, obtaining  
 \begin{equation}
 \label{eq:oneClassDec}
-\mathbf{a} \in
+\bm{a} \in
 \begin{cases}
-\mathcal{A}_0 \quad \text{if } p(\mathbf{a}|\mathcal{H}_0) \geq \Lambda \\
-\mathcal{A}_1 \quad \text{if } p(\mathbf{a}|\mathcal{H}_0) < \Lambda,
+\mathcal{A}_0 \quad \text{if } p(\bm{a}|\mathcal{H}_0) \geq \Lambda \\
+\mathcal{A}_1 \quad \text{if } p(\bm{a}|\mathcal{H}_0) < \Lambda,
 \end{cases}
 \end{equation}
 which represents the best discriminant function for the one class classification problem.
@@ -574,33 +484,33 @@ The performance of the obtained classifier are given by the following
 Let us consider the \ac{mse} approximation of $\tilde{\epsilon}(\bm{a}^{(n)})$ being $1/p(\bm{a}^{(n)}|\mathcal{H}_0)$ and hence consider the minimization problem over the weight vector $\bm{w}$
 \begin{equation}
 	\begin{aligned}
-		&\underset{\mathbf{w}}{\text{min}}\,\, \Exp{ \left( \tilde{\epsilon}(\mathbf{a},\mathbf{w}) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right) ^2} = \\
-		&\underset{\mathbf{w}}{\text{min}} \int_{\bm{a} \in \mathbb{R}^n} \left[ \tilde{\epsilon}(\mathbf{a},\mathbf{w}) - \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
-		&\underset{\mathbf{w}}{\text{min}} \left\lbrace \int_{\bm{a} \in \mathbb{R}^n} \tilde{\epsilon}(\mathbf{a},\mathbf{w})^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
-		-2\int_{\bm{a} \in \mathbb{R}^n} \tilde{\epsilon}(\mathbf{a},\mathbf{w}) d\mathbf{a}
-		+ \int_{\bm{a} \in \mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
+		&\underset{\bm{w}}{\text{min}}\,\, \Exp{ \left( \tilde{\epsilon}(\bm{a},\bm{w}) - \frac{1}{p(\bm{a}|\mathcal{H}_0)}\right) ^2} = \\
+		&\underset{\bm{w}}{\text{min}} \int_{\bm{a} \in \mathbb{R}^n} \left[ \tilde{\epsilon}(\bm{a},\bm{w}) - \frac{1}{p(\bm{a}|\mathcal{H}_0)} \right] ^2 p(\bm{a}|\mathcal{H}_0) d\bm{a} = \\
+		&\underset{\bm{w}}{\text{min}} \left\lbrace \int_{\bm{a} \in \mathbb{R}^n} \tilde{\epsilon}(\bm{a},\bm{w})^2 p(\bm{a}|\mathcal{H}_0) d\bm{a}
+		-2\int_{\bm{a} \in \mathbb{R}^n} \tilde{\epsilon}(\bm{a},\bm{w}) d\bm{a}
+		+ \int_{\bm{a} \in \mathbb{R}^n} \frac{1}{p(\bm{a}|\mathcal{H}_0)} d\bm{a} \right\rbrace.
 	\end{aligned}	
 \end{equation}
-We notice that the second term in brackets is the sum of the reconstruction error of the attenuation vectors over $\mathbb{R}^{n}$. Since different regions of $\mathbb{R}^n$ are characterized by different features and since the \ac{ae} is able to reconstruct, with small reconstruction error, only those vectors with features similar to those of the training set we can assume that the summation of the reconstruction errors over all possible feature spaces goes to infinity. The second integral does not hence depend on $\bm{w}$ as for each value of $\bm{w}$ it goes to infinity. The last term in brackets does not depend on the weight vector $\bm{w}$ and hence the only term that depends on $\bm{w}$ is the first one, which is the objective function of the training optimization problem. Noticing that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is equivalent to thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ we conclude that training the \ac{ae} with $\epsilon$ loss function provides a classifier that approximates in the \ac{mse} sense the optimal one (\ref{eq:oneClassDec}).
+We notice that the second term in brackets is the sum of the reconstruction error of the attenuation vectors over $\mathbb{R}^{n}$. Since different regions of $\mathbb{R}^n$ are characterized by different features and since the \ac{ae} is able to reconstruct, with small reconstruction error, only those vectors with features similar to those of the training set we can assume that the summation of the reconstruction errors over all possible feature spaces goes to infinity. The second integral does not hence depend on $\bm{w}$ as for each value of $\bm{w}$ it goes to infinity. The last term in brackets does not depend on the weight vector $\bm{w}$ and hence the only term that depends on $\bm{w}$ is the first one, which is the objective function of the training optimization problem. Noticing that thresholding $\frac{1}{p(\bm{a}|\mathcal{H}_0)}$ with $\gamma$ is equivalent to thresholding $p(\bm{a}|\mathcal{H}_0)$ with $1/\gamma$ we conclude that training the \ac{ae} with $\epsilon$ loss function provides a classifier that approximates in the \ac{mse} sense the optimal one (\ref{eq:oneClassDec}).
 \end{proof}
 \end{comment}
 
 \subsection{\Acl{oclssvm}}
 In this section we consider the \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. The soft output of the \ac{oclssvm} is 
 \begin{equation}
-	\tilde{t}_o = \mathbf{w} \phi(\mathbf{a}^{(i)}) - \rho		
+	\tilde{t}_o = \bm{w} \phi(\bm{a}^{(i)}) - \rho		
 \end{equation} 
 while the decision function is the same as in \eqref{eq:cases}, with $\tilde{t}_o$ in place of $\tilde{t}$. The training optimization problem is instead:
 \begin{subequations}
 	\label{eq:oneClassSvm}
 	\begin{equation}
 	\label{eq:oneClass1}
-	\underset{\mathbf{w},e_i, \rho}{\text{min}} \quad f_o \triangleq
-	 \frac{1}{2} \mathbf{w}^T \mathbf{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 - \rho 
+	\underset{\bm{w},e_i, \rho}{\text{min}} \quad f_o \triangleq
+	 \frac{1}{2} \bm{w}^T \bm{w} +  \frac{C}{2} \sum_{i=1}^S e_i^2 - \rho 
 	\end{equation}
 	\begin{equation}
 	\label{eq:oneClassConstr}
-	\text{subject to}\, \rho - \mathbf{w}^T \phi (\mathbf{a}^{(i)})  = e_i,  \quad i = 1,\dots S, 
+	\text{subject to}\, \rho - \bm{w}^T \phi (\bm{a}^{(i)})  = e_i,  \quad i = 1,\dots S, 
 	\end{equation}
 \end{subequations}
 where $C$ is a hyper-parameter.
@@ -618,7 +528,7 @@ We want to show that the \ac{oclssvm} is a machine that asymptotically approxima
 \label{lem:lem2}
 Given $S$ training samples $\bm{a}^{(i)}$ from a finite alphabet $\mathcal A$, taken with a given static probability distribution, for large number of training samples, i.e., as $S \rightarrow \infty$, problem \eqref{eq:oneClassSvm} is equivalent to 
 \begin{equation}
-		\underset{\mathbf{w},e_i, \rho}{\text{min}} \Exp{e_i}^2
+		\underset{\bm{w},e_i, \rho}{\text{min}} \Exp{e_i}^2
 \end{equation}
 \end{lemma}
 \begin{proof}
@@ -627,30 +537,30 @@ We first proceed as in the proof of Theorem \ref{th:lsnp} and re-write problem \
 		\label{eq:oclssvm22}
 		\begin{equation}
 		\label{eq:oclssvm2}
-		\underset{\mathbf{w},e}{\text{min}} \quad f_0' = \frac{1}{2} \mathbf{w}^T \mathbf{w} + C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_j^2 - \rho  
+		\underset{\bm{w},e}{\text{min}} \quad f_0' = \frac{1}{2} \bm{w}^T \bm{w} + C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_j^2 - \rho  
 		\end{equation}
 		\begin{equation}
 		\label{eq:ocstpart2}
-		\text{subject to}\,  \rho - \mathbf{w}^T \phi (\mathbf{a}^{(i)})  = e_i,  \quad i = 1,\dots M, 
+		\text{subject to}\,  \rho - \bm{w}^T \phi (\bm{a}^{(i)})  = e_i,  \quad i = 1,\dots M, 
 		\end{equation}		
 	\end{subequations} 
 Note that differently from \eqref{eq:lssvm22} we have only $M$ constraints (and not $2M$) because we have target labels only of one class.
 We now solve \eqref{eq:oclssvm22} using the same steps as in \cite{choi2009least}. Let us define the Lagrangian
 \begin{equation}
-	\mathcal{L} = 	\frac{1}{2} \mathbf{w}^T \mathbf{w} - \rho +
+	\mathcal{L} = 	\frac{1}{2} \bm{w}^T \bm{w} - \rho +
 	C S \frac{1}{2} \sum_{j=1}^M p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j^2 - 
-	\sum_{j=1}^{M} u_j \left[ \mathbf{w}^T \phi (\mathbf{a}^{(j)}) -\rho + e_j \right],
+	\sum_{j=1}^{M} u_j \left[ \bm{w}^T \phi (\bm{a}^{(j)}) -\rho + e_j \right],
 \end{equation}
 and set to zero the derivatives w.r.t. optimization variables and multipliers $u_j$
 
 \begin{subequations}
 \begin{equation}
 \label{eq:derivatives1}
-\frac{\partial \mathcal{L}}{\partial \mathbf{w}}: \quad \mathbf{w} = \sum_{j=1}^{M} u_j \phi (\mathbf{a}^{(j)}), 		
+\frac{\partial \mathcal{L}}{\partial \bm{w}}: \quad \bm{w} = \sum_{j=1}^{M} u_j \phi (\bm{a}^{(j)}), 		
 \end{equation}
   \begin{equation}
   \label{eq:derivatives2}
-  		\frac{\partial \mathcal{L}}{\partial \mathbf{e_j}}: \quad CS p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j = u_j \quad
+  		\frac{\partial \mathcal{L}}{\partial \bm{e_j}}: \quad CS p_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1) e_j = u_j \quad
   		 j=1,\dots, M,
   \end{equation}
   \begin{equation}
@@ -659,93 +569,93 @@ and set to zero the derivatives w.r.t. optimization variables and multipliers $u
   \end{equation}
   \begin{equation}
   \label{eq:derivatives4}
-  	\frac{\partial \mathcal{L}}{\partial \mathbf{u_j}}:	\quad \phi (\mathbf{a}^{(j)}) \mathbf{w} + e_j - \rho = 0.
+  	\frac{\partial \mathcal{L}}{\partial \bm{u_j}}:	\quad \phi (\bm{a}^{(j)}) \bm{w} + e_j - \rho = 0.
   \end{equation}
 \end{subequations}
 Substituting \eqref{eq:derivatives1} and \eqref{eq:derivatives2} in \eqref{eq:derivatives4} we get the system of equations
 \begin{equation}
 \begin{aligned}
-	&\sum_{i=1}^{M}  u_i k( \mathbf{a}^{(i)},\mathbf{a}^{(j)}) - \rho + \frac{u_j}{SCp_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1)}=0 \quad j = 1,\dots, M\\
+	&\sum_{i=1}^{M}  u_i k( \bm{a}^{(i)},\bm{a}^{(j)}) - \rho + \frac{u_j}{SCp_{\bm{a}^{(i)},\hat{t}_i}(\bm{\alpha}_j,1)}=0 \quad j = 1,\dots, M\\
 	&\sum_{i=1}^{M}u_i=1,
 \end{aligned}	
 \end{equation}
 with $M+1$ unknowns and $M+1$ equations which therefore provides finite convergence values for $\{\rho,u_i\}_{i=1}^{i=M}$.
-In the dual formulation of \eqref{eq:oneClassSvm} we can express $\mathbf{w}$ as a function of the kernel and Langrange multipliers $\{u_j\}$ 
+In the dual formulation of \eqref{eq:oneClassSvm} we can express $\bm{w}$ as a function of the kernel and Langrange multipliers $\{u_j\}$ 
 \begin{equation}
-\mathbf{w}^T\mathbf{w} = \sum_{i=1}^{M} \sum_{j=1}^{M} u_i u_j k(\bm{\alpha}_i,\bm{\alpha}_j), 
+\bm{w}^T\bm{w} = \sum_{i=1}^{M} \sum_{j=1}^{M} u_i u_j k(\bm{\alpha}_i,\bm{\alpha}_j), 
 \end{equation}
 which, given the finiteness of the sum, converges.
 We can now write
 \begin{equation}
 \begin{aligned}
-\lim_{S \to +\infty} &\frac{1}{S} \mathbf{w}^T\mathbf{w} =0, \\
+\lim_{S \to +\infty} &\frac{1}{S} \bm{w}^T\bm{w} =0, \\
 \lim_{S \to +\infty} &\frac{1}{S}\rho =0.
 \end{aligned}		
 \end{equation}
 It follows that
 \begin{equation}
-	\underset{\mathbf{w},e_i, \rho}{\text{min}} \frac{1}{S} f_o(\mathbf{w},e_i, b) = 
-	\underset{\mathbf{w},e_i, \rho}{\text{min}} \frac{1}{S} \sum_{i=1}^S e_i^2 = 
-	\underset{\mathbf{w},e_i, \rho}{\text{min}} \Exp{e_i}^2,	
+	\underset{\bm{w},e_i, \rho}{\text{min}} \frac{1}{S} f_o(\bm{w},e_i, b) = 
+	\underset{\bm{w},e_i, \rho}{\text{min}} \frac{1}{S} \sum_{i=1}^S e_i^2 = 
+	\underset{\bm{w},e_i, \rho}{\text{min}} \Exp{e_i}^2,	
 \end{equation}
-where $e_i^2 = (\mathbf{w}^T \phi (\mathbf{a}^{(i)}) -\rho)^2 $, the last equality follows from the law of large numbers, and the expected value is carried out \wrt the training $\mathbf{a}^{(i)}$.
+where $e_i^2 = (\bm{w}^T \phi (\bm{a}^{(i)}) -\rho)^2 $, the last equality follows from the law of large numbers, and the expected value is carried out \wrt the training $\bm{a}^{(i)}$.
 \end{proof}
 
-%Note that $|e_i|$ is proportional, by a factor $1/||\mathbf{w}||$, to the distance between any point $\phi(\mathbf{a}^{(i)})$ and the hyperplane $\mathbf{w}^T \phi (\mathbf{a}) + b = 0$ defined in the transformed space by the \ac{oclssvm}. We claim that $|e_i|$ is inversely proportional to $p(\mathbf{a}|\mathcal{H}_0)$ and we will prove that this holds in the mean-square sense. A direct consequence is that the \ac{oclssvm} approximates asymptotically the optimal decision rule of Section \ref{sec:oneClassOpt}. 
+%Note that $|e_i|$ is proportional, by a factor $1/||\bm{w}||$, to the distance between any point $\phi(\bm{a}^{(i)})$ and the hyperplane $\bm{w}^T \phi (\bm{a}) + b = 0$ defined in the transformed space by the \ac{oclssvm}. We claim that $|e_i|$ is inversely proportional to $p(\bm{a}|\mathcal{H}_0)$ and we will prove that this holds in the mean-square sense. A direct consequence is that the \ac{oclssvm} approximates asymptotically the optimal decision rule of Section \ref{sec:oneClassOpt}. 
 
 \begin{theorem}
 	\label{th:onelsnp}
-	Consider a \ac{oclssvm} with perfect training, \ie the training reaches a global minimum of $f_o(\mathbf{w},e_i,b)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classifier obtained by training the \ac{oclssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the optimal classifier \eqref{eq:oneClassDec}.
+	Consider a \ac{oclssvm} with perfect training, \ie the training reaches a global minimum of $f_o(\bm{w},e_i,b)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal A$. Then the classifier obtained by training the \ac{oclssvm} and by thresholding the soft output \eqref{eq:svm} is equivalent, in the \ac{mse} sense, to the optimal classifier \eqref{eq:oneClassDec}.
 \end{theorem}
 
 \begin{proof}
-Let $(\mathbf{w}^*,e_i^*, \rho^*)$ be the solution for problem \eqref{eq:oneClassSvm}. We note that $\rho^* >0$. If this was not the case, then we cold define the new triplet $(-\mathbf{w}^*,e_i^*, -\rho^*)$ providing a lower value for $f_o(\mathbf{w},e_i,\rho)$. This is because from \eqref{eq:oneClass1} the first two terms of the sum remain unchanged, while in the third term we are now subtracting a positive value, yielding
+Let $(\bm{w}^*,e_i^*, \rho^*)$ be the solution for problem \eqref{eq:oneClassSvm}. We note that $\rho^* >0$. If this was not the case, then we cold define the new triplet $(-\bm{w}^*,e_i^*, -\rho^*)$ providing a lower value for $f_o(\bm{w},e_i,\rho)$. This is because from \eqref{eq:oneClass1} the first two terms of the sum remain unchanged, while in the third term we are now subtracting a positive value, yielding
 \begin{equation}
-		f_o(-\mathbf{w}^*,e_i^*, -\rho^*) < f_o(\mathbf{w}^*,e_i^*, \rho^*).
+		f_o(-\bm{w}^*,e_i^*, -\rho^*) < f_o(\bm{w}^*,e_i^*, \rho^*).
 \end{equation} 
 Let us define the function 
 \begin{equation}
-	e(\mathbf{a},\mathbf{w},\rho) \triangleq \mathbf{w}^T  \phi (\mathbf{a}) - \rho,	
+	e(\bm{a},\bm{w},\rho) \triangleq \bm{w}^T  \phi (\bm{a}) - \rho,	
 \end{equation}
 and consider 
 \begin{equation}
 \label{eq:coreTheorem}
 	\begin{aligned}
-		&\underset{\mathbf{w},\rho}{\text{min}} \Exp{ \left( e(\mathbf{a},\mathbf{w},\rho) - \left(-\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
-		&\underset{\mathbf{w},\rho}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\mathbf{a},\mathbf{w},b) + \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} \right] ^2 p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a} = \\
-		&\underset{\mathbf{w},\rho}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},\rho) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a}
-		+2\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},\rho) d\mathbf{a}
-		+ \int_{\mathbb{R}^n} \frac{1}{p(\mathbf{a}|\mathcal{H}_0)} d\mathbf{a} \right\rbrace.
+		&\underset{\bm{w},\rho}{\text{min}} \Exp{ \left( e(\bm{a},\bm{w},\rho) - \left(-\frac{1}{p(\bm{a}|\mathcal{H}_0)}\right)\right) ^2} = \\
+		&\underset{\bm{w},\rho}{\text{min}} \int_{\mathbb{R}^n} \left[ e(\bm{a},\bm{w},b) + \frac{1}{p(\bm{a}|\mathcal{H}_0)} \right] ^2 p(\bm{a}|\mathcal{H}_0) d\bm{a} = \\
+		&\underset{\bm{w},\rho}{\text{min}} \left\lbrace \int_{\mathbb{R}^n} e^2(\bm{a},\bm{w},\rho) p(\bm{a}|\mathcal{H}_0) d\bm{a}
+		+2\int_{\mathbb{R}^n} e(\bm{a},\bm{w},\rho) d\bm{a}
+		+ \int_{\mathbb{R}^n} \frac{1}{p(\bm{a}|\mathcal{H}_0)} d\bm{a} \right\rbrace.
 	\end{aligned}	
 \end{equation}
 Consider the integral in the double product
 \begin{equation}
-		\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},b) d\mathbf{a} =
-		\int_{\mathbb{R}^n} \mathbf{w} ^T  \phi (\mathbf{a})d\mathbf{a} - \int_{\mathbb{R}^n} \rho d\mathbf{a},		
+		\int_{\mathbb{R}^n} e(\bm{a},\bm{w},b) d\bm{a} =
+		\int_{\mathbb{R}^n} \bm{w} ^T  \phi (\bm{a})d\bm{a} - \int_{\mathbb{R}^n} \rho d\bm{a},		
 \end{equation}
 For what concerns the second integral in the r.h.s. we can write
 \begin{equation}
-		\int_{\mathbb{R}^n} \rho d\mathbf{a} = \rho \int_{\mathbb{R}^n} d\mathbf{a} = \sign(\rho) (+\infty) = + \infty,
+		\int_{\mathbb{R}^n} \rho d\bm{a} = \rho \int_{\mathbb{R}^n} d\bm{a} = \sign(\rho) (+\infty) = + \infty,
 \end{equation}
 since we have shown that at the optimum $\rho^*>0$. Now, using \eqref{eq:derivatives1}, we can write the first integral as
 \begin{equation}
 \begin{aligned}
-		&\int_{\mathbb{R}^n} e(\mathbf{a},\mathbf{w},\rho) d\mathbf{a} = \int_{\mathbb{R}^n} \sum_{j=1}^{M} u_j k(\bm{a}_j,\bm{a})d\mathbf{a} \\
-		&= \sum_{j=1}^{M} u_j \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\mathbf{a} = \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\mathbf{a},
+		&\int_{\mathbb{R}^n} e(\bm{a},\bm{w},\rho) d\bm{a} = \int_{\mathbb{R}^n} \sum_{j=1}^{M} u_j k(\bm{a}_j,\bm{a})d\bm{a} \\
+		&= \sum_{j=1}^{M} u_j \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\bm{a} = \int_{\mathbb{R}^n} k(\bm{a}_j,\bm{a})d\bm{a},
 \end{aligned},
 \end{equation}
 where we used \eqref{eq:derivatives3}.
-Note that the only term in the last line of \eqref{eq:coreTheorem} that depends on the optimization variables $\{\mathbf{w}, \rho \}$  is 
+Note that the only term in the last line of \eqref{eq:coreTheorem} that depends on the optimization variables $\{\bm{w}, \rho \}$  is 
 \begin{equation}
-		\Exp{  e^2(\mathbf{a}, \mathbf{w}, \rho)} = \int_{\mathbb{R}^n} e^2(\mathbf{a},\mathbf{w},\rho) p(\mathbf{a}|\mathcal{H}_0) d\mathbf{a},
+		\Exp{  e^2(\bm{a}, \bm{w}, \rho)} = \int_{\mathbb{R}^n} e^2(\bm{a},\bm{w},\rho) p(\bm{a}|\mathcal{H}_0) d\bm{a},
 \end{equation}
 which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function optimized by the \ac{lssvm}.
-%The third term inside the curly brackets does not depend on $(\mathbf{w},b)$. Therefore, the mean square error approximation of $1/p(\mathbf{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\mathbf{a},\mathbf{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
+%The third term inside the curly brackets does not depend on $(\bm{w},b)$. Therefore, the mean square error approximation of $1/p(\bm{a}|\mathcal{H}_0)$ is found by minimizing $\Exp{e^2(\bm{a},\bm{w},b)}$ which, by Lemma \ref{lem:lem2}, is the same function minimized by \ac{oclssvm}. Asymptotically we have, from \eqref{eq:svm},
 %\begin{equation}
 %\label{eq:approx}
-%	\tilde{t} \approx \frac{1}{p(\mathbf{a}|\mathcal{H}_0)},	
+%	\tilde{t} \approx \frac{1}{p(\bm{a}|\mathcal{H}_0)},	
 %\end{equation} 
-%in the mean square sense. Note that thresholding $\frac{1}{p(\mathbf{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\mathbf{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
+%in the mean square sense. Note that thresholding $\frac{1}{p(\bm{a}|\mathcal{H}_0)}$ with $\gamma$ is the same as thresholding $p(\bm{a}|\mathcal{H}_0)$ with $1/\gamma$ which is the optimal classifier of Section \ref{sec:oneClassOpt}.
 \end{proof}
 \end{comment}
 
@@ -794,7 +704,7 @@ We generate $n_{\rm x}$ spatial coordinates located in area $\mathcal{A}_1$ and 
 Consider the set $\bm{A}$ of the attenuation vectors from $\mathcal{A}_1$ used for training the attacker \ac{ae}. The vector with highest reconstruction error is selected as a starting point for a possible successful attack. In order to find a direction toward which move the values of the attenuation vector to increment the probability of a successful attack, knowing that a higher reconstruction error means an higher probability of the vector belonging to the authentic area $\mathcal{A}_0$, we perform a gradient ascent algorithm based on the reconstruction error function (\ref{eq: rec err}) . 
 Starting from the attenuation vector with highest reconstruction error we perform various steps of the gradient algorithm and, for each step we exploit the forged vector as a possible attack. Considering the first attack as $\bm{a}_f^{(0)}=\underset{\bm{a} \in \bm{A}}{\max}$ the attack vector at iteration $q$ is
 \begin{equation}\label{eq: rnn attack}
-    \bm{a}_f^{(q)} = \bm{a}_f^{(q-1)}+ \delta \nabla_{\mathbf{a}}\epsilon(\bm{a}_f^{(q-1)}).
+    \bm{a}_f^{(q)} = \bm{a}_f^{(q-1)}+ \delta \nabla_{\bm{a}}\epsilon(\bm{a}_f^{(q-1)}).
 \end{equation}
 The gradient ascent algorithm continues up to the point where the attack is successful or when the reconstruction error is lower then the one obtained in the previous step, i.e., $\epsilon(\bm{a}_f^{(q)}) < \bm{a}_f^{(q-1)}$. When the algorithm stops due to the second case the training of the \ac{ae} is updated with $\bm{a}_f^{(q-1)}$. The new training set is hence updated as $\bm{A} = \bm{A} \cup \bm{a}_f^{(q)}$ and the attenuation vector with highest reconstruction error obtained by the updated \ac{ae} is selected as the new starting point of the gradient algorithm. The algorithm steps are shown in Algorithm \ref{alg:rnnGrad}.
 
@@ -813,7 +723,7 @@ The gradient ascent algorithm continues up to the point where the attack is succ
         \If{$a_f^{(0)}$ is not successful}{
         \Repeat{attack is successful or $\epsilon(\bm{a}_f^{(q)}) < \bm{a}_f^{(q-1)}$}
         {
-        generate attack $\mathbf{a}_f^{(q)}$ via (\ref{eq: rnn attack})\;
+        generate attack $\bm{a}_f^{(q)}$ via (\ref{eq: rnn attack})\;
         perform the attack \;
     
       }
@@ -828,36 +738,36 @@ The gradient ascent algorithm continues up to the point where the attack is succ
 
 
 \subsection{\Acl{oclssvm} Attack}
-The attacker trains a \ac{oclssvm} with the training data coming only from the non-authentic area and his objective is now to forge an attack value $\mathbf{a_{f}}$ that will be accepted as authentic by the \ac{irlv} system. We propose an euristic approach  exploiting the fact that the decision function for the attacker's trained \ac{oclssvm} would be
+The attacker trains a \ac{oclssvm} with the training data coming only from the non-authentic area and his objective is now to forge an attack value $\bm{a_{f}}$ that will be accepted as authentic by the \ac{irlv} system. We propose an euristic approach  exploiting the fact that the decision function for the attacker's trained \ac{oclssvm} would be
 \begin{equation}
-\mathbf{a} \in
+\bm{a} \in
 	\begin{cases}
 		\mathcal{A}_1 \quad \text{if} \quad \tilde{t} \geq \Lambda \\
 		\mathcal{A}_0 \quad \text{if} \quad \tilde{t} < \Lambda.
 	\end{cases}	
 \end{equation} 
-Moreover, from Theorem \ref{th:onelsnp} we know that the more $\tilde{t}$ decreases, the more $p(\mathbf{a}|\mathcal{H}_0)$ decreases as well.
-This suggests that the attacker could start from the training point $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ and then moving along the direction of greatest decrease $\mathbf{d}$, given by
+Moreover, from Theorem \ref{th:onelsnp} we know that the more $\tilde{t}$ decreases, the more $p(\bm{a}|\mathcal{H}_0)$ decreases as well.
+This suggests that the attacker could start from the training point $\bm{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ and then moving along the direction of greatest decrease $\bm{d}$, given by
 \begin{equation}
 \label{eq:dDef}
-	\mathbf{d} \triangleq - \nabla_{\mathbf{a}} \tilde{t},
+	\bm{d} \triangleq - \nabla_{\bm{a}} \tilde{t},
 \end{equation} 
-where $\nabla_{\mathbf{a}}$ is the gradient operator \wrt $\mathbf{a}$. Exploiting the dual formulation \cite{choi2009least} we can write
+where $\nabla_{\bm{a}}$ is the gradient operator \wrt $\bm{a}$. Exploiting the dual formulation \cite{choi2009least} we can write
 \begin{equation}
 \label{eq:gradient}
-		\nabla_{\mathbf{a}} \tilde{t} = \sum_{j=1}^{S} u_j \nabla_{\mathbf{a}} k(\mathbf{a}_j,\mathbf{a}).
+		\nabla_{\bm{a}} \tilde{t} = \sum_{j=1}^{S} u_j \nabla_{\bm{a}} k(\bm{a}_j,\bm{a}).
 \end{equation}
 Using the radial-basis kernel
 \begin{equation}
-k(\mathbf{a}_j,\mathbf{a}_i) = e^{-\frac{||\mathbf{a}_j-\mathbf{a}_i||^2}{2\sigma^2}},
+k(\bm{a}_j,\bm{a}_i) = e^{-\frac{||\bm{a}_j-\bm{a}_i||^2}{2\sigma^2}},
 \end{equation}
 the explicit expression for the gradient in \eqref{eq:gradient} is
 \begin{equation}
-	\nabla_{\mathbf{a}} \tilde{t} =\frac{1}{\sigma^2} \sum_{j=1}^{S} u_j k(\mathbf{a}_j,\mathbf{a}) (\mathbf{a}_j - \mathbf{a}).
+	\nabla_{\bm{a}} \tilde{t} =\frac{1}{\sigma^2} \sum_{j=1}^{S} u_j k(\bm{a}_j,\bm{a}) (\bm{a}_j - \bm{a}).
 \end{equation}
 Next, the attacker forges the point
 \begin{equation}
-	\mathbf{a}_f^{(1)} = \mathbf{a}_f^{(0)} + \delta \mathbf{d}, 	
+	\bm{a}_f^{(1)} = \bm{a}_f^{(0)} + \delta \bm{d}, 	
 \end{equation}
 where $\delta$ is a parameter, and performs the attack. If it does not succeed, he re-trains the \ac{oclssvm} with this new information and repeats the attack until he eventually succeeds. This constitutes Algorithm \ref{alg:svm}.
 
@@ -872,21 +782,30 @@ where $\delta$ is a parameter, and performs the attack. If it does not succeed, 
 
  \Repeat{attack is succesful}{
  		train a \ac{oclssvm} \;
-        select $\mathbf{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ \;
-        compute $\mathbf{d}$ from \eqref{eq:dDef} \;
-        compute $\mathbf{a}_f^{(1)} = \mathbf{a}_f^{(0)} + \delta \mathbf{d}$ \;
+        select $\bm{a}_{f}^{(0)}$ yielding the lowest value of $\tilde{t}$ \;
+        compute $\bm{d}$ from \eqref{eq:dDef} \;
+        compute $\bm{a}_f^{(1)} = \bm{a}_f^{(0)} + \delta \bm{d}$ \;
         perform the attack \;
         \If{
         	attack is not succesful}
-        	{$\mathbf{a}_f^{(1)}$ belongs to non-authentic area\;
-        	add $\mathbf{a}_f^{(1)}$ to training set\;}
+        	{$\bm{a}_f^{(1)}$ belongs to non-authentic area\;
+        	add $\bm{a}_f^{(1)}$ to training set\;}
       }
     
  \caption{One-class \ac{svm} Attack}
 \end{algorithm}
 
 
-\section{Numerical Results: two class classifcation}
+\section{Numerical Results}
+
+The activation function of the input layer is the identity function. The activation function of the hidden layers is the sigmoid function
+\begin{equation}
+\psi^{(\ell)}(x) = \frac{1}{1-e^{-x}},
+\end{equation}
+whereas the activation function of the output layer is 
+\begin{equation}
+\psi^{(L-1)}(x)=\tanh^{-1}(x) = \frac{1}{2} \left( \frac{1+x}{1-x} \right).
+\end{equation}
 
 \subsection{LOS scenario}\label{sec:res_los}
 In order to confirm the theoretical results obtained in previous sections and to compare the different solutions we test the performance of the \ac{irlv} systems in the scenario described in \ref{sec:los}.
@@ -1011,7 +930,93 @@ Consider the scenario depicted in Fig. \ref{fig:mBS}, where $N_{\rm AP}=5$ \acp{
 
 In order to test the proposed attack strategies we compare them with random attacks, i.e., where attenuation vectors appointed for attack are selected by randomly choosing a position in the non legitimate area $\mathcal{A}_1$. In particular we consider two different random attacks: the former generates random positions in the overall area $\mathcal{A}_1$, the latter generates random positions in the portion of area $\mathcal{A}_1$ which is at the border of the legitimate area $\mathcal{A}_0$. 
 
+\section*{Appendix}
 
+	Given a finite alphabet $\mathcal A = \{\bm{\alpha}_1, \ldots, \bm{\alpha}_M\}$ of $M$ elements for $\bm{a}^{(i)}$, we indicate with $p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j, t)$, with $t \in \{-1,1\}$, the joint probability of input vector $\bm{a}^{(i)}$ and corresponding output $t_i$, $i=1, \ldots, S$.
+	
+	By the Glivenko–Cantelli theorem we have that with probability 1 as $S\rightarrow \infty$ there are $Sp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,t)$ training vectors $\bm{\alpha}_j$ with associated true value $t$ in any training sequence.
+	All these training points will have the same value $e_i$, from (\ref{eq:stpart}), that will appear $Sp_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,t)$ times in the sum $\sum_{i=1}^{S} e_i^2$.
+	Note that in the training ensemble there could be two equal instances $\bm{a}^{(m)}=\bm{a}^{(n)}=\bm{\alpha}_j$, but with different labels $t_m \neq t_n$. Therefore, for $\bm{a}^{i}=\bm{\alpha}_j$ we can have two possible values for $e_i$, depending on $y_i$, and we denote them with $e_{j,1}$ and $e_{j,-1}$.
+	This translates in only $2M$ \textit{distinct} constraints of the type \eqref{eq:stpart}.
+	Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
+	\begin{subequations}
+		\label{eq:lssvm22}
+		\begin{equation}
+		\label{eq:lssvm2}
+		\underset{\bm{w},e}{\text{min}} \quad f_l' \triangleq \frac{1}{2} \bm{w}^T \bm{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1}^2 + p_{\bm{a}^{(i)},y_i}(\bm{\alpha}_j,-1) e_{j,-1}^2]  
+		\end{equation}
+		subject to 
+		\begin{equation}
+		\label{eq:stpart2}
+		[\bm{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,1}\quad j = 1 ,\dots,M.
+		\end{equation}
+		\begin{equation}
+		\label{eq:stpart3}
+		\quad  -[\bm{w}^T \phi (\bm{\alpha}_j) + b] = 1- e_{j,-1}\quad j = 1 ,\dots,M.
+		\end{equation}
+	\end{subequations}
+	whose solution provides the convergence value (in probability) of vector $\bm{w}$. We write the Lagrangian
+	\begin{equation}
+	\mathcal{L}_1 = f_l' - \sum_{k=1}^{M} v_k \left[ \bm{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} \right] 
+	- \sum_{k=1}^{M} u_k \left[- \bm{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + e_{j,-1} \right], 
+	\end{equation}
+	where $\{u_k,v_k\}_{k=1}^{M}$ are the Lagrangian multipliers. Let us set to zero the derivatives w.r.t. $\{\bm{w},b,e_{j,1},e_{j,-1}, v_j,u_j\}$
+	\begin{subequations}
+		\begin{equation}
+		\label{eq:deriv1_1}
+		\frac{\partial \mathcal{L}_1}{ \partial \bm{w}}: \quad \bm{w} = \sum_{k=1}^{M} (u_k - v_k) \phi (\bm{\alpha}_k),
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_2}
+		\frac{\partial \mathcal{L}_1}{\partial b}: \quad \sum_{k=1}^{M} (u_k - v_k) = 0 ,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_3}
+		\frac{\partial \mathcal{L}_1}{\partial e_{j,1}}: \quad v_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) e_{j,1} \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_4}
+		\frac{\partial \mathcal{L}_1}{\partial e_{j,-1}}: \quad u_j = CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1) e_{j,-1} \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_5}
+		\frac{\partial \mathcal{L}_1}{\partial v_j}: \quad \bm{w}^T \phi (\bm{\alpha}_j) + b - 1 + e_{j,1} = 0 \quad j=1\dots M,
+		\end{equation}
+		\begin{equation}
+		\label{eq:deriv1_6}
+		\frac{\partial \mathcal{L}_1}{\partial u_j}: \quad - \bm{w}^T \phi (\bm{\alpha}_j) - b - 1 + e_{j,-1} = 0 \quad j=1\dots M.
+		\end{equation}
+	\end{subequations}
+	Substituting \eqref{eq:deriv1_1}, \eqref{eq:deriv1_3} and \eqref{eq:deriv1_4} in \eqref{eq:deriv1_5} and \eqref{eq:deriv1_6} we get the system of equations
+	\begin{subequations}
+		\label{eq:system1}
+		\begin{equation}
+		\sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) + b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1)} = 0
+		\quad j=1\dots M
+		\end{equation}
+		\begin{equation}
+		- \sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) - b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1)} = 0
+		\quad j=1,\dots, M
+		\end{equation}
+		\begin{equation}
+		\sum_{k=1}^{M} (u_k - v_k) = 0.
+		\end{equation}
+	\end{subequations}
+	\eqref{eq:system1} is a system with $2M + 1$ equations, linear in the $2M + 1$ unknowns $\{u_k,v_k,b\}_{k=1}^{k=M}$ and therefore has finite solution. In particular, using \eqref{eq:deriv1_1}, we have
+	\begin{equation}
+	\label{eq:wSolution}
+	\bm{w}^T\bm{w} =  \sum_{k=1}^{M} \sum_{h=1}^{M} k(\bm{\alpha}_k,\bm{\alpha}_h) (v_kv_h + u_ku_h -2 v_ku_h),
+	\end{equation}
+	where we used the fact that the kernel function
+	\begin{equation}
+	k(\bm{\alpha}_k,\bm{\alpha}_h) \triangleq \phi(\bm{\alpha}_k) \phi(\bm{\alpha}_h)^T
+	\end{equation}
+	 is symmetric \wrt its inputs. 
+	
+%	Note that while the original problem \eqref{eq:lssvm}, as $S \to \infty$, has infinite constraints, the equivalent formulation \eqref{eq:lssvm22} includes a finite number $2M$ of constraints.
+	
+	We conclude that $\bm{w}$ has a finite norm since the rhs of \eqref{eq:wSolution} is a finite sum.
+	 
 \newpage 
 
 
