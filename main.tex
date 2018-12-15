@@ -473,8 +473,8 @@ In particular we consider here the \ac{ae} \cite{Hinton-2006}, i.e., a \ac{nn} t
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{AE.jpg}
-    \caption{Example of \ac{ae} architecture with $5$ input (and output) values, one hidden layer with 3 neurons.} 
-    \label{fig:mBS}
+    \caption{Example of \ac{ae} architecture with $5$ input (and output) values and one hidden layer with 3 neurons.} 
+    \label{fig:aeArch}
 \end{figure}
 
 For our \ac{irlv} problem, we train the \ac{ae} with attenuation vectors $\bm{a}^{(i)}$ taken only when the trusted \ac{ue} is in the \ac{roi} $\mathcal A_0$. Then, by letting $\bm{y}^{(L)}$ be the output of the \ac{ae} for the attenuation input $\bm{a}$, the reconstruction error is 
@@ -829,7 +829,7 @@ For the one-class classifier we use either the \ac{ae} or the \ac{svm}, as descr
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_com_CE_MSE_SVM.eps}
-    \caption{\ac{md} probability vs. \ac{fa} probability in the scenario of Section \ref{sec:los}. Comparison between the \ac{np} test function, \ac{svm} and \ac{mlp} with $N_h$ neurons in the hidden layer and both \ac{mse} (\ac{mse} in the legend) and CE training (\ac{ce} in the legend).}
+    \caption{\ac{md} probability vs. \ac{fa} probability in the scenario of Section \ref{sec:los}. Comparison between the \ac{np} test function, \ac{svm} and \ac{mlp} with $N_h$ neurons in the hidden layer and both \ac{mse} (NN-\ac{mse} in the legend) and CE training (NN-\ac{ce} in the legend).}
     \label{fig:ceVSmse}
 \end{figure}
 
@@ -894,7 +894,7 @@ Still from Fig. \ref{fig:trueMap} we see that with $N_h=10$ the \ac{mlp} and the
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_NP_approx_SVM.eps}
-    \caption{\ac{md} probability vs \ac{fa} probability for the attenuation map in Fig. \ref{fig:map} for \ac{np}, \ac{svm} and \ac{nn} with $N_h$ neurons in the hidden layer.}
+    \caption{\ac{md} probability vs \ac{fa} probability for the attenuation map in Fig. \ref{fig:map} for \ac{np}, \ac{svm} and \ac{nn} with MSE design and with $N_h$ neurons in the hidden layer.}
     \label{fig:trueMap}
 \end{figure}
 
@@ -913,14 +913,14 @@ We now consider the network of Fig. \ref{fig:mBS}, with $N_{\rm ap}=5$ \acp{ap} 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_avg_nTrain_kf1.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for different number of space points $n_x$ and one ($k_f=1$) fading realization per space point. The \ac{mlp} is implemented with $N_h = 10$ and \ac{ce} loss function.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for different number of space points $n_x$ and one ($k_f=1$) fading realization per space point. The NN-based \ac{irlv} is implemented with $N_h = 10$ and \ac{ce} loss function.}
     \label{fig:kf1}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_avg_nTrain_kf10.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for different numbers $n_x$ of space points and $k_f=10$ fading realizations per space point. The \ac{mlp} is implemented with $N_h = 10$ and \ac{ce} loss function.}
+    \caption{\ac{md} vs. \ac{fa} probabilities for different numbers $n_x$ of space points and $k_f=10$ fading realizations per space point. The NN-based \ac{irlv} is implemented with $N_h = 10$ and \ac{ce} loss function.}
     \label{fig:kf10}
 \end{figure}
 
@@ -939,7 +939,7 @@ We first consider a scenario with path-loss and shadowing only, thus without fad
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_ae_onNeur.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for the one class \ac{irlv}. \ac{ae} performance are shown for different values of $N_h$, $S=10^4$, and no fading.}
+    \caption{\ac{md} vs. \ac{fa} probability of one-class \acp{irlv} in a scenario with path-loss, shadowing and without fading. \ac{ae} performance are shown for different values of $N_h$.}
     \label{fig:aeNh}
 \end{figure}
  
@@ -955,7 +955,7 @@ Comparing one-class and two-class classification in Fig.s \ref{fig:kf1} and \ref
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_avgnTrain_oneClass_kf1.eps}
-    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set size and $k_f=10$ fading realizations.}
+    \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and fading with different training set size and $k_f=10$ fading realizations,  \ac{ae} with $N_h = 2$. }
     \label{fig:kf1Oc}
 \end{figure}
 
@@ -974,7 +974,7 @@ We consider now the \ac{ml} attack strategies described in Section \ref{sec:atta
 
 We compare the \ac{ml} attack strategies with uniformly random attacks, wherein attacks are launched by uniformly random positions in the \ac{roi}-complementary area $\mathcal{A}_1$.  Moreover, as a naive enhancement we consider a \emph{random-border} attack, wherein the attacker moves only along the border between areas $\mathcal{A}_0$ and $\mathcal A_1$, as we expect that being closer to the \ac{roi} increases the chances of a successful attack. The same \ac{ml} algorithm is implemented for one-class classification at both attack and defense sides, although the attacker training is with points in $\mathcal A_1$, while the \ac{ap} network training is with points in $\mathcal A_0$. For the \ac{irlv} training we set $k_f=10$.
 
-Fig.s \ref{fig:selectiveSVM} and \ref{fig:selectiveAE} show the \ac{cdf} of the attack number $\eta$ before a success attack for three strategies, namely the random, random-border and selective ML strategies. Fig. \ref{fig:selectiveAE} shows results when both attack strategy and \ac{irlv} are based on \acp{ae}, with$P_{\rm FA} =0.5$ for the network. We observe that the random-border attack outperforms the pure random attack, while still being less-powerful than the selective \ac{ml}. Similarly, Fig. \ref{fig:selectiveSVM} shows the \ac{roc} for $P_{\rm FA}=10^{-2}$ for \ac{irlv} and both the attack strategy and the \ac{irlv} are based on \ac{oclssvm}. In this case selective-ML outperforms the random attack, while the two random attacks perform closely. In summary we can conclude that the \ac{ml} selective attack is clearly reducing the time to reach a success with respect to random attacks. Moreover, \ac{oclssvm} is more robust to attacks than \ac{ae} when used for \ac{irlv}, as the \ac{fa} probability for \ac{irlv} is much smaller than that achieved by \ac{ae}.
+Fig.s \ref{fig:selectiveSVM} and \ref{fig:selectiveAE} show the \ac{cdf} of the time of first successful attack $\eta$ for three attack strategies, namely the random, random-border and selective ML strategies. Fig. \ref{fig:selectiveAE} shows results when both attack strategies and \ac{irlv} are based on \acp{ae}, with $P_{\rm FA} =0.5$ for the network. We observe that the random-border attack outperforms the pure random attack, while still being less-powerful than selective \ac{ml}. Similarly, Fig. \ref{fig:selectiveSVM} shows the \ac{cdf} of $\eta$ for \ac{irlv} with $P_{\rm FA}=10^{-2}$ and both the attack strategies and the \ac{irlv} based on \ac{oclssvm}. In this case selective-ML attack outperforms the pure random attack, while the two random attacks perform closely. We can conclude that the \ac{ml} selective attack is clearly reducing the time to reach a success with respect to random attacks. Moreover, \ac{oclssvm} is more robust to attacks than \ac{ae} when used for \ac{irlv}, as the \ac{fa} probability for \ac{irlv} is much smaller than that achieved by \ac{ae}.
 
 
 
