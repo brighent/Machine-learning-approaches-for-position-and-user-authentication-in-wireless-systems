@@ -169,7 +169,16 @@ Now, let  $p(\bm{a}|\mathcal{H}_i)$ be the probability of estimating the vector 
 \begin{equation}\label{eq:lr}
     {\mathcal M}(\bm{a})=\ln\left(\frac{p(\bm{a}|\mathcal{H}_0)}{p(\bm{a}|\mathcal{H}_1)}\right).
 \end{equation}
-According to the \ac{np} theorem, the most powerful test is obtained by comparing $\mathcal{M}(\bm{a})$ with a threshold value $\Lambda$, i.e., deciding for hypothesis $\mathcal{H}_1$ if $\mathcal{M}(\bm{a}) \le \Lambda$ and for hypothesis $\mathcal{H}_0$ if $\mathcal{M}(\bm{a}) > \Lambda$. This procedures  provides the minimum \ac{md} probability for a given  \ac{fa} probability.
+According to the \ac{np} theorem, the most powerful test is obtained by comparing $\mathcal{M}(\bm{a})$ with a threshold value $\Lambda$, i.e., obtaining the test function
+\begin{equation}
+\label{eq:oneClassDec}
+f^*(\bm{a}) =
+\begin{cases}
+1 &\text{if } {\mathcal M}(\bm{a}) \geq \Lambda \\
+-1 & \text{if } {\mathcal M}(\bm{a}) < \Lambda,
+\end{cases}
+\end{equation}
+This procedures  provides the minimum \ac{md} probability for a given  \ac{fa} probability.
 
 \subsection{Example of \ac{np} Test}\label{sec:los}
 
@@ -416,35 +425,33 @@ We now discuss the one-class classification problem implemented via both \ac{nn}
 \subsection{Test Function With Known Statistics}
 \label{sec:oneClassOpt}
 
-In the one-class scenario the \ac{llr} \eqref{eq:lr} can not be used as discriminant function, as $p(\bm{a}|\mathcal{H}_1)$ is not known. In this case we can resort to the \ac{glrt}, which although not proven to be optimal is a meaningful generalization of the \ac{np} test.
-
-Consider the probability of classification error
-\begin{equation}
-    p_e = {\mathbb P}\left(\hat{\mathcal H} = \mathcal{H}_0|{\mathcal H} = \mathcal{H}_1 \right){\mathbb P}\left({\mathcal H}=  \mathcal{H}_1\right)+{\mathbb P}\left(\hat{\mathcal H} = \mathcal{H}_1|{\mathcal H} = \mathcal{H}_0 \right){\mathbb P}\left( {\mathcal H} = \mathcal{H}_0\right)
-\end{equation}
-that can be rewritten as
-\begin{equation}
-   p_e = \int p_e(\bm{a}) d\bm{a}, 
-\end{equation}
-where \colorbox{yellow}{deve dipendere da dalla decisione}
-\begin{equation}\label{eq: disc}
-    p_e(\bm{a}) = {\mathbb P}\left( \mathcal{H}=\mathcal{H}_1\right)p\left(\bm{a}|\mathcal{H}_1\right)+{\mathbb P}\left(\mathcal{H}= \mathcal{H}_0\right){\mathbb P}\left(\bm{a}|\mathcal{H}_0\right)
-\end{equation}
-is the error \ac{pdf} for a given attenuation vector $\bm{a}$.
-
-\colorbox{yellow}{qui non capisco}
-In order to minimize $P_e$ we can then consider the following test function
-\begin{equation}
-f(\bm{a})=    \begin{cases}
-    1 & \text{if }  {\mathbb P}\left( \mathcal{H}= \mathcal{H}_0\right)p\left(\bm{a}|\mathcal{H}_0\right)- {\mathbb P}\left( \mathcal{H}=\mathcal{H}_1\right)p\left(\bm{a}|\mathcal{H}_1\right) \geq 0 \\
--1 & \text{if }
- {\mathbb P}\left( \mathcal{H}= \mathcal{H}_0\right)p\left(\bm{a}|\mathcal{H}_0\right)- {\mathbb P}\left( \mathcal{H}= \mathcal{H}_1\right)p\left(\bm{a}|\mathcal{H}_1\right) < 0\,,
-    \end{cases}
-\end{equation}
-which is an alternative form of the optimal Bayes discriminant function with decision rule.
-
-
-However, since we do not know the statistics of the attenuation vectors in hypothesis $\mathcal{H}_1$ and the prior probabilities of both hypothesis, we move all the unknown terms to the right side of the inequality, obtaining  
+In the one-class scenario the \ac{llr} \eqref{eq:lr} can not be used as discriminant function, as $p(\bm{a}|\mathcal{H}_1)$ is not known. In this case we can resort to the \ac{glrt} \cite{Kay-book}, which, although not proven to be optimal, is a meaningful generalization of the \ac{np} test. Hence the test function becomes 
+%
+%Consider the probability of classification error
+%\begin{equation}
+%    p_e = {\mathbb P}\left(\hat{\mathcal H} = \mathcal{H}_0|{\mathcal H} = \mathcal{H}_1 \right){\mathbb P}\left({\mathcal H}=  \mathcal{H}_1\right)+{\mathbb P}\left(\hat{\mathcal H} = \mathcal{H}_1|{\mathcal H} = \mathcal{H}_0 \right){\mathbb P}\left( {\mathcal H} = \mathcal{H}_0\right)
+%\end{equation}
+%that can be rewritten as
+%\begin{equation}
+%   p_e = \int p_e(\bm{a}) d\bm{a}, 
+%\end{equation}
+%where 
+%\begin{equation}\label{eq: disc}
+%    p_e(\bm{a}) = {\mathbb P}\left( \hat{\mathcal H} = \mathcal{H}_0|\mathcal{H}=\mathcal{H}_1\right)p\left(\bm{a}|\mathcal{H}_1\right)+{\mathbb P}\left(\hat{\mathcal H} = \mathcal{H}_1|\mathcal{H}= \mathcal{H}_0\right){\mathbb P}\left(\bm{a}|\mathcal{H}_0\right)
+%\end{equation}
+%is the error \ac{pdf} for a given attenuation vector $\bm{a}$.
+%
+%\colorbox{yellow}{qui non capisco}
+%In order to minimize $p_e(\bm{a})$ we can then consider the following test function
+%\begin{equation}
+%f(\bm{a})=    \begin{cases}
+%    1 & \text{if }   p\left(\bm{a}|\mathcal{H}_0\right)  \geq \lambda \\
+%-1 & \text{if }
+%  p\left(\bm{a}|\mathcal{H}_0\right) < \lambda\,,
+%    \end{cases}
+%\end{equation}
+%
+%However, since we do not know the statistics of the attenuation vectors in hypothesis $\mathcal{H}_1$ and the prior probabilities of both hypothesis, we move all the unknown terms to the right side of the inequality, obtaining  
 \begin{equation}
 \label{eq:oneClassDec}
 f^*(\bm{a}) =
@@ -668,46 +675,58 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 \end{proof}
 \end{comment}
 
-\section{Attack strategies}
+\subsection{\ac{ml}-Based Attack Strategies}
 \label{sec:attack}
-The proposed techniques can be exploited in order to provide not only an \ac{irlv} system, but also for implementing an attack strategy. The idea is here to use attenuation values measured from the non-authentic area and to train a \ac{ml} architecture based on these values.
 
-Consider a training set set large enough to cover the statistical description of the non-legitimate area $\mathcal{A}_1$. The attenuation vector with the highest reconstruction error in the \ac{ae} case or with the largest value of $\tilde{t}_o$ in the \ac{oclssvm} case can be considered at the border of the region $\mathcal{A}_1$, and hence nearer to region $\mathcal{A}_0$. In the next section we describe two attack strategies exploiting this property of the \ac{ml} algorithms: the former attack is the filter attack, which exploits the one class trained \ac{ml} algorithms to select proper attack vectors; the latter is the gradient based attack, which exploits the loss function of \ac{ml} algorithms in order to forge attenuation vectors that can be considered as authentic by the \ac{irlv} system.
+\ac{ml} techniques can be also exploited in order to perform more effective attacks. In particular the attacker  $a$) obtains estimates of the attenuation vectors of its channel to all the \acp{ap}, and $b$) moves around in the area $\mathcal A_1$ and performs attacks. Point $a$) is possible if \acp{ap} transmit training signals to the \ac{ue}, so that it can estimate the channel characteristics. We also assume that the attacker has means to determine if its attack has been successful, e.g., by receiving the services reserved to \acp{ue} in the \ac{roi}.
 
-\subsection{Selective \ac{ml} attack}
-As before stated the one class classification involves training the \ac{ml} algorithms with attenuation vectors measured from one of the two available classes. We here propose an attack strategy which trains the \ac{ml} algorithms with attenuation vectors measured from the non-legitimate area $\mathcal{A}_1$. However, differently from a simple random attack, the attenuation vectors are \emph{filtered} by the attacker with a machine trained to learn the class of non successful points. The chosen attack point is then only the one yielding the worst metric as output of the filter. In this way we aim at minimizing the number of attempted attacks.
+%Consider a training set set large enough to cover the statistical description of the non-legitimate area $\mathcal{A}_1$. The attenuation vector with the highest reconstruction error in the \ac{ae} case or with the largest value of $\tilde{t}_o$ in the \ac{oclssvm} case can be considered at the border of the region $\mathcal{A}_1$, and hence nearer to region $\mathcal{A}_0$. In the next section we describe two attack strategies exploiting this property of the \ac{ml} algorithms: the former attack is the filter attack, which exploits the one class trained \ac{ml} algorithms to select proper attack vectors; the latter is the gradient based attack, which exploits the loss function of \ac{ml} algorithms in order to forge attenuation vectors that can be considered as authentic by the \ac{irlv} system.
 
-In particular, consider an attenuation vector $\bm{a}_{\mathcal{A}_1}$ measured in area $\mathcal{A}_1$ This vector could be a possible successful attack and is hence tested. If the attack is not successful $\bm{a}_{\mathcal{A}_1}$ is used to train the \ac{ml} algorithm. 
-We generate $n_{\rm x}$ spatial coordinates located in area $\mathcal{A}_1$ and we measure the attenuation values incurred in each position. We then filter this set of vectors with the \ac{ml} algorithm and select as a possible attack the vector which is more likely to belong to class $\mathcal{A}_0$ (i.e., the one with highest reconstruction error for the \ac{ae} and with smallest $\tilde{t}_0$ for the \ac{oclssvm}). If the selected vector is not a successful attack then it is used to update the training of the \ac{ml} algorithm. This process is repeated until a successful attack vector is generated. The algorithm steps are shown in Algorithm \ref{alg:filter}.
+%\subsection{Selective \ac{ml} Attack}
 
-\begin{algorithm}[t]
-\label{alg:filter}
-  \algsetup{linenosize=\tiny}
-  \scriptsize
 
- \KwData{ $\bm{a}_{\mathcal{A}_1}$}
- \KwResult{successful attack vector }
- 
+Although it possible to perform multiple attacks, the purpose of the attacker is to be successful with the minimum number of attacks in order not to let the network detect to be under a series of attacks and take countermeasures (e.g., activating additional \ac{irlv} techniques or switching off the service). Moreover, a smaller number of attacks reduces the resource consumption by the attacker and provides faster access to the services. In order to make attacks more efficient we propose that the attacker moves in the \ac{roi}-complementary area $\mathcal A_1$, measures the attenuation vectors at various position and then decides whether to attack or not, according to its previous experience of failed attack. We denote this attack as {\em selective \ac{ml} attack}. As soon as an attack is successful the procedure is stopped, therefore the experience on which the attacker can base its decision comprises only failed attacks.
 
- \Repeat{attack is successful}{
-        \eIf{first attack}{
-        test $\bm{a}_{\mathcal{A}_1}$\;
-        \If{attack $\neq$ successful}{
-        build and train the \ac{ml} architecture with $\bm{a}_{\mathcal{A}_1}$\;
-        }
-        }
-        {
-        build set $\bm{A}$ of randomly selected attenuation vectors from $\mathcal{A}_1$\;
-        $\bm{a}_{\mathcal{A}_1} = \underset{\bm{a} \in \bm{A}}{\max} \quad \rm{loss} \, \rm{function}$ $(\bm{A})$\;
-        \If{attack $\neq$ successful}{
-       update training with $\bm{a}_{\mathcal{A}_1}$
-       }
-      }
-      }
-    
- \caption{Selective \ac{ml} attack}
-\end{algorithm}
+In details, the attacker uses the attenuation vectors of (failed) attacks to train a one-class classifier. Then, when reaching a new position it feeds the attenuation vector to the classifier and it is classified as belonging to the same class of training, no attacks is performed since the position is deemed to be useless. Otherwise, if the attenuation vector is not recognized as belonging to the class of collected training, it is evaluated as a potential successful attack and the attacker sends the message attempting to be authenticated by the network. Upon success the procedure is stopped, while upon failure the attenuation vector is fed as additional training to the machine, so that the classifier becomes more accurate.  
 
+%As before stated the one class classification involves training the \ac{ml} algorithms with attenuation vectors measured from one of the two available classes. We here propose an attack strategy which trains the \ac{ml} algorithms with attenuation vectors measured from the non-legitimate area $\mathcal{A}_1$. However, differently from a simple random attack, the attenuation vectors are \emph{filtered} by the attacker with a machine trained to learn the class of non successful points. The chosen attack point is then only the one yielding the worst metric as output of the filter. In this way we aim at minimizing the number of attempted attacks.
+
+%In particular, consider an attenuation vector $\bm{a}_{\mathcal{A}_1}$ measured in area $\mathcal{A}_1$ This vector could be a possible successful attack and is hence tested. If the attack is not successful $\bm{a}_{\mathcal{A}_1}$ is used to train the \ac{ml} algorithm. 
+%We generate $n_{\rm x}$ spatial coordinates located in area $\mathcal{A}_1$ and we measure the attenuation values incurred in each position. We then filter this set of vectors with the \ac{ml} algorithm and select as a possible attack the vector which is more likely to belong to class $\mathcal{A}_0$ (i.e., the one with highest reconstruction error for the \ac{ae} and with smallest $\tilde{t}_0$ for the \ac{oclssvm}). If the selected vector is not a successful attack then it is used to update the training of the \ac{ml} algorithm.
+
+For the one-class classifier we use either the \ac{ae} or the \ac{svm}, as described in the previous section. 
+%
+% This process is repeated until a successful attack vector is generated. The algorithm steps are shown in Algorithm \ref{alg:filter}.
+%
+%\begin{algorithm}[t]
+%\label{alg:filter}
+%  \algsetup{linenosize=\tiny}
+%  \scriptsize
+%
+% \KwData{ $\bm{a}_{\mathcal{A}_1}$}
+% \KwResult{successful attack vector }
+% 
+%
+% \Repeat{attack is successful}{
+%        \eIf{first attack}{
+%        test $\bm{a}_{\mathcal{A}_1}$\;
+%        \If{attack $\neq$ successful}{
+%        build and train the \ac{ml} architecture with $\bm{a}_{\mathcal{A}_1}$\;
+%        }
+%        }
+%        {
+%        build set $\bm{A}$ of randomly selected attenuation vectors from $\mathcal{A}_1$\;
+%        $\bm{a}_{\mathcal{A}_1} = \underset{\bm{a} \in \bm{A}}{\max} \quad \rm{loss} \, \rm{function}$ $(\bm{A})$\;
+%        \If{attack $\neq$ successful}{
+%       update training with $\bm{a}_{\mathcal{A}_1}$
+%       }
+%      }
+%      }
+%    
+% \caption{Selective \ac{ml} attack}
+%\end{algorithm}
+
+%Note that Point $b$) is possible by letting the attacker to be equipped with multiple antennas so that, thanks to the estimates its channel to the \acp{ap}, the attacker can beamform the training signals with different gains to the \acp{ap}, thus letting them estimate the intended attenuation values. In this setting even a static \ac{ue} can generate many attacks with different estimated attenuation vectors at the \acp{ap}. 
 
 % \subsection{Gradient-based \ac{ae} attack}
 % Consider the set $\bm{A}$ of the attenuation vectors from $\mathcal{A}_1$ used for training the attacker \ac{ae}. The vector with highest reconstruction error is selected as a starting point for a possible successful attack. In order to find a direction toward which move the values of the attenuation vector to increment the probability of a successful attack, knowing that a higher reconstruction error means an higher probability of the vector belonging to the authentic area $\mathcal{A}_0$, we perform a gradient ascent algorithm based on the reconstruction error function (\ref{eq: rec err}) . 
@@ -807,6 +826,13 @@ We generate $n_{\rm x}$ spatial coordinates located in area $\mathcal{A}_1$ and 
 
 \section{Numerical Results}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_com_CE_MSE_SVM.eps}
+    \caption{\ac{md} probability vs. \ac{fa} probability in the scenario of Section \ref{sec:los}. Comparison between the \ac{np} test function, \ac{svm} and \ac{mlp} with $N_h$ neurons in the hidden layer and both \ac{mse} (\ac{mse} in the legend) and CE training (\ac{ce} in the legend).}
+    \label{fig:ceVSmse}
+\end{figure}
+
 In this section we present numerical results obtained using the proposed solutions for the scenario described in Section II. In particular, for the \ac{nn} (in two-class classification) the activation function of the input layer is the identity function, while the activation function of the hidden layers is the sigmoid function
 \begin{equation}
 \psi^{(\ell)}(x) = \frac{1}{1-e^{-x}}.
@@ -828,12 +854,6 @@ In order to build the training set we consider $n_x$ spatial points $\bm{x}_{\rm
 
 \paragraph*{\ac{los} Model} We first consider the simplified scenario of Section \ref{sec:los} in order to have a simple implementation of the \ac{np} test function.  We consider an overall circular area $\mathcal{A}_0$ with radius $40$ m., a squared authentic area $\mathcal{A}_1$ of $625$ m$^2$ located inside $\mathcal{A}_0$, with upper left corner at a distance of $4$ m. from the center of $\mathcal{A}_0$. We considered $10^6$ training points. For the \ac{nn} solution we considered various values for the number $N_h$ of the neurons in the hidden layer.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.6\columnwidth]{res_com_CE_MSE_SVM.eps}
-    \caption{\ac{md} probability vs. \ac{fa} probability in the scenario of Section \ref{sec:los}. Comparison between the \ac{np} test function, \ac{svm} and \ac{mlp} with $N_h$ neurons in the hidden layer and both \ac{mse} (\ac{mse} in the legend) and CE training (\ac{ce} in the legend).}
-    \label{fig:ceVSmse}
-\end{figure}
 
 Fig. \ref{fig:ceVSmse} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with various \ac{irlv} techniques. In particular we compare the \ac{np} detector with \ac{svm} and and \ac{mlp} with $N_h$ neurons in the hidden layer and both \ac{mse} and CE training. 
 
@@ -914,16 +934,16 @@ Fig.s \ref{fig:kf1} and \ref{fig:kf10} show the \ac{roc} of various \ac{irlv} te
 
 We consider here the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. Note that the performance of the  \ac{ae}-based \ac{irlv} depends on its compressing capability and hence on the number of neurons $N_h$ in the hidden layer.  
 
-We first consider a scenario with path-loss and shadowing only, thus without fading. Fig. \ref{fig:aeNh} shows the \ac{roc} for \ac{ae} with $N_h \in [1, 5]$. $S=10^4$ training vectors have been used for training. We see that by increasing $N_h$ the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to the fact that  \ac{ae} compresses the attenuation vectors and hence best performance are achieved when it  extracts the optimal number of features from the input.  
+We first consider a scenario with path-loss and shadowing only, thus without fading. Fig. \ref{fig:aeNh} shows the \ac{roc} for the one class \ac{irlv} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$. $S=10^4$ training vectors have been used for training and only path loss and shadowing effects are considered. We see that by increasing $N_h$ the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to the fact that  \ac{ae} compresses the attenuation vectors and hence best performance are achieved when it  extracts the optimal number of features from the input. Furthermore we notice that the \ac{oclssvm} is a more effective classifier than the \ac{ae}, as the obtained \ac{roc} attains lower $P_{\rm MD}$ values for the same $P_{\rm FA}$ values.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_ae_onNeur.eps}
-    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae}-based \ac{irlv} for different values of $N_h$, $S=10^4$, and no fading.}
+    \caption{$P_{\rm MD}$ vs. $P_{\rm FA}$ for the one class \ac{irlv}. \ac{ae} performance are shown for different values of $N_h$, $S=10^4$, and no fading.}
     \label{fig:aeNh}
 \end{figure}
  
-We now consider the effect the training set size $S$. Note that for one-class \ac{irlv} the training set collects only attenuation vectors from \ac{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. As in Section \ref{sec:res_fading} we consider a training set with size $S = n_x \cdot k_f$ and we test and compare the training sets created with $k_f=1$ and $10$.
+We now consider the effect of the training set size $S$. Note that for one-class \ac{irlv} the training set collects only attenuation vectors from \ac{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. As in Section \ref{sec:res_fading} we consider a training set with size $S = n_x \cdot k_f$ and we test and compare the training sets created with $k_f=1$ and $10$.
 
 Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show $P_{\rm MD}$ vs. $P_{\rm FA}$ of \ac{irlv} systems based on  both \ac{ae} and \ac{oclssvm}, for $k_f = 1$ and $10$.  Results are reported in solid line for the \ac{ae} and in dashed line for the \ac{oclssvm}. The \ac{ae} has been implemented with $N_h=2$. Different markers denote various training set size values $k_t$.
 
@@ -946,27 +966,29 @@ Comparing one-class and two-class classification in Fig.s \ref{fig:kf1} and \ref
     \label{fig:kf10Oc}
 \end{figure}
 
-\subsection{Attack Strategies}
-Consider the scenario depicted in Fig. \ref{fig:mBS}, where $N_{\rm AP}=5$ \acp{ap} gather attenuation vectors from the transmitting users. Each attenuation vector is described by its path loss, shadowing and fading.  Both attack and defense are trained with one class classifier, respectively trained with attenuation vectors measured from $\mathcal{A}_1$ and $\mathcal{A}_0$. In order to test the attacks we fix a \ac{fa} probability at the defense side, such that the threshold value needed for classification is given. We compare attacks and defense both implemented via \ac{ae} and \ac{oclssvm}. 
+\subsection{\ac{ml} Attack Strategies}
 
-In order to test the proposed attack strategies we compare them with random attacks, i.e., where attenuation vectors appointed for attack are selected by randomly choosing a position in the non legitimate area $\mathcal{A}_1$. In particular we consider two different random attacks: the \emph{random} attack generates random positions in the overall area $\mathcal{A}_1$ and the \emph{random-border} attack generates random positions in the portion of area $\mathcal{A}_1$ which is at the border of the legitimate area $\mathcal{A}_0$. 
+We consider now the \ac{ml} attack strategies described in Section \ref{sec:attack} for the scenario of Fig. \ref{fig:mBS} and channels including path loss, shadowing and fading. The \ac{irlv} is also implemented with one-class classifiers. 
 
-In Fig.s \ref{fig:selectiveSVM} and \ref{fig:selectiveAE} we show the \ac{cdf} of the number of attack trials $\eta$ before a success for each of the three attack: random, random-border and selective ML.
-In Fig. \ref{fig:selectiveAE} attack and defence machines are \acp{ae}, with $P_{\rm FA}$ at defence is set to $0.5$, and we can see how the random-border attack performs better than the pure random attack, but still being less-powerful than the selective-ML. Similarly, in Fig. \ref{fig:selectiveSVM}, with $P_{\rm FA}$ at defence is set to $10^{-2}$, where attack and defence machines are \ac{oclssvm}, the selective-ML attack outperforms the random attacks. In this case, however, the two random attacks have similar performances.
+%In order to test the attacks we set the \ac{fa} probability at the defense side, such that the threshold value needed for classification is given. We compare attacks and defense both implemented via \ac{ae} and \ac{oclssvm}. 
+
+We compare the \ac{ml} attack strategies with uniformly random attacks, wherein attacks are launched by uniformly random positions in the \ac{roi}-complementary area $\mathcal{A}_1$.  Moreover, as a naive enhancement we consider a \emph{random-border} attack, wherein the attacker moves only along the border between areas $\mathcal{A}_0$ and $\mathcal A_1$, as we expect that being closer to the \ac{roi} increases the chances of a successful attack. The same \ac{ml} algorithm is implemented for one-class classification at both attack and defense sides, although the attacker training is with points in $\mathcal A_1$, while the \ac{ap} network training is with points in $\mathcal A_0$. For the \ac{irlv} training we set $k_f=10$.
+
+Fig.s \ref{fig:selectiveSVM} and \ref{fig:selectiveAE} show the \ac{cdf} of the attack number $\eta$ before a success attack for three strategies, namely the random, random-border and selective ML strategies. Fig. \ref{fig:selectiveAE} shows results when both attack strategy and \ac{irlv} are based on \acp{ae}, with$P_{\rm FA} =0.5$ for the network. We observe that the random-border attack outperforms the pure random attack, while still being less-powerful than the selective \ac{ml}. Similarly, Fig. \ref{fig:selectiveSVM} shows the \ac{roc} for $P_{\rm FA}=10^{-2}$ for \ac{irlv} and both the attack strategy and the \ac{irlv} are based on \ac{oclssvm}. In this case selective-ML outperforms the random attack, while the two random attacks perform closely. In summary we can conclude that the \ac{ml} selective attack is clearly reducing the time to reach a success with respect to random attacks. Moreover, \ac{oclssvm} is more robust to attacks than \ac{ae} when used for \ac{irlv}, as the \ac{fa} probability for \ac{irlv} is much smaller than that achieved by \ac{ae}.
 
 
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_selective_SVM.eps}
-    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set size and $k_f=10$ fading realizations.}
+    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set sizes and $k_f=10$ fading realizations.}
     \label{fig:selectiveSVM}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_selective_AE.eps}
-    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set size and $k_f=10$ fading realizations.}
+    \caption{Convergence of the \ac{ae}. $P_{\rm MD}$ vs. $P_{\rm FA}$ for \ac{ae} with $N_h = 2$, different training set sizes and $k_f=10$ fading realizations.}
     \label{fig:selectiveAE}
 \end{figure}
 
