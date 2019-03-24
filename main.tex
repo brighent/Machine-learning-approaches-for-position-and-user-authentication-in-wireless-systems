@@ -36,6 +36,7 @@
 \newacronym{md}{MD}{mis-detection}
 \newacronym{ml}{ML}{machine learning}
 \newacronym{mlp}{MLP}{multy-layer perceptron}
+\newacronym{mmse}{MMSE}{minimum mean square error}
 \newacronym{mse}{MSE}{mean squared error}
 \newacronym[\glslongpluralkey={neural networks}]{nn}{NN}{neural network}
 \newacronym{np}{N-P}{Neyman-Pearson}
@@ -182,13 +183,14 @@ In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm
 \end{equation}
 where $\nu$ is the path-loss coefficient, $f$ is the carrier frequency and $c$ is the speed of light. 
 For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
-\begin{equation}
+\begin{equation}\label{eq:nlos}
     P_{{\rm PL}, {\rm NLOS}}\left(L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})\right) = 40\log_{10}\left (\frac{L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) + 21\log_{10}\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
 
 The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma^2_s$. Moreover, the shadowing parameters of two \acp{ue} located at positions $\bm{x}_i$ $\bm{x}_j$ and transmitting to the same \ac{ap} have correlation $\sigma_s^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}. 
 
 Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
+
 
 \subsection{\ac{irlv} With Known Channel Statistics}\label{sec:auth}
 
@@ -197,7 +199,16 @@ The \ac{irlv} problem can be seen as a hypothesis testing between the two hypoth
     \item $\mathcal{H}_0$: the \ac{ue} is transmitting from area $\mathcal{A}_0$;
     \item $\mathcal{H}_1$: the \ac{ue} is transmitting from area $\mathcal{A}_1$.
 \end{itemize}
-This is also denoted as a two-class classification problem. Given vector $\bm{a} = [a^{(1)}, \ldots, a^{(N_{\rm AP})}]$ collecting the attenuation estimates at all the \acp{ap}, we aim  at determining the most likely hypothesis in order to perform \ac{irlv}. While a few measurements of path-loss would allow, by triangulation, to establish the exact position of the \ac{ue}, both shadowing and fading make the \ac{irlv} more problematic and in general prone to errors. Let $\mathcal H \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ be the effective location of the \ac{ue}, and $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the decision taken at the \acp{ap}. We have two possible errors: \acp{fa}, which occur when the \ac{ue}  is classified as outside the \ac{roi}, while being inside it, and \acp{md}, which occur when the \ac{ue}  is classified as inside the \ac{roi}, while being outside of it. We indicate the probability of \ac{fa} as $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H = \mathcal H_0)$ and the  probability of \ac{md} as $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H = \mathcal H_1)$. 
+This is also denoted as a two-class classification problem. Given vector $\bm{a} = [a^{(1)}, \ldots, a^{(N_{\rm AP})}]$ collecting the attenuation estimates at all the \acp{ap}, we aim  at determining the most likely hypothesis in order to perform \ac{irlv}. While a few measurements of path-loss would allow, by triangulation, to establish the exact position of the \ac{ue}, both shadowing and fading make the \ac{irlv} more problematic and in general prone to errors. 
+
+\revi{avg_1}{We also consider the scenario in which the \ac{ap} averages out fading by measuring $N_{\rm avg}$ received power realizations. The feature vector in this case is $\bm{a}_{\Sigma} = [a^{(1)}_{\Sigma}, \ldots, a^{(N_{\rm AP})}_\Sigma]$, where}
+\begin{equation}
+\label{eq:avg}
+a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
+\end{equation}
+\revi{avg_2}{Note that each element of the sum in \eqref{eq:avg} is a different fading realization with the same shadowing power. We thus model the situation in which the user is standing still for $N_{\rm avg}$ measurement periods and the  \ac{ap} exploits all the measurements to mitigate the fading effects.}
+
+Let $\mathcal H \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ be the effective location of the \ac{ue}, and $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the decision taken at the \acp{ap}. We have two possible errors: \acp{fa}, which occur when the \ac{ue}  is classified as outside the \ac{roi}, while being inside it, and \acp{md}, which occur when the \ac{ue}  is classified as inside the \ac{roi}, while being outside of it. We indicate the probability of \ac{fa} as $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H = \mathcal H_0)$ and the  probability of \ac{md} as $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H = \mathcal H_1)$. 
 %
 Let $p(\bm{a}|\mathcal{H}_i)$ be the probability of observing the vector $\bm{a}$ given that $\mathcal{H} = \mathcal{H}_i$. The \ac{llr} for the considered hypothesis is defined as 
 \begin{equation}\label{eq:lr}
@@ -293,6 +304,29 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 \revi{simpleScen4_4}{ and $\erf(x)= \frac{2}{\sqrt{\pi}}\int_0^x e^{-t^2} dt$ is the error function.}
 
 \revi{llrComp}{We notice however that the obtained functions are easily computed for a single \ac{ap} and spatially uncorrelated fading and shadowing. In more complicated scenarios including spatially correlated channels and multiple \acp{ap} the probabilities of incurring in a certain attenuation in the two hypotheses would not have a simple solution, making the implementation of \ac{np} test problematic. We thus propose to implement the \ac{irlv} hypothesis testing by \ac{ml} approaches, which do not require the a-priori knowledge of the probability density functions.}
+
+\subsection{\Acl{mmse} Approach}
+\revi{literature_1}{With known channel statistics we can tackle \ac{irlv} by solving \eqref{eq:los} and \eqref{eq:nlos} for $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})$ and then find the user position using a \ac{mmse} approach, like in \cite{li2010security}. This consists in solving the following optimization problem
+}
+	\begin{align}
+ \hat{\bm x}_{\rm UE} =  \underset{\bm x}{\arg \min} \sum_{i=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) \right)^2,
+\end{align}
+\revi{literature_2}{where $\hat{\bm x}_{\rm UE}$ is the estimated user position. Then, we check whether $\hat{\bm x}_{\rm UE}$ lies inside or outside $\mathcal{A}_0$. More specifically, since the estimation is affected by noise, we build a \ac{roc} by defining $\mathcal{A}_0 ^ {(\theta)}$ as scaled versions of $\mathcal{A}_0$, such that $|\mathcal{A}_0 ^ {(\theta)}| \triangleq \theta|\mathcal{A}_0|$, with $\theta \in \mathbb{R}$.
+The \ac{mmse} approach decision function becomes then
+}
+
+\begin{equation}
+\hat{\mathcal{H}}_{\rm MMSE} = 
+\begin{cases}
+\mathcal{H}_0 \quad \text{if } \hat{\bm x}_{\rm UE} \in \mathcal{A}_0 ^ {(\theta)} \\
+\mathcal{H}_1 \quad {\rm otherwise}.
+\end{cases}
+\end{equation}
+
+\revi{literature_3}{Note that here the shadowing acts as a non-Gaussian noise, since to retrieve $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})$ we go from the logarithmic domain (in which shadowing is Gaussian distributed) to the linear domain.
+Moreover, this approach relies not only on the knowledge of the path-loss models \eqref{eq:los} \eqref{eq:nlos}, but also on the ability to distinguish between \ac{los} and non-\ac{los}.
+In the next Sections we see how the proposed \ac{irlv} system by \ac{ml} achieves better performance under no previous knowledge of any channel statistics and with fading, which was not considered in \cite{li2010security}.}
+
 
 
 \section{\Ac{irlv} by Machine Learning Approaches}\label{sec:irlvML}
