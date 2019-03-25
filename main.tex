@@ -48,7 +48,7 @@
 \newacronym{rss}{RSS}{received signal strength}
 \newacronym[\glslongpluralkey={support vector machines}]{svm}{SVM}{support vector machine}
 \newacronym{ue}{UE}{user equipment}
-
+\expandafter\def\expandafter\quote\expandafter{\quote\setstretch{1}~\\}
 % Revisions macro
 \usepackage[normalem]{ulem}
 \usepackage[user]{zref}
@@ -98,7 +98,7 @@
 \newtheorem{corollary}{Corollary}
 
 \title{Machine Learning For In-Region Location Verification In Wireless Networks}
-\author{\small Alessandro Brighente, Francesco Formaggio, Giorgio Maria Di Nunzio, and  Stefano Tomasin }
+\author{Alessandro Brighente, Francesco Formaggio, Giorgio Maria Di Nunzio, \\ and  Stefano Tomasin }
 \date{\today}
 
 
@@ -119,14 +119,14 @@
 \end{abstract}
 
 \begin{IEEEkeywords}
-In-region location verification, machine learning, neural network, auto-encoder, support vector machine.
+Auto-encoder, in-region location verification, machine learning, neural network, support vector machine.
 \end{IEEEkeywords}
 
 \glsresetall
 \clearpage
 \section{Introduction}
 
-Location information without verification gives ample opportunities to attack a service granting system since the location information can be easily manipulated either by tampering the hardware/software reporting the location or by spoofing the \ac{gnss} signal outside the user device. In this context, location verification systems aim at verifying the position of mobile devices in a mobile communication network. These systems can be used to implement location-based granting systems, e.g., location-based access control, media streaming, and social networking, and have applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature, there are approaches that leverage the features of the wireless channel over which communication occurs. For example, the approach proposed by \cite{yan2016location} uses \ac{rss} to provide the measurement of the distance between the user and other network nodes. Moreover, the location verification problem is similar to the  {\em user authentication} problem addressed at the physical layer where channel measurements are processed to verify the identity of the message sender \cite{7270404}. 
+Location information without verification gives ample opportunities to attack a service granting system since the location information can be easily manipulated either by tampering the hardware/software reporting the location or by spoofing the \ac{gnss} signal outside the user device. In this context, location verification systems aim at verifying the position of mobile devices in a mobile communication network. These systems can be used to implement location-based granting systems, e.g., location-based access control, media streaming, and social networking, and have applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature, there are approaches that leverage the features of the wireless channel over which communication occurs. For example, the approach proposed by \cite{yan2016location} uses \ac{rss} to provide the measurement of the distance between the user and other network nodes. \revi{rev3cit}{Moreover, the location verification problem is similar to the  {\em user authentication} problem addressed at the physical layer where channel measurements are processed to verify the identity of the message sender. Examples include the comparison of an estimated channel feature with a  reference channel feature when the noise statistics is known \protect{\cite{Baracca-12}}, or learning strategies when the channel statistics are unknown \protect{\cite{7398138}} (see also \protect{\cite{7270404}} for a survey).}
 
 In this work, we focus on \ac{irlv} that aims at verifying whether a user is inside a specific \ac{roi} by exploiting the features of the channel between the user to be verified and a set of trusted \acp{ap} \cite{Zeng-survey}. In this regard, distance bounding techniques with rapid exchanges of packets between the verifier and the prover have been proposed in \cite{Brands}. Different solutions use radio-frequency and ultrasound signals \cite{Sastry} or anchor nodes and increasing transmit power by the sender \cite{Vora}. More recently, a delay-based verification technique leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays, has been proposed in \cite{7145434}.  
 %
@@ -136,7 +136,7 @@ When the knowledge of the channel statistics is not available, a two-step soluti
 
 In this paper, we remove the channel knowledge assumption and study two \ac{ml} solutions based on \acp{nn} and \ac{svm} to learn channel features of the \ac{roi}. We investigate two loss functions for the \ac{mlp} design: the \ac{ce} and the \ac{mse}; while we study the \ac{ls} implementation of the \ac{svm}. We show that these two approaches are \ac{np}-optimal for sufficiently complex machines as well as sufficiently large training data. Moreover, for a limited training dataset, the \ac{ml} approach turns out to be more accurate than \ac{np} applied on estimated channel statistics. 
 
-Two specific security issues are then addressed. Firstly, the attacker can select the location for the attack and its statistics \hl{non mi e' chiaro its statistics a cosa faccia riferimento} can be modified. We explore the one-class classification problem both under the knowledge of legitimate channel statistics and by a \ac{ml} approach, and we conclude that conventional \ac{ml} solutions based on both the \ac{ae} and one-class \ac{svm} do not coincide with the \ac{glrt}, even under asymptotic training  conditions. \revi{rev11a}{The obtained asymptotic results are applicable also to elaborate ML solution, such as deep learning NNs, that can still be seen as parametric functions, although more complex than conventioanl NNs.}Secondly, advanced attacks based on the use of \ac{ml} techniques to select the positions of attack by the attacker are considered. Numerical results are provided to support the results in a realistic network scenario, including shadowing and fading effects for the channel. We show that in a simple scenario a simple \ac{nn} and a relatively small training dataset already provide close-to-optimal performance; then, we assess the one-class \ac{irlv} approach as well as the advanced attack strategy based on \ac{ml}.
+Two specific security issues are then addressed. Firstly, the attacker can select the location for the attack and its statistics \hl{non mi e' chiaro its statistics a cosa faccia riferimento} can be modified. We explore the one-class classification problem both under the knowledge of legitimate channel statistics and by a \ac{ml} approach, and we conclude that conventional \ac{ml} solutions based on both the \ac{ae} and one-class \ac{svm} do not coincide with the \ac{glrt}, even under asymptotic training  conditions. \revi{rev11a}{The obtained asymptotic results are applicable also to elaborate ML solution, such as deep learning NNs, that can still be seen as parametric functions, although more complex than conventioanl NNs.}Secondly, advanced attacks based on the use of \ac{ml} techniques to select the positions of attack by the attacker are considered. Numerical results are provided to support the results in a realistic network scenario, including shadowing and fading effects for the channel. We show that in a simple scenario a simple \ac{nn} and a relatively small training dataset already provide close-to-optimal performance; then, we assess the one-class \ac{irlv} approach as well as the advanced attack strategy based on \ac{ml}. \revi{WiFi}{Indeed, while at the moment most literature has focused on WiFi or IoT applications for \ac{irlv}, positioning is a relevant feature for 5G and beyond cellular systems, and as reference example we consider a cellular scenario in this paper.}
 
 The contributions of this paper are summarized hereby:
 \begin{itemize}
@@ -158,7 +158,7 @@ The following notation is used throughout the paper: bold letters $\bm{x}$ refer
     \label{fig1}
 \end{figure}
 
-In Fig. \ref{fig1}, we consider a cellular system with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a \ac{irlv} system to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ inside  $\mathcal{A}$. we define the complementary region to the \ac{roi} as $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. The authentication process exploits the location dependency of the features of the channel between the \ac{ue} and the \acp{ap}. Without losing generality, we consider a narrowband transmission and we choose the power attenuation as the feature on which we perform \ac{irlv}. Extensions of the proposed technique to more elaborate channel features is straightforward and its evaluation is left for future study.
+In Fig. \ref{fig1}, we consider a cellular system with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a \ac{irlv} system to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ inside  $\mathcal{A}$. we define the complementary region to the \ac{roi} as $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. The authentication process exploits the location dependency of the features of the channel between the \ac{ue} and the \acp{ap}. \revi{revPHASE}{As an exmple of \ac{irlv} based on physical channel features, we consider here a narrowband transmission and choose as feature the power attenuation. This is in line with various works in the literature \protect{\cite{boh}}. Indeed, other features can also be exploited, such as the phase or the wideband impulse response: the proposed ML techniques readily applied also to this cases as we do not make special assumptions on the channel model for their design and analysis.}
 
 The exploitation of the channel features is obtained by letting the \ac{ue} transmit a signal with fixed power $P_{\rm tx}$, known at the \acp{ap}, from which the \acp{ap} can estimate the received power and obtain a measure of the attenuation incurred by the channel. We assume that the attenuation estimation is perfect, i.e., not affected by noise or interference: this can be achieved by using a sufficiently long signal.
 
@@ -177,7 +177,9 @@ where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue}
 where $(\sigma_{a,n}^2)_{dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component.
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
-In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. For the path-loss, we consider two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
+In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. 
+
+\revi{WiFi2}{Here we focus on a cellular communication scenario as a reference model for performance evaluation. However, the proposed \ac{irlv} technique can also be applied to wireless local area networks (WLANs) and IoT scenarios.} For the path-loss, we consider two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
 \begin{equation}\label{eq:los}
     P_{{\rm PL},{\rm LOS}}\left(L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})\right) = 10 \nu \log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})}{c}\right),
 \end{equation}
@@ -201,11 +203,11 @@ The \ac{irlv} problem can be seen as a hypothesis testing between the two hypoth
 \end{itemize}
 This is also denoted as a two-class classification problem. Given vector $\bm{a} = [a^{(1)}, \ldots, a^{(N_{\rm AP})}]$ collecting the attenuation estimates at all the \acp{ap}, we aim  at determining the most likely hypothesis in order to perform \ac{irlv}. While a few measurements of path-loss would allow, by triangulation, to establish the exact position of the \ac{ue}, both shadowing and fading make the \ac{irlv} more problematic and in general prone to errors. 
 
-\revi{avg_1}{We also consider the scenario in which the \ac{ap} averages out fading by measuring $N_{\rm avg}$ received power realizations. The feature vector in this case is $\bm{a}_{\Sigma} = [a^{(1)}_{\Sigma}, \ldots, a^{(N_{\rm AP})}_\Sigma]$, where}
+\revi{avg_1}{We also consider the scenario in which the \ac{ap} averages out fading by measuring $N_{\rm avg}$ received power realizations. The feature vector in this case is $\bm{a}_{\Sigma} = [a^{(1)}_{\Sigma}, \ldots, a^{(N_{\rm AP})}_\Sigma]$, where} 
 \begin{equation}
 \label{eq:avg}
 a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
-\end{equation}
+\end{equation} 
 \revi{avg_2}{Note that each element of the sum in \eqref{eq:avg} is a different fading realization with the same shadowing power. We thus model the situation in which the user is standing still for $N_{\rm avg}$ measurement periods and the  \ac{ap} exploits all the measurements to mitigate the fading effects.}
 
 Let $\mathcal H \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ be the effective location of the \ac{ue}, and $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the decision taken at the \acp{ap}. We have two possible errors: \acp{fa}, which occur when the \ac{ue}  is classified as outside the \ac{roi}, while being inside it, and \acp{md}, which occur when the \ac{ue}  is classified as inside the \ac{roi}, while being outside of it. We indicate the probability of \ac{fa} as $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H = \mathcal H_0)$ and the  probability of \ac{md} as $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H = \mathcal H_1)$. 
@@ -305,27 +307,24 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 
 \revi{llrComp}{We notice however that the obtained functions are easily computed for a single \ac{ap} and spatially uncorrelated fading and shadowing. In more complicated scenarios including spatially correlated channels and multiple \acp{ap} the probabilities of incurring in a certain attenuation in the two hypotheses would not have a simple solution, making the implementation of \ac{np} test problematic. We thus propose to implement the \ac{irlv} hypothesis testing by \ac{ml} approaches, which do not require the a-priori knowledge of the probability density functions.}
 
-\subsection{\Acl{mmse} Approach}
-\revi{literature_1}{With known channel statistics we can tackle \ac{irlv} by solving \eqref{eq:los} and \eqref{eq:nlos} for $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})$ and then find the user position using a \ac{mmse} approach, like in \cite{li2010security}. This consists in solving the following optimization problem
+\subsection{Estimated Distance Approach} \label{seccomp}
+\revi{literature_1}{In order to compare our approach with existing \ac{irlv} solutions, we consider the the \ac{mmse} approach on estimated distance  \cite{li2010security}. From the measured attenuation, first the distance of the \ac{ue} from the \ac{ap} is estimated by inverting the path-loss models. Then the \ac{ue} position is estimated by solving 
 }
 	\begin{align}
- \hat{\bm x}_{\rm UE} =  \underset{\bm x}{\arg \min} \sum_{i=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) \right)^2,
+ \hat{\bm x}_{\rm UE} =  \underset{\bm x}{\arg \min} \sum_{n=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) \right)^2,\label{probmindist}
 \end{align}
-\revi{literature_2}{where $\hat{\bm x}_{\rm UE}$ is the estimated user position. Then, we check whether $\hat{\bm x}_{\rm UE}$ lies inside or outside $\mathcal{A}_0$. More specifically, since the estimation is affected by noise, we build a \ac{roc} by defining $\mathcal{A}_0 ^ {(\theta)}$ as scaled versions of $\mathcal{A}_0$, such that $|\mathcal{A}_0 ^ {(\theta)}| \triangleq \theta|\mathcal{A}_0|$, with $\theta \in \mathbb{R}$.
-The \ac{mmse} approach decision function becomes then
+\revi{literature_2}{Let $\mathcal B_0$ be the set of points of the border of $\mathcal A_0$. Then measure the  distance of the UE from the  border of $\mathcal{A}_0$ as $d = \min_{\bm{x} \in \mathcal{B}_0} \pm||\hat{\bm x}_{\rm UE} - \bm{x}||$,  where the sign is negative if $\hat{\bm x}_{\rm UE} \in \mathcal A_0$, and positive otherwise. Lastly, $d$ is compared with a suitable threshold $d_0$, chosen in order to achieve desired FA or MD probability, and the test can be written as
 }
 
 \begin{equation}
 \hat{\mathcal{H}}_{\rm MMSE} = 
 \begin{cases}
-\mathcal{H}_0 \quad \text{if } \hat{\bm x}_{\rm UE} \in \mathcal{A}_0 ^ {(\theta)} \\
+\mathcal{H}_0 \quad \text{if } d < d_0 \\
 \mathcal{H}_1 \quad {\rm otherwise}.
 \end{cases}
 \end{equation}
 
-\revi{literature_3}{Note that here the shadowing acts as a non-Gaussian noise, since to retrieve $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})$ we go from the logarithmic domain (in which shadowing is Gaussian distributed) to the linear domain.
-Moreover, this approach relies not only on the knowledge of the path-loss models \eqref{eq:los} \eqref{eq:nlos}, but also on the ability to distinguish between \ac{los} and non-\ac{los}.
-In the next Sections we see how the proposed \ac{irlv} system by \ac{ml} achieves better performance under no previous knowledge of any channel statistics and with fading, which was not considered in \cite{li2010security}.}
+\revi{literature_3}{Note that the MSE (\ref{probmindist}) is not the optimal performance metric, since the error on position is not Gaussian. Moreover, this approach requires the knowledge of the path-loss model (including the possibility to distinguish LOS and non-LOS scenarios), which is quite unrealistic in a real deploymenet. Indeed, most of the literature simply assume the perfect knowledge of the \ac{ue}-\ac{ap} distance.}
 
 
 
@@ -491,7 +490,7 @@ We can now prove the following theorem establishing the optimality of the \ac{sv
 
 \begin{theorem}
 	\label{th:lsnp}
-	Consider a \ac{lssvm} with perfect training, \ie the training reaches a global minimum of $\omega(\bm{w},b)$ given an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal C$. Then the test function obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} converges to  the \ac{np} test, thus is the most powerful test.
+	\revi{revGO}{Consider a \ac{lssvm} converged to the global minimum of $\omega(\bm{w},b)$ and using an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal C$.} Then the test function obtained by training the \ac{lssvm} and by thresholding the soft output \eqref{eq:svm} converges to  the \ac{np} test, thus is the most powerful test.
 \end{theorem}
 \begin{proof}
 	From \eqref{eq:lssvmOrig} consider
@@ -768,7 +767,19 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 
 \subsection{\ac{ml}-Based Attack Strategies}
 \label{sec:attack}
+\hl{LA TOGLIAMO??}
 
+\revi{sezattack}{Until now we have used ML approaches to perform \ac{irlv}. Here we propose to use ML also to obtain new more powerful attacks. In particular, we focus on an attacker that moves outside $\mathcal A_0$ and performs multiple attacks. We assume that the attacker knows if each attack is successful or not, and aims at minimizing the number of attacks before success. Moreover, we assume that before attack the attacker can estimate the attenuation vector to each \ac{ap}, by exploiting training signals transmitted by the \acp{ap}: while these estimate come almost for free to the attacker, an active attack is more expensive, both in terms of transmitted energy and as an intense attack sequence can be detected by the \acp{ap} that can take suitable countermeasures, which however are outside the scope of this work. Therefore we simply focus on the problem of doing as few attacks are possible, while being able to have as much attenuation vectors of the area outside $\mathcal A_0$. The proposed strategy works as follows:}
+\begin{enumerate}
+    \item The attacker visit  $N$  points spread uniformly at random outside $\mathcal A_0$. From each point it collects the attenuation vector and performs the attack. If any of the attacks is successful, the procedure is stopped.
+    \item If none of the $N$ attacks has been successful, the attenuation vectors are used to train a one-class classifier.
+    \item The attacker picks a new position uniformly at random outside $\mathcal A_0$ and feeds its attenuation vector to the trained classifier.
+    \item If the vector is classified as belonging to the class it is discarded, and the procedure goes back to point 3), otherwise an attack from that position is performed.
+    \item If the attack is successful, the procedure is stopped. Otherwise, the attenuation vector is used to as further training input of the one-class classifier and the procedure goes back to point 3).
+\end{enumerate}
+\revi{sezattack2}{Note that other attack strategies are possible, including game-theoretic approaches, where the attacker and the \ac{irlv} system are confronting players. These strategies are left for future study and we concentrate on the described attack procedure as it is similar, while from the attack perspective, to that used by the \ac{irlv}.}
+
+\begin{comment}
 \ac{ml} techniques can be also exploited in order to perform more effective attacks. In particular, the attacker can $a$) compute estimates of the attenuation vectors of its channel to all the \acp{ap}, and $b$) move around in the area $\mathcal A_1$ and perform attacks. Point $a$) is possible if \acp{ap} transmit training signals to the \ac{ue}, so that it can estimate the channel characteristics. We also assume that the attacker has means to determine if its attack has been successful, e.g., by receiving the services reserved to \acp{ue} in the \ac{roi}.
 
 %Consider a training set set large enough to cover the statistical description of the non-legitimate area $\mathcal{A}_1$. The attenuation vector with the highest reconstruction error in the \ac{ae} case or with the largest value of $\tilde{t}_o$ in the \ac{oclssvm} case can be considered at the border of the region $\mathcal{A}_1$, and hence nearer to region $\mathcal{A}_0$. In the next section we describe two attack strategies exploiting this property of the \ac{ml} algorithms: the former attack is the filter attack, which exploits the one class trained \ac{ml} algorithms to select proper attack vectors; the latter is the gradient based attack, which exploits the loss function of \ac{ml} algorithms in order to forge attenuation vectors that can be considered as authentic by the \ac{irlv} system.
@@ -780,7 +791,7 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 The purpose of the attacker is to be successful with the minimum number of attacks in order not to let the network detect to be under a series of attacks and take countermeasures (e.g., activating additional \ac{irlv} techniques or switching off the service). Moreover, a smaller number of attacks reduces the resource consumption by the attacker and provides faster access to the services. In order to make attacks more efficient, we propose that the attacker 1) moves in the \ac{roi}-complementary area $\mathcal A_1$, 2) measures the attenuation vectors at various position, and then 3) decides whether to attack or not according to its previous experience of failed attacks. We denote this attack as {\em selective \ac{ml} attack}. As soon as an attack is successful, the procedure is stopped; therefore, the data on which the attacker can use to take his decision comprises only failed attacks.
 
 In details, the attacker uses the attenuation vectors of (failed) attacks to train a one-class classifier. Then, when reaching a new position it feeds the attenuation vector to the classifier and, if it is classified as belonging to the same class of training, no attacks is performed since the position is deemed to be useless. Otherwise, if the attenuation vector is not recognized as belonging to the class of collected points, it is evaluated as a potential successful attack and the attacker sends a message claiming to be in $\mathcal A_0$ to the network. If successful, the procedure is stopped, while upon failure the attenuation vector is fed as additional training data to the machine so that the classifier becomes more accurate.  
-
+\end{comment}
 %As before stated the one class classification involves training the \ac{ml} algorithms with attenuation vectors measured from one of the two available classes. We here propose an attack strategy which trains the \ac{ml} algorithms with attenuation vectors measured from the non-legitimate area $\mathcal{A}_1$. However, differently from a simple random attack, the attenuation vectors are \emph{filtered} by the attacker with a machine trained to learn the class of non successful points. The chosen attack point is then only the one yielding the worst metric as output of the filter. In this way we aim at minimizing the number of attempted attacks.
 
 %In particular, consider an attenuation vector $\bm{a}_{\mathcal{A}_1}$ measured in area $\mathcal{A}_1$ This vector could be a possible successful attack and is hence tested. If the attack is not successful $\bm{a}_{\mathcal{A}_1}$ is used to train the \ac{ml} algorithm. 
@@ -1035,7 +1046,7 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
     \label{fig:aeNh}
 \end{figure}
 
-We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{ The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear.} We first consider a scenario with path-loss and shadowing without fading.
+We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear.} We first consider a scenario with path-loss and shadowing without fading.
 
 Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$ and $S=10^4$ training vectors. We see that, by increasing $N_h$, the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to how \ac{ae} compresses the attenuation vectors: the best performance are achieved when it extracts the optimal number of features from the input. As we have seen, the one-class solutions are not optimal in general, and we clearly see that \ac{oclssvm} is significantly more powerful than \ac{ae}, as the obtained \ac{roc} achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$.
  
@@ -1231,7 +1242,7 @@ In this paper, we have proposed innovative solutions for the \ac{irlv} in wirele
 
 {\bf Ans:} We agree with you that various solutions have been considered in the literature for classification. Still, we believe that the addressed problem in this paper is simple (we only need to decide between two hypotheses) and the structure/type of input is also simple (we focus on the received signal power at various base stations). Therefore, we focused on two classical approaches, i.e., neural network and support vector machines. Moreover, the intent of the paper was also to establish a strong connection between the machine learning approach -- to be used when statistics of input data in the two hypotheses is not known a priori,-- and the Neyman-Pearson test, to be used when the statistics are known. In this respect, the presented theoretical results fill the gap and are actually applicable also to more complex scenarios. Indeed, as we consider the neural network as a generic parametric function, whose parameters are updated using specific target function, our results extend for example also to deep learning solutions, using more complex neural networks.
 
-In order to make this point more clear we have updated the Introduction, by extended the literature survey, and adding the following sentence:
+In order to make this point more clear we have updated the Introduction, by extending the literature survey, and adding the following sentence:
 \begin{quote}
     "\revp{rev11a}"
 \end{quote}
@@ -1245,19 +1256,23 @@ Lastly, numerical results have been revised and now include the performance of m
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Theorem 1 looks too obvious.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Although Theorem 1 (Corollary 1 in the new version of the manuscript) largely relies on an existing result that connects the MLP to the Bayes optimal discriminant function, it is not so common in journal and even books on ML to frame the classification problem as a hypothesis testing problem and investigate the connection between ML solutions and Neyman-Pearson optimal test. We believe that this is the contribution of Theorem 1, also the other theorems of the manuscript that extended this results to SVM solutions and various training options. Following your advice we have here briefly recalled the result of \cite{Ruck-90} and reduced to the minimum the derivations for the proof of Theorem 1, which now only presented as a corollary of the result of \cite{Ruck-90}.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Neural networks in Figure 2 (Fig. \ref{fig:aeArch} in the new version of the manuscript) are fully connected and kind of shallow.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{CAMBIARE LA FIG. 3!!!} We thank the reviewer for his/her comment. We have modified Fig. \ref{fig:aeArch} including the possibility of not having some connections among neurons. We also added the following more extensive description of the AE:
+{\bf Ans:} \hl{CAMBIARE LA FIG. 3!!!} We thank the reviewer for his/her comment. We have modified Fig. \ref{fig:aeArch} including the possibility of \hl{not having some connections among neurons}. We also added the following more extensive description of the AE:
 \begin{quote}
     "\revp{deep ae}"
 \end{quote}
@@ -1274,11 +1289,13 @@ In the numerical results we still use a fully-connected NN (with two hidden laye
  
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Abstract sounds to stress something like the attacks, while in the main text, it is rarely mentioned and discussed.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We thank the reviewer for his/her comment. We have revised the abstract to avoid misunderstanding about the attacks. It now reads as follows:
+{\bf Ans:} Thanks for your comment. We have revised the abstract to avoid misunderstanding about the attacks. It now reads as follows:
 \begin{quote}
     "\revp{rev14}"
 \end{quote}
@@ -1288,28 +1305,59 @@ Abstract sounds to stress something like the attacks, while in the main text, it
 ~
 \setstretch{1.0}
 
+\begin{framed}
 \noindent {\bf Rev:
-There exist a large number of literature on location aware services in WiFi as well as cellular networks. It must be clearly described what the benefits of the proposed (simple and idealised hypothesis test approach) are.
-In the numerical simulations a comparison with state of the art algorithms should be included.}
+There exist a large number of literature on location aware services in WiFi as well as cellular networks. It must be clearly described what the benefits of the proposed (simple and idealised hypothesis test approach) are.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
+\noindent {\bf  Rev: In the numerical simulations a comparison with state of the art algorithms should be included.}
+\end{framed}
+
+\setstretch{1.5}
+{\bf Ans:} Thank you for the suggestion. In the revised manuscript we have included the description of a literature method, wherein first the position of the user is estimated and then compared with the area of interest. Most of the literature assumes a perfect estimate of the position, thus trivially solving the \ac{irlv} problem. We have extended this approach taking into account estimation errors. The comparison method is briefly described in Section \ref{seccomp} as
+\begin{quote}
+    "\revp{literature_1} 
+	\begin{align}
+ \hat{\bm x}_{\rm UE} =  \underset{\bm x}{\arg \min} \sum_{n=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) \right)^2,\label{probmindist}
+\end{align}
+\revp{literature_2}
+$$
+\hat{\mathcal{H}}_{\rm MMSE} = 
+\begin{cases}
+\mathcal{H}_0 \quad \text{if } d < d_0 \\
+\mathcal{H}_1 \quad {\rm otherwise}.
+\end{cases}
+$$
+\revp{literature_3}"
+\end{quote}
+
+Moreover, Fig \hl{TBD} ... now include the comparison with the literature model. We have added the following comments on the figures: \hl{TBD}
+
+\setstretch{1.0}
+\vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The quality of the graphics could be improved.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for pointing out this issue. We have revised all the graphics in the paper and improve their quality.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The asymptotic results are only available for very idealised cases.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} As asymptotic results were shown in comparison with the \ac{np} framework described in Section \ref{sec:los}, we revised the entire Section in order to include more realistic scenarios and show the effect of the different channel parameters on the \ac{irlv} performance. In particular we added in Sec. \ref{sec:los}
+{\bf Ans:} As asymptotic results were shown in comparison with the \ac{np} framework described in Section \ref{sec:los}, we revised the entire Section in order to include more realistic scenarios and show the effect of the different channel parameters on the \ac{irlv} performance. In particular we added in Section \ref{sec:los}
 \begin{quote}
 "\revp{simpleScen}
 
@@ -1387,78 +1435,114 @@ Then we showed the convergence of all the \ac{ml}-based systems to the optimal \
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 An overall framework/unified model is missing. The impact of the paper would be much larger if the model-less learning based approach is tested with real experimental data.}
-
-\setstretch{1.5}
-{\bf Ans:} Ans
-
-\setstretch{1.0}
-\vspace{5mm} %5mm vertical space
-\noindent {\bf Rev:
-The security attack by choosing locations is not properly modelled and does not contain a complete analysis and assessment. Either elaborate or do not include. If the security attack is included, please modify the title accordingly.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
+\noindent {\bf Rev:
+The security attack by choosing locations is not properly modelled and does not contain a complete analysis and assessment. Either elaborate or do not include. If the security attack is included, please modify the title accordingly.}
+\end{framed}
+
+\setstretch{1.5}
+{\bf Ans:} Indeed, we do not have the ambition to fully describe an attack in which the user chooses the location. In order to make this point more clear we have revised the abstract to avoid misunderstanding about the attacks. It now reads as follows:
+\begin{quote}
+    "\revp{rev14}"
+\end{quote}
+
+\setstretch{1.0}
+\vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 There are a number of typos and English grammar mistakes. The paper should be carefully proofread.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for pointing out this issue. We have carefully revised the paper to avoid typos and grammar mistakes.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Most applications are from the WiFi or IoT area. Why the paper then studies the cellular setup?}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} Ans
-
+{\bf Ans:} We agree with you that \ac{irlv} has been studied for WiFi applications. Still, we believe that the problem will be also relevant for future cellular networks that may provide IoT services and will rely more and more on the position of the user for location-specific services. On this point we have added the following sentence in the Introduction:
+\begin{quote}
+    "\revp{WiFi}"
+\end{quote}
+Moreover, in Section II we have added the following sentence:
+\begin{quote}
+    "\revp{WiFi2}"
+\end{quote}
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 If books are referenced, please include page or section or Theorem numbers for easier reference.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for the suggestion. We revised the manuscript in order to include chapter numbers for the cited books.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 In the introduction, there are no SoA references for the security attacks including models and countermeasures.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Ans
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Fig. 1 is not adding any real value. Please add more information like showing the variables such as regions A0 and A1 and the channel parameters.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for pointing out this issue. We revised Fig. 1 with system parameters.
 \setstretch{1.0}
+
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Justify and motivate why only the receive power and not the phase is used for hypothesis test.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} The received power was considered only as an example of channel feature that can be exploited for \ac{irlv}, and definitely other options as the phase or the wideband impulse response can be used for localization. In order to make this point more clear we added the following sentence in Section II:
+\begin{quote}
+    "\revp{revPHASE}"
+\end{quote}
 \setstretch{1.0}
+
+
+
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Provide a reference for the chosen shadowing correlation model below (4).}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} We added the reference to \cite[Chapter 2.7]{goldsmith2005} after the description of the shadowing correlation.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Explain how to choose the parameter Lambda in (6).}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for pointing out this. We added in Sec. \ref{sec:auth}
@@ -1468,16 +1552,20 @@ Explain how to choose the parameter Lambda in (6).}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Provide more details on $\zeta(\rho)$ below (8) and its operational meaning.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} As the provided example in the old version of the paper was not practical from an operational point of view we modified it by considering two different scenarios: the former affected by path-loss and fading and the latter affected by path-loss and shadowing. The parameter $\zeta(\rho)$ does not exist anymore, as also the overall scenario for the example of application of the \ac{np} lemma has been changed, as shown in Fig. \ref{fig:simpScen}. 
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The example closes with equation (11): How does the test function look like? What are the insights from this example?}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} We decided not to include the plots for the test functions (\ref{eq:llr1}), (\ref{eq:llr2}) and (\ref{eq:llr3}) as they do not provide any insights if not compared with the threshold value $\Lambda$, allowing us to state whether the tested received power comes from a user located in $\mathcal{A}_0$ or $\mathcal{A}_1$. From this example we get the closed form equation of the functions that allows us to classify the received power in an optimal way, i.e., providing the minimum $P_{\rm MD}$ for a given $P_{\rm FA}$. In order to clarify this, we added in Sec. \ref{sec:los}:
@@ -1487,8 +1575,10 @@ The example closes with equation (11): How does the test function look like? Wha
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Section III, explicitly state that you apply supervised learning.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for the suggestion. We added in Sec \ref{sec:irlvML}
@@ -1498,8 +1588,10 @@ Section III, explicitly state that you apply supervised learning.}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Below (13), is $\lambda$ optimised with ML, too?}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Since Theorems 1 and 2 hold, the hypothesis testing implemented by the \ac{nn} classifier is the same implemented by the \ac{np} framework. Therefore the parameter $\lambda$ does not need to be optimize, but instead guarantees the minimum $P_{\rm MD}$ for the chosen $P_{\rm FA}$. In order to clarify this points we added in Sec. \ref{sec:nn}:
@@ -1509,15 +1601,21 @@ Below (13), is $\lambda$ optimised with ML, too?}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
-Theorem 1 is basically a Corollary from [18].}
+Theorem 1 is basically a Corollary from [18] (now \cite{Ruck-90}).}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} Following your suggestion we have reported the theorem by \cite{Ruck-90} and denoted former Theorem 1 as a corollary.
 \setstretch{1.0}
+
+
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 From the flow of the paper, it is not clear, why the section on NN CE Design is needed. Furthermore, sections D and E on SVM should be merged.}
+\end{framed}
 
 In order to clarify why both \ac{mse} and \ac{ce} loss functions are considered for \acp{nn} we added in \ref{sec:nn}:
 \begin{quote}
@@ -1538,26 +1636,38 @@ In Sec. \ref{sec: ce_train}
 
 Furthermore we merged Sec.s D and E on \ac{svm} as suggested by the reviewer.
 
-\setstretch{1.5}
-{\bf Ans:} Ans
+
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+
+\begin{framed}
 \noindent {\bf Rev:
 In Theorem 3 and following, the assumption of perfect training (reaching a global optimum) should be justified. Lemma 1 alone is not sufficient.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} In Theorem 3 we analyze the function obtained by SVM when it converges to the global optimum. We agree with you that in general, this requires a very long training, although this condition alone is not enough to ensure convergence to the optimum. In order to make this point more clear we have rewritten the hypothesis of Theorem 3 as follows:
+\begin{quote}
+    "\revp{revGO}"
+\end{quote}
+
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The phrase "hyperparameter" is first used explicitly in Sec. 3-E without introducing it. However, it is implicitly used earlier when the activation function in NNs and kernel function in SVMs are described as being "fixed" (which refers to being a hyperparameter).}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
+
+
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Section IV switches to a new model where data is only collected within region A0. This is not clear and also not justified.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} In Sec. \ref{sec:OneClass} the new model collects data uniquely from region $\mathcal{A}_0$ in the training phase and consider particular implementation of \ac{ml} classifiers able to distinguish between two classes by being trained only with samples of one class. Hence samples are collected from $\mathcal{A}_0$ during the training phase and from both $\mathcal{A}0$ and $\mathcal{A}_1$ during the testing phase. 
@@ -1575,59 +1685,86 @@ The choice of this new setting is motivated by the fact that, as reported in Sec
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 In the AE architecture, the operational meaning and benefits of the low dimensional hidden layer are not clearly derived. Furthermore, the linear activation is not motivated.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} As \acp{ae} are well known architectures, the in-depth description of the meaning of the low dimensional layer as well as its derivation is beyond the scope of this paper, as well it is the choice of the linear activation function at the output layer (usual choice according to \cite[Chapter 14]{Goodfellow}). We added in Sec. \ref{sec:auto} a reference to \cite[Chapter 14]{Goodfellow}, for a more accurate description of the characteristics of \acp{ae}.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The resulting IRLV test function is the simple MSE thresholding.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} As the \ac{ae} is trained to attempt to copy the input to its output the result is that, in the testing phase, only those vectors with the same features of the training set will be reconstructed with small \ac{mse}, whereas input vectors with features different from those of the training set will be mapped to different vectors at the output, and hence with high \ac{mse}. Since training is based on vectors collected from area $\mathcal{A}_0$ and we want to grant access to the systems only to users located inside $\mathcal{A}_0$ and hence whose vectors will have the same features of the training set, by thresholding the \ac{mse} we can obtain the classifier needed for the \ac{irlv}.
-\setstretch{1.0}
 
+\setstretch{1.0}
+\begin{framed}
 \noindent {\bf Rev:
 The section on the ML-based attack strategies does not have a clear model and the interaction between system and attacker are correctly detailed. It seems a non-cooperative game model could fit here.}
-
+\end{framed}
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} Thank you for your observation. The previous description of the attack was confusing, as it was also mentioning various strategies. We have completely rewritten Section \ref{sec:attack}, focusing on the specific attack and stressing its motivation, while hinting to other possibile strategies. The new section reads as follows:
+\begin{quote}
+    "\revp{sezattack}
+\begin{enumerate}
+    \item The attacker visit  $N$  points spread uniformly at random outside $\mathcal A_0$. From each point it collects the attenuation vector and performs the attack. If any of the attacks is successful, the procedure is stopped.
+    \item If none of the $N$ attacks has been successful, the attenuation vectors are used to train a one-class classifier.
+    \item The attacker picks a new position uniformly at random outside $\mathcal A_0$ and feeds its attenuation vector to the trained classifier.
+    \item If the vector is classified as belonging to the class it is discarded, and the procedure goes back to point 3), otherwise an attack from that position is performed.
+    \item If the attack is successful, the procedure is stopped. Otherwise, the attenuation vector is used to as further training input of the one-class classifier and the procedure goes back to point 3).
+\end{enumerate}
+\revp{sezattack2} 
+\end{quote}
+
+
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Reason for using Eq. (38) as activation function for the output layer is missing, especially since it is not a common choice for an activation function. Motivate the design choices!}
-
+\end{framed}
 \setstretch{1.5}
+
+
 {\bf Ans:} 
 \hl{Ruvoletto}
-We also added in Sec. \ref{sec:numResOneClass}:
+Thanks for havigh highlighted this issue. We have carefully revised the AE and its design choice and we now use common activation functions in the literature. In particular, in Section \ref{sec:numResOneClass} we specify
 \begin{quote}
 "\revp{designAE}"
 \end{quote}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Why not using more hidden layers to improve performance?}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} In the revised manuscript both the feedforward \acp{nn} and the \ac{ae} hev been extended to include multiple layers in order to improve the system performance as suggested by the reviewer. Results are reported in Sec. \ref{sec:numRes}.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 A illustration of the considered layout in Sec. V-A might be helpful.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for the suggestion. We added in Sec. \ref{sec:los} Fig. \ref{fig:simpScen} to illustrate the scenario where the \ac{np} framework has been applied and for which Sec. \ref{sec:singleAp} reports the numerical results.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 In the assessment of Fig 3 ( Fig. \ref{fig:ceVSmse} in the revised paper), the advantage of NN versus N-P should be clarified, too, since they perform equally (bad).}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} We added in Sec. \ref{sec:los}:
@@ -1639,82 +1776,128 @@ Furthermore the performance of the resulting \ac{irlv} system has been improved 
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The scenario in Fig. 4 (Fig. \ref{fig:map} in the revised paper) is not well motivated. Why should the region A0 be outside the two main streets?}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We added in Sec. \ref{sec:singleAp}:
+{\bf Ans:} There is no special reason for the positioning of area $\mathcal A_0$ outside of the two streets, other than considering it inside a building (e.g., an office). In order to clarify this point we added in Section \ref{sec:singleAp}:
 \begin{quote}
 "\revp{building}"
 \end{quote}
 
+\hl{Moreover, we consider a general position of the area...}
+
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The evaluation in the end of Sec V-B sounds contradictory. First, it is said that "[...] for small S, performance get slightly worse as $k_f$ grows.". Second, at the end of the evaluation, it is stated that "[...] in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location.". Another way of saying this would be that for small S ("limited number of training points"), the number of $k_f$ should be increased ("collect more fading realizations per location"). However, this is contradictory to the first statement, that the performance decreases with increasing $k_f$ for small S.
 - The considered layout in Sec. V-C is unclear.
 }
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 The conclusions from the numerical simulations (last paragraph before Section VI) are very specific and contain mainly numerical evidence from the chose numerical scenarios.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 In the references: check capitalised letters in [14], [20]. Check author names in [16].}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Thank you for pointing out the mistakes. We have carefully revised the references section. 
 \vspace{5mm} %5mm vertical space
-\section{Reviewer 3}
 
-~
+
+\clearpage
+
+
+\section*{Reviewer 3}
+
 
 \setstretch{1.0}
-
+\begin{framed}
 \noindent {\bf Rev:
 The references of the work can be further enhanced and the model descriptions are not always comprehensive. Please explain the numerical results for more details. For example, please add the benchmark scheme to convince readers. In addition, the presentation can be further improved and the complexity of the proposed scheme should be provided.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} We would like to thank your for your useful suggestions. We have carefully revised the paper according to your indications, providing more explanations of the numerical results \hl{check}, improving the presentation, comparing our solutions with existing ones, and assessing the complexity of the proposed approach \hl{CHECK}.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Please compare the proposed scheme with other existing schemes.}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} Thank you for the suggestion. In the revised manuscript we have included the description of a literature method, wherein first the position of the user is estimated and then compared with the area of interest. Most of the literature assumes a perfect estimate of the position, thus trivially solving the \ac{irlv} problem. We have extended this approach taking into account estimation errors. The comparison method is briefly described in Section \ref{seccomp} as
+\begin{quote}
+    "\revp{literature_1} 
+	\begin{align}
+ \hat{\bm x}_{\rm UE} =  \underset{\bm x}{\arg \min} \sum_{n=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) \right)^2,\label{probmindist}
+\end{align}
+\revp{literature_2}
+$$
+\hat{\mathcal{H}}_{\rm MMSE} = 
+\begin{cases}
+\mathcal{H}_0 \quad \text{if } d < d_0 \\
+\mathcal{H}_1 \quad {\rm otherwise}.
+\end{cases}
+$$
+\revp{literature_3}"
+\end{quote}
 
+Moreover, Fig \hl{TBD} ... now include the comparison with the literature model. We have added the following comments on the figures: \hl{TBD}
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 Proof that this proposed scheme has robust against the channel fading. In other words, could you please provide some numerical results to support the robust of this scheme?}
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} Please note that our considered channel model includes fading. Indeed, Fig.s \hl{lista} all include fading effect. Moreover, we have also considered a refinement of our approach, explicitly targeting the adverse effect of fading, wherein the input data to the learning machines are obtained by averaging over multiple fading realizations. By choosing the number of averaged realization we can understand the relevance of averaging fading, taking into account that having multiple realizations of attenuation vectors may not always be possibile and takes additional time. In order to make this point more clear we have added the following sentences in Section \ref{sec:auth}:
+\begin{quote}
+    "\revp{avg_1}
+$$
+a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
+$$
+    \revp{avg_2}"
+\end{quote}
 
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 What are the computation complexity of the two machine learning methods (i.e., neural networks (NNs) and SVM)?}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
-The results in terms of the miss detection rate and the false alarm rate in Fig. 3 ( Fig. \ref{fig:ceVSmse} in the revised paper) are not practical. Please explain.}
+The results in terms of the miss detection rate and the false alarm rate in Fig. 3 [Fig. \ref{fig:ceVSmse} in the revised paper] are not practical. Please explain.}
+\end{framed}
 
 \setstretch{1.5}
 {\bf Ans:} Based on the reviewer's comments we revised Fig. \ref{fig:ceVSmse} and the relative theoretical part in Sec. \ref{sec:los}. Results show that the implemented system achieves petter performance and the equivalence between hypothesis testing based on the \ac{np} framework and via \ac{ml} is still verified.
@@ -1723,13 +1906,20 @@ The results in terms of the miss detection rate and the false alarm rate in Fig.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
+\begin{framed}
 \noindent {\bf Rev:
 A couple of papers are worth citing:
+
 (1). Physical layer authentication over MIMO fading wiretap channels, IEEE Trans. Wireless Communications, 2012.
+
 (2). PHY-layer spoofing detection with reinforcement learning in wireless networks, IEEE Trans. Vehicular Technology,2016.
 }
+\end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} We have added a citation of the two papers in the Introduction, within the following sentence:
+\begin{quote}
+    "\revp{rev3cit}"
+\end{quote}
 
 \end{document}
