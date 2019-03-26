@@ -378,6 +378,7 @@ According to the \ac{mse} design criterion \underline{\cite{bishop92}}, the \ac{
 This is achieved by using the stochastic gradient descent algorithm \underline{\cite[Chapter~3.1.3]{Bishop2006}}.
 
 In order to prove the connection of \ac{mse} design criterion with the \ac{np} we first recall the following theorem \cite{Ruck-90}
+
 \begin{theorem}
 Let $\tilde{t}(\bm{a},\bm{W})$ be the function implemented by the \ac{nn} given the weights in matrix $\bm{W}$ and let $g_0(\bm{a})$ be the Bayes optimal discriminant function
 \begin{equation}\label{eq:bayesDisc}
@@ -390,7 +391,7 @@ Then the \ac{mlp} trained by backpropagation via (\ref{eq:mseFunct}) minimizes t
 where $\bm{a} \in \mathcal{A}$ is the set of attenuation vectors measured over area $\mathcal{A}$.
 \label{teoruck}
 \end{theorem}
-Now we have the following corollary.
+\revi{teoruck2}{Hence Theorem \ref{teoruck} proves that in the presence of perfect training and for an infinite number of neurons the function implemented by the \ac{mlp} is the Bayes optimal discriminant function. Now we have the following corollary.}
 \begin{corollary}
 \label{th:nn_np}
 The \ac{mlp} designed according to the \ac{mse} criterion with an infinite set of training points ($S \rightarrow \infty$) and a threshold (\ref{testfunNN}) converges to a test function equivalent to the \ac{np} test, thus it is the most powerful test.
