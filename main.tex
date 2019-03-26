@@ -956,8 +956,15 @@ We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models
     \label{fig:ceVSnp}
 \end{figure}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\columnwidth]{npsvm.eps}
+	\caption{\ac{roc} of \acp{irlv} methods in the scenarios of Section \ref{sec:los}: comparison between \ac{np} framework and \ac{lssvm}.}
+	\label{fig:npsvm}
+\end{figure}
 
-\revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{mlp} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense.}
+
+\revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{mlp} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense. This holds also for the \ac{lssvm}, as Fig. \ref{fig:npsvm} shows that also the \acp{roc} obtained with \ac{lssvm} in the same scenarios of Fig. \ref{fig:ceVSnp} match with the \acp{roc} of the \ac{np} framework.}
 
 \revi{numResSimplScen3}{Fig. \ref{fig:ceVSmse} shows the \ac{fa} vs. the \ac{md} probabilities comparing \ac{mlp} with \ac{ce} and \ac{mse} loss functions. We note that both \ac{nn}-\ac{ce} and \ac{nn}-\ac{mse} obtain the same performance for the same number of layers $N_L$ and neurons $N_h$ per layer as expected, since they both are equivalent to \ac{np} testing in the asymptotic regime.}
 
