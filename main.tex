@@ -32,6 +32,7 @@
 \newacronym{llr}{LLR}{log likelihood-ratio}
 \newacronym{los}{LOS}{line of sight}
 \newacronym{glrt}{GLRT}{generalized likelihood ratio test}
+\newacronym{gsm}{GSM}{global system for mobile communications}
 \newacronym{lssvm}{LS-SVM}{least squares SVM}
 \newacronym{md}{MD}{mis-detection}
 \newacronym{ml}{ML}{machine learning}
@@ -1037,6 +1038,7 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
 
 (\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. First, note that for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let $n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ the number of collected fading realizations per location. Overall, we obtain $S = n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $k_f=10$ fading realizations per location (thus $n_x = S/10$). \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
 
+\revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by \cite{MOMENTUM-D53}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at $(2500,2500)$~m , $(500, 4000)$~m, $(4000, 4000)$~m, $(500, 500)$~m, $(4000, 500)$~m, $(100, 4500)$~m, $(1000, 400)$~m, $(4000, 500)$~m, $(4300, 4000)$~m, and $(4500, 500)$~m. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$ . The \ac{svm} configuration is .}
 
 %By comparing the two figures, we note that for small values of $S$, the performance get slightly worse as $k_f$ grows. For a large enough training set size $S$, different values $k_f$ provide approximately the same performance.  Therefore, we can conclude that, for large training sets, \ac{ml} algorithms are also robust to fading irrespective of the number of collected fading realization per location. However, in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location. 
 
