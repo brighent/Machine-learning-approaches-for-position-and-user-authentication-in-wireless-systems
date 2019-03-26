@@ -170,14 +170,14 @@ When the \ac{ue} transmits with power $P_{\rm tx}$, the received power at the $n
 \begin{equation}\label{eq: rec pow}
     P_{\rm rc}^{(n)}= \frac{P_{\rm tx}}{a^{(n)}},
 \end{equation}
-where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue} and the \ac{ap} $n$. The channel model for path-loss and shadowing is derived from \cite{3gpp}. The attenuation coefficient includes the effects of path-loss, shadowing and fading. In particular, by assuming Rayleigh model for fading we have 
+where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue} and the \ac{ap} $n$. The attenuation coefficient includes the effects of path-loss, shadowing and fading. In particular, by assuming Rayleigh model for fading we have 
 \begin{equation}
     \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
 \end{equation}
 where $(\sigma_{a,n}^2)_{dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component.
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
-In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. 
+The channel model for path-loss and shadowing is derived from \cite{3gpp}. In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. 
 
 \revi{WiFi2}{Here we focus on a cellular communication scenario as a reference model for performance evaluation. However, the proposed \ac{irlv} technique can also be applied to wireless local area networks (WLANs) and IoT scenarios.} For the path-loss, we consider two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
 \begin{equation}\label{eq:los}
@@ -193,6 +193,12 @@ The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma
 
 Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
 
+\revi{avg_1}{Fading does not give information on the \ac{ue} location, thus is a disturbance in the \ac{irlv} process. However, fading is typically time-varying, and by performing multiple estimates of the attenuation in a short time we can assume that both path-loss and shadowing do not change (due a very small movement of the \ac{ue}), while going through independent fading realizations. In particular, when $N_{\rm avg}$ estimates with independent fading realizations are available, the \ac{ap} $n$ can average them obtaining}
+\begin{equation}
+\label{eq:avg}
+a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
+\end{equation} 
+ 
 
 \subsection{\ac{irlv} With Known Channel Statistics}\label{sec:auth}
 
@@ -203,12 +209,6 @@ The \ac{irlv} problem can be seen as a hypothesis testing between the two hypoth
 \end{itemize}
 This is also denoted as a two-class classification problem. Given vector $\bm{a} = [a^{(1)}, \ldots, a^{(N_{\rm AP})}]$ collecting the attenuation estimates at all the \acp{ap}, we aim  at determining the most likely hypothesis in order to perform \ac{irlv}. While a few measurements of path-loss would allow, by triangulation, to establish the exact position of the \ac{ue}, both shadowing and fading make the \ac{irlv} more problematic and in general prone to errors. 
 
-\revi{avg_1}{We also consider the scenario in which the \ac{ap} averages out fading by measuring $N_{\rm avg}$ received power realizations. The feature vector in this case is $\bm{a}_{\Sigma} = [a^{(1)}_{\Sigma}, \ldots, a^{(N_{\rm AP})}_\Sigma]$, where} 
-\begin{equation}
-\label{eq:avg}
-a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
-\end{equation} 
-\revi{avg_2}{Note that each element of the sum in \eqref{eq:avg} is a different fading realization with the same shadowing power. We thus model the situation in which the user is standing still for $N_{\rm avg}$ measurement periods and the  \ac{ap} exploits all the measurements to mitigate the fading effects.}
 
 Let $\mathcal H \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ be the effective location of the \ac{ue}, and $\hat{\mathcal H} \in  \{\mathcal{H}_0, \mathcal{H}_1\}$ the decision taken at the \acp{ap}. We have two possible errors: \acp{fa}, which occur when the \ac{ue}  is classified as outside the \ac{roi}, while being inside it, and \acp{md}, which occur when the \ac{ue}  is classified as inside the \ac{roi}, while being outside of it. We indicate the probability of \ac{fa} as $P_{\rm FA} =P(\hat{\mathcal H} = \mathcal H_1 | \mathcal H = \mathcal H_0)$ and the  probability of \ac{md} as $P_{\rm MD}=P(\hat{\mathcal H} = \mathcal H_0 | \mathcal H = \mathcal H_1)$. 
 %
@@ -237,9 +237,9 @@ f^*(\bm{a}) =
 \revi{simpleScen}{We provide here an example of an application of the \ac{np} theorem to the simple scenario of Fig. \ref{fig:simpScen}, where area $\mathcal{A}$ is a circle with radius $R_{\rm out}$ ans \ac{roi} $\mathcal{A}_{0}$ is an annulus concentric to the overall area with larger radius $R_{\rm in}$ and smaller radius $R_{\rm min}$. A single \ac{ap} ($N_{\rm AP} =1$) is located at the \ac{roi} center and a \ac{ue} is transmitting from distance $d$. We consider two models: a) \emph{fading scenario}, which includes path-loss and fading, and b) \emph{shadowing scenario} which includes path loss and shadowing. In both cases we consider the \ac{los} scenario for path-loss.}
 \revi{simpleScen2}{In order to compute $p(a|\mathcal{H}_i)$ we first observe that the probability of incurring in an attenuation $a$ for a user located inside the \ac{roi} is given by the total probability law}
 \begin{equation}\label{eq:prc}
-p(a|\mathcal{H}_0) = \int_{0}^{R_{\rm in}} p\left( \frac{P_{\rm tx}}{a} | d = d_0\right)p(d_0| d_0 \in \mathcal{A}_0) \, dd_0,    
+p(a|\mathcal{H}_0) = \int_{0}^{R_{\rm in}} p\left( \frac{P_{\rm tx}}{a} | d = d_0\right)p(d_0| d_0 \in \mathcal{A}_0) \, {\tt d}d_0,    
 \end{equation}
-\revi{simpleScen2_1}{where $p(d_0| d_0 \in \mathcal{A}_0)$ is the probability of the \ac{ue} transmitting from distance $d_0$ inside the \ac{roi}. Assuming that \ac{ue} position is uniformly distributed in the whole area we have} \hl{attenzione PL in dB!}
+\revi{simpleScen2_1}{where $p(d_0| d_0 \in \mathcal{A}_0)$ is the probability of the \ac{ue} transmitting from distance $d_0$ inside the \ac{roi}. Assuming that \ac{ue} position is uniformly distributed in the whole area we have} 
 \begin{equation}\label{eq:a0}
 p(d_0| d_0 \in \mathcal{A}_0) =
 \begin{cases}
@@ -260,12 +260,12 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 
 \begin{equation}\label{eq:fading}
     p(a|\mathcal{H}_0) = 
-    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{in}} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, dd_0,
+    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{in}} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, {\tt d}d_0,
 \end{equation}
 \revi{simpleScen3_1}{whereas from (\ref{eq:a1}) we have}
 \begin{equation}\label{eq:fading2}
     p(a|\mathcal{H}_1) = 
-    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, dd_0,
+    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, {\tt d}d_0,
 \end{equation}
 \revi{simpleScen3_2}{By computing integrals for path-loss coefficient $\nu = 2$ the \ac{llr} is} 
 \begin{equation}\label{eq:llr1}
@@ -288,12 +288,12 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 \revi{simpleScen4}{Assuming spatially uncorrelated shadowing the received power is distributed in the logarithmic domain as a Gaussian random variable with mean value given by the path-loss (\ref{eq:los}) and variance $\sigma_s^2$. Considering (\ref{eq:prc}) the probability of incurring an attenuation $a$ in hypothesis $\mathcal{H}_0$ is given by}
 \begin{equation}\label{eq:sh}
    p(a|\mathcal{H}_0) = 
-    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{\rm in}} \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, d d_0, 
+    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{\rm in}} \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, {\tt d} d_0, 
 \end{equation}
 \revi{simpleScen4_1}{whereas in hypothesis $\mathcal{H}_1$}
 \begin{equation}\label{eq:sh1}
     p(a|\mathcal{H}_1) = 
-    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, d d_0 .
+    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, {\tt d} d_0 .
 \end{equation}
 \revi{simpleScen4_2}{By solving the integrals in (\ref{eq:sh}) and (\ref{eq:sh1}) we obtain the \ac{llr}}
 \begin{equation}\label{eq:llr3}
@@ -956,12 +956,6 @@ We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models
     \label{fig:ceVSnp}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.6\columnwidth]{comp_NN_CE_MSE.eps}
-    \caption{\ac{roc} of \acp{irlv} methods in the scenarios of Section \ref{sec:los}: comparison between \ac{ce} and \ac{mse} trained \acp{nn}. $S=10^5$ training points and $N_L = 2$ hidden layers each with $N_h=5$ neurons}
-    \label{fig:ceVSmse}
-\end{figure}
 
 \revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{mlp} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense.}
 
@@ -1016,7 +1010,7 @@ Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{l
 \end{figure}
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.6\columnwidth]{res_avg_nTrain_kf1.eps}
+    \includegraphics[width=0.6\columnwidth]{res_training_10BS_2Class.eps}
     \caption{\ac{roc} of \ac{svm} and \ac{nn}-\ac{ce} ($N_h = 10$) for different numbers of training set size $S$.}
     \label{fig:kf1}
 \end{figure}
@@ -1029,19 +1023,22 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.6\columnwidth]{res_avg_nTrain_kf10.eps}
+    \includegraphics[width=0.6\columnwidth]{res_fading_10BS_2Class.eps}
     \caption{\ac{roc} of \ac{svm} and \ac{nn}-\ac{ce} ($N_h = 10$) for different numbers of collected locations ($n_x$) and $k_f=10$ fading realization per location.}
     \label{fig:kf10}
 \end{figure}
 
-(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. First, note that for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let $n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ the number of collected fading realizations per location. Overall, we obtain $S = n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $k_f=10$ fading realizations per location (thus $n_x = S/10$). By comparing the two figures, we note that for small values of $S$, the performance get slightly worse as $k_f$ grows. For a large enough training set size $S$, different values $k_f$ provide approximately the same performance.  Therefore, we can conclude that, for large training sets, \ac{ml} algorithms are also robust to fading irrespective of the number of collected fading realization per location. However, in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location. 
+(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. First, note that for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let $n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ the number of collected fading realizations per location. Overall, we obtain $S = n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $k_f=10$ fading realizations per location (thus $n_x = S/10$). \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
+
+
+%By comparing the two figures, we note that for small values of $S$, the performance get slightly worse as $k_f$ grows. For a large enough training set size $S$, different values $k_f$ provide approximately the same performance.  Therefore, we can conclude that, for large training sets, \ac{ml} algorithms are also robust to fading irrespective of the number of collected fading realization per location. However, in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location. 
 
 
 \subsection{One-Class \ac{irlv} With Multiple \acp{ap}}\label{sec:numResOneClass}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.6\columnwidth]{res_ae_onNeur.eps}
+    \includegraphics[width=0.6\columnwidth]{noFading_10BS.eps}
     \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and without fading.}
     \label{fig:aeNh}
 \end{figure}
@@ -1053,7 +1050,7 @@ Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N
  
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.6\columnwidth]{res_avgnTrain_oneClass_kf1.eps}
+    \includegraphics[width=0.6\columnwidth]{res_Training_10BS_oneClass.eps}
     \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and fading with different training set size and $k_f=1$ fading realizations,  \ac{ae} with $N_h = 2$. }
     \label{fig:kf1Oc}
 \end{figure}
@@ -1363,7 +1360,7 @@ The asymptotic results are only available for very idealised cases.}
 
 \revp{simpleScen2}
 \begin{equation*}
-p(a|\mathcal{H}_0) = \int_{0}^{R_{\rm in}} p\left( \frac{P_{\rm tx}}{a} | d = d_0\right)p(d_0| d_0 \in \mathcal{A}_0) \, dd_0,   
+p(a|\mathcal{H}_0) = \int_{0}^{R_{\rm in}} p\left( \frac{P_{\rm tx}}{a} | d = d_0\right)p(d_0| d_0 \in \mathcal{A}_0) \, {\tt d} d_0,   
 \end{equation*}
 \revp{simpleScen2_1}
 \begin{equation*}
@@ -1385,12 +1382,12 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 \revp{simpleScen3}
 \begin{equation*}
     p(a|\mathcal{H}_0) = 
-    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{in}} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, dd_0,
+    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{in}} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, {\tt d}d_0,
 \end{equation*}
 \revp{simpleScen3_1}
 \begin{equation*}
     p(a|\mathcal{H}_1) = 
-    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, dd_0,
+    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{P_{\rm tx}}{a}\right)d_0 \, {\tt d}d_0,
 \end{equation*}
 \revp{simpleScen3_2}
 \begin{equation*}
@@ -1413,12 +1410,12 @@ p(d_0| d_0 \in \mathcal{A}_1) =
 \revp{simpleScen4}
 \begin{equation*}
    p(a|\mathcal{H}_0) = 
-    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{\rm in}} \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, d d_0,  
+    \frac{2}{R_{\rm in}^2-R_{\rm min}^2}\int_{R_{\rm min}}^{R_{\rm in}} \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, {\tt d} d_0,  
 \end{equation*}
 \revp{simpleScen4_1}
 \begin{equation*}
     p(a|\mathcal{H}_1) = 
-    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, d d_0 .
+    \frac{2}{R^2-R_{\rm in}^2}\int_{R_{\rm in}}^R \exp\left(-\frac{1}{2}\frac{\left(\frac{P_{\rm tx}}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_s^2}\right) d_0 \, {\tt d} d_0 .
 \end{equation*}
 \revp{simpleScen4_2}
 \begin{equation*}
@@ -1799,7 +1796,18 @@ The evaluation in the end of Sec V-B sounds contradictory. First, it is said tha
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} Thank you for your note. Indeed, we have revised our approach in the presence of fading, and we average the $k_f$ fading realizations and give the resulting average as input to the learning machines. We now describe the fading average in Section \ref{sec:auth}:
+\begin{quote}
+    "\revp{avg_1}
+$$
+a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}."
+$$
+\end{quote}
+
+The sentence mentioned in the revision has been replaced by the following comment on Fig. \ref{}:
+\begin{quote}
+    "\revp{rev2fad}"
+\end{quote}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
@@ -1876,9 +1884,8 @@ Proof that this proposed scheme has robust against the channel fading. In other 
 \begin{quote}
     "\revp{avg_1}
 $$
-a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
+a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}."
 $$
-    \revp{avg_2}"
 \end{quote}
 
 
