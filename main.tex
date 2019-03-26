@@ -372,17 +372,22 @@ such that, different values of $\lambda$ provide different values of \ac{fa} and
 \label{sec: mse_train}
 \revi{ceNeeded2}{As optimal hypothesis testing is implemented via the \ac{np} framework which exploits the knowledge of the \ac{llr} function we aim at learning this function from data. This problem is referred to as \emph{curve fitting} and it can be solved by training a \ac{nn} via \ac{mse} loss function \cite{bishop92}.}
 According to the \ac{mse} design criterion \underline{\cite{bishop92}}, the \ac{mlp} parameters are estimated in order to minimize the \ac{mse} during the training phase:
-\begin{equation}
+\begin{equation}\label{eq:mseFunct}
 \Gamma = \sum_{i=1}^S |\tilde{t}(\ai) - t_i|^2.
 \end{equation}
 This is achieved by using the stochastic gradient descent algorithm \underline{\cite[Chapter~3.1.3]{Bishop2006}}.
 
 In order to prove the connection of \ac{mse} design criterion with the \ac{np} we first recall the following theorem \cite{Ruck-90}
 \begin{theorem}
-\hl{RIPORTARE QUI IL TEOREMA DI RUCK}    It has been shown in \cite{Ruck-90} that a \ac{mlp} trained via \ac{mse} implements a function that is the minimum \ac{mse} approximation of the Bayes optimal discriminant function
+Let $\tilde{t}(\bm{a},\bm{W})$ be the function implemented by the \ac{nn} given the weights in matrix $\bm{W}$ and let $g_0(\bm{a})$ be the Bayes optimal discriminant function
 \begin{equation}\label{eq:bayesDisc}
 g_0(\bm{a}) = \mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a}) - \mathbb{P}(\mathcal{H}=\mathcal{H}_1|\bm{a}).
 \end{equation} 
+Then the \ac{mlp} trained by backpropagation via (\ref{eq:mseFunct}) minimizes the error
+\begin{equation}
+    \epsilon^2(\bm{W}) = \int_{\bm{a} \in \mathcal{A}} \left(\tilde{t}(\bm{a},\bm{W}) - g_0(\bm{a})\right)^2 {\tt d}\bm{a},
+\end{equation}
+where $\bm{a} \in \mathcal{A}$ is the set of attenuation vectors measured over area $\mathcal{A}$.
 \label{teoruck}
 \end{theorem}
 Now we have the following corollary.
@@ -556,7 +561,7 @@ In the following, we address the problem of  one-class classification  implement
  
 
 \subsection{Auto Encoder \ac{nn}}
-\label{sec:auto}
+\label{sec:auto}\hl{aggiornare connesioni }
 
 When attenuation statistics conditioned to the two hypotheses are not available, we can apply \ac{ml} solutions, as for the case of two-class classification of Section III. 
 
@@ -1513,7 +1518,7 @@ In the introduction, there are no SoA references for the security attacks includ
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} Ans
+{\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
@@ -1858,7 +1863,7 @@ In the references: check capitalised letters in [14], [20]. Check author names i
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:}
+{\bf Ans:} \hl{TBD}
 
 \setstretch{1.0}
 \begin{framed}
