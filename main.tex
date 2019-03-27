@@ -352,6 +352,7 @@ Each layer $\ell=0, \ldots, Q-1$ has $N^{(\ell)}$ outputs obtained by processing
 y_n^{(\ell+1)} = \psi^{(\ell)}\left( \bm{w}_n^{(\ell)}\bm{y}^{(\ell)}+b_n^{(\ell)} \right),
 \end{equation}
 where the mapping between the input and the outpus is given by the {\em activation function} $\psi^{(\ell)}(\cdot)$. The argument of the activation function is a weighted linear combination, with weights $\bm{w}_n^{(\ell)}$, of the outputs $\bm{y}^{(\ell)}$ of the previous layer plus a bias $b_n^{(\ell)}$. We focus here on feedforward \acp{nn}, i.e., without loops between neurons' input and output, an architecture also known as \ac{mlp}. For a in-depth description of \acp{nn} refer for example to \underline{\cite[Chapter 6]{goodfellow}}. While the activation functions are typically fixed, the vectors $\bm{w}_n^{(\ell)}$ are adapted according to the perceptron learning algorithm in order to optimize the desired output. 
+\revi{hyper1}{The activation function type is a variable which is not an output of the learning algorithm and must be chosen beforehand. We denote these values as "hyper-parameters", in contrast with "parameters" which are instead the result of the learning procedure.}
 
 In our setting, the input of the \ac{nn} is the attenuation vector $\bm{a}$, $N=N_{\rm AP}$, and the output layer has a single neuron ($O=1$) providing as output the scalar $y^{(Q)}_1$. Let $\tilde{t}(\bm{a}) = y^{(Q-1)}_1$ be the output of the \ac{nn} corresponding to the attenuation vector input $\bm{a}$. A threshold $\lambda$ is used after computing the test function, i.e.
 \begin{equation}
@@ -459,7 +460,7 @@ A \ac{svm} \underline{\cite[Chapter~7]{Bishop2006}} is a supervised learning mod
 \end{equation}
 where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter. The test function is again provided by (\ref{testfunNN}) where now $\tilde{t}(\bm{a})$ is given by (\ref{eq:svm}). Note that in the conventional \ac{svm} formulation we have $\lambda = 0$, while here $\lambda$ is chosen according to the desired \ac{fa} and \ac{md} probabilities.
 
-While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
+While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, \revi{hyper2}{\ie, it is a hyper-parameter}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
 
 We consider the \ac{lssvm} approach \cite{Suykens1999} for the optimization of the \ac{svm} parameters.  Learning for \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
@@ -473,7 +474,9 @@ We consider the \ac{lssvm} approach \cite{Suykens1999} for the optimization of t
 	e_i =   t_i[\bm{w}^T \phi (\bm{a}^{(i)}) + b]-1   \quad i = 1 ,\dots,S\,,
 	\end{equation}
 \end{subequations}
-where $C$ is a hyper-parameter. In conventional \ac{svm}, variables $e_i$ are constrained to be non-negative and appear in the objective function without squaring. Inequalities in the constraints translates into a quadratic programming problem, while equalities constraints in \ac{lssvm} yield a linear system of equations in the optimization values. In \cite{Yevs}, it is shown that \ac{svm} and \ac{lssvm} are equivalent under mild conditions.
+where $C$ is a hyper-parameter. 
+\revi{hyper3}{Hyper-parameters in \ac{lssvm}, like $C$ and the scale of radial basis kernels {\cite[Chapter 6]{Bishop2006}} can be optimized on training data using a separate procedure, e.g., see \cite{guo2008novel}.}
+In conventional \ac{svm}, variables $e_i$ are constrained to be non-negative and appear in the objective function without squaring. Inequalities in the constraints translates into a quadratic programming problem, while equalities constraints in \ac{lssvm} yield a linear system of equations in the optimization values. In \cite{Yevs}, it is shown that \ac{svm} and \ac{lssvm} are equivalent under mild conditions.
 
 From  constraints  \eqref{eq:lssvm} and the fact that $t_i = \pm 1$ we have
 \begin{equation}
@@ -969,7 +972,6 @@ We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models
 	\caption{\ac{roc} of \acp{irlv} methods in the scenarios of Section \ref{sec:los}: comparison between \ac{np} framework and \ac{lssvm}.}
 	\label{fig:npsvm}
 \end{figure}
-
 
 \revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{mlp} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense. This holds also for the \ac{lssvm}, as Fig. \ref{fig:npsvm} shows that also the \acp{roc} obtained with \ac{lssvm} in the same scenarios of Fig. \ref{fig:ceVSnp} match with the \acp{roc} of the \ac{np} framework.}
 
@@ -1678,12 +1680,22 @@ In Theorem 3 and following, the assumption of perfect training (reaching a globa
 \vspace{5mm} %5mm vertical space
 \begin{framed}
 \noindent {\bf Rev:
-The phrase "hyperparameter" is first used explicitly in Sec. 3-E without introducing it. However, it is implicitly used earlier when the activation function in NNs and kernel function in SVMs are described as being "fixed" (which refers to being a hyperparameter).}
+The phrase "parameter" is first used explicitly in Sec. 3-E without introducing it. However, it is implicitly used earlier when the activation function in NNs and kernel function in SVMs are described as being "fixed" (which refers to being a hyperparameter).}
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
-
+{\bf Ans}: We better introduced the notion of "hyper-parameter" as soon as the first of them appears in Section \ref{sec:nn}, by writing:
+\begin{quote}
+	"\revp{hyper1}"
+\end{quote}
+We did the same for the feature space transformation function in Section \ref{sec:svm}
+\begin{quote}
+	"\revp{hyper2}"
+\end{quote}
+ and also for the kernel scale and $C$ in \eqref{eq:lssvm}
+ \begin{quote}
+ 	"\revp{hyper3}"
+ \end{quote} 
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
