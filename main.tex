@@ -196,10 +196,10 @@ The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma
 
 Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
 
-\revi{avg_1}{Fading does not give information on the \ac{ue} location, thus is a disturbance in the \ac{irlv} process. However, fading is typically time-varying, and by performing multiple estimates of the attenuation in a short time we can assume that both path-loss and shadowing do not change (due a very small movement of the \ac{ue}), while going through independent fading realizations. In particular, when $N_{\rm avg}$ estimates with independent fading realizations are available, the \ac{ap} $n$ can average them obtaining}
+\revi{avg_1}{Fading does not give information on the \ac{ue} location, thus is a disturbance in the \ac{irlv} process. However, fading is typically time-varying, and by performing multiple estimates of the attenuation in a short time we can assume that both path-loss and shadowing do not change (due a very small movement of the \ac{ue}), while going through independent fading realizations. In particular, when $k_f$ estimates with independent fading realizations are available, the \ac{ap} $n$ can average them obtaining}
 \begin{equation}
 \label{eq:avg}
-a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}.
+a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a^{(n)}.
 \end{equation} 
  
 
