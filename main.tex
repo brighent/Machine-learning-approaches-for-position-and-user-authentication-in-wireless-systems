@@ -1098,7 +1098,12 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}
 We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear. Furthermore we considered random weights initialization.} 
 
 % Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$ and $S=10^4$ training vectors. We see that, by increasing $N_h$, the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to how \ac{ae} compresses the attenuation vectors: the best performance are achieved when it extracts the optimal number of features from the input. As we have seen, the one-class solutions are not optimal in general, and we clearly see that \ac{oclssvm} is significantly more powerful than \ac{ae}, as the obtained \ac{roc} achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$.
- 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_Training_5BS_oneClass.eps}
+    \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and fading with different training set size and $k_f=1$ fading realizations,  \ac{ae} with $N_h = 2$. }
+    \label{fig:kf1Oc}
+\end{figure} 
  
 \begin{figure}[t]
     \centering
