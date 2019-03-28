@@ -565,7 +565,7 @@ In the following, we address the problem of  one-class classification  implement
  
 
 \subsection{Auto Encoder \ac{nn}}
-\label{sec:auto}\hl{aggiornare connesioni }
+\label{sec:auto}
 
 When attenuation statistics conditioned to the two hypotheses are not available, we can apply \ac{ml} solutions, as for the case of two-class classification of Section III. 
 
@@ -574,7 +574,7 @@ When attenuation statistics conditioned to the two hypotheses are not available,
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{AE.jpg}
-    \caption{Example of \ac{ae} architecture with $5$ input (and output) values and one hidden layer with 3 neurons.} 
+    \caption{Example of \ac{ae} architecture with $5$ input (and output) values and 3 hidden layers.} 
     \label{fig:aeArch}
 \end{figure}
 
@@ -615,7 +615,7 @@ We notice that the second term in brackets is the sum of the reconstruction erro
 
 \subsection{One-Class LS-SVM}
 
-Similarly, we can resort to \ac{svm} to perform the one-class classification in \ac{irlv}. We focus in particular on the  \ac{oclssvm}, first introduced in \cite{choi2009least} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. 
+Similarly, we can resort to \ac{svm} to perform the one-class classification in \ac{irlv}. We focus in particular on the  \ac{oclssvm}, first introduced in \cite{choi2009} as an extension of the one-class \ac{svm} \cite{Scholkopf2001estimating}. 
 
 The only difference with respect to the \ac{svm} introduced in Section III is that the training optimization problem is now
 \begin{subequations}
@@ -634,7 +634,7 @@ where $C$ is a hyper-parameter.
 Note that in the one-class case, the bias parameter $b$ appears also in the objective function.
 
 
-We observe also in this case that the one-class \ac{svm} is suboptimal, as it does not provides a monotone function of the \ac{pdf} of the input points. In fact, it is not necessary that the training points far from the bound of the classification region are less probable, and the direction $\bm{w}$ is obtained by an ensemble elaboration of the \ac{pdf} of the input rather then been a point-wise function of it (\hl{rileggere}). Nevertheless, by resorting to the Chernoff bound, we can conclude that by minimizing the \ac{mse} we also minimize the upper bound the probability of false alarm; therefore the optimization process goes in the right direction although not optimal.
+We observe also in this case that the one-class \ac{svm} is suboptimal, as it does not provide a monotone function of the \ac{pdf} of the input points. In fact, it is not necessary that the training points far from the bound of the classification region are less probable, and the direction $\bm{w}$ is obtained by an ensemble elaboration of the \ac{pdf} of the input rather then been a point-wise function of it (\hl{rileggere}). Nevertheless, by resorting to the Chernoff bound, we can conclude that by minimizing the \ac{mse} we also minimize the upper bound the probability of false alarm; therefore the optimization process goes in the right direction although not optimal.
 
 
 
@@ -950,14 +950,14 @@ In this section, we present the numerical results obtained using the proposed \a
 \end{equation}
 In order to build the training set, we consider $n_x$ spatial points $\bm{x}_{\rm UE}$, each one representing the coordinates of the position of a \ac{ue}, uniformly distributed over the area $\mathcal A$.
 
-About the channel model, we consider a unitary transmitting power for each user and a carrier frequency of $f_0=2.12$ GHz. The path-loss coefficient is $\nu=3$, the shadowing power is \revi{shadVar}{$\sigma_s^2=8$ dB} and the shadowing decorrelation distance is $d_c=75$ m. 
+About the channel model, we consider a unitary transmitting power for each user and a carrier frequency of $f_0=2.12$ GHz. The path-loss coefficient is $\nu=3$, the shadowing standard deviation is \revi{shadVar}{$\sigma_s=8$ dB} and the shadowing decorrelation distance is $d_c=75$ m. 
 
 
 \subsection{Two-class \ac{irlv} With Single \ac{ap}}\label{sec:singleAp}
 
 We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models are considered: a simple \ac{los} channel model as discussed in Section \ref{sec:los}, and a no-\ac{los} model including both path-loss and shadowing.
 
-\paragraph*{\ac{los} Model} \revi{numResSimplScen}{We consider the simplified scenario of Section \ref{sec:los} with $R_{\rm out}= 10$ meters, $R_{\rm in} = 2$ meters and $R_{\rm min} = 0.1$ meters. We here compare the performance of the system for the two different scenarios, i.e., the fading scenario and the shadowing scenario, with the machine learning approaches. In particular, for the fading scenario we consider the cases $\nu=2$ and $\nu=3$ where the \ac{llr} functions used for the \ac{np} test are given by (\ref{eq:llr1}) and (\ref{eq:llr2}), whereas for the shadowing scenario we consider $\nu=2$ and $\sigma_s^2 = \{-8,0,0\}$ dB and the \ac{llr} for the \ac{np} framework is given by (\ref{eq:llr3}). For the \ac{ml} approaches, we consider $S=10^5$ training points and $N_L = 2$ hidden layers each with $N_h=5$ neurons.}
+\paragraph*{\ac{los} Model} \revi{numResSimplScen}{We consider the simplified scenario of Section \ref{sec:los} with $R_{\rm out}= 10$ meters, $R_{\rm in} = 2$ meters and $R_{\rm min} = 0.1$ meters. We here compare the performance of the system for the two different scenarios, i.e., the fading scenario and the shadowing scenario, with the machine learning approaches. In particular, for the fading scenario we consider the cases $\nu=2$ and $\nu=3$ where the \ac{llr} functions used for the \ac{np} test are given by (\ref{eq:llr1}) and (\ref{eq:llr2}), whereas for the shadowing scenario we consider $\nu=2$ and $\sigma_s^2 = \{0.1,1.8,6\}$ dB and the \ac{llr} for the \ac{np} framework is given by (\ref{eq:llr3}). For the \ac{ml} approaches, we consider $S=10^5$ training points and $N_L = 2$ hidden layers each with $N_h=5$ neurons.}
 
 \begin{figure}[h]
     \centering
@@ -973,11 +973,11 @@ We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models
 	\label{fig:npsvm}
 \end{figure}
 
-\revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{mlp} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense. This holds also for the \ac{lssvm}, as Fig. \ref{fig:npsvm} shows that also the \acp{roc} obtained with \ac{lssvm} in the same scenarios of Fig. \ref{fig:ceVSnp} match with the \acp{roc} of the \ac{np} framework.}
+\revi{numResSimplScen2}{Fig. \ref{fig:ceVSnp} shows the \ac{fa} versus (vs.) the \ac{md} probabilities -- the so-called \ac{roc} --  obtained with two \ac{irlv} techniques: the \ac{np} test functions for the different scenarios and the \ac{nn} designed with \ac{ce} loss function. We notice that the performance of the \ac{mlp} based system achieve the same values obtained with the \ac{np} framework. This numerical results confirm that hypothesis testing implemented via \ac{mlp} is optimal in the \ac{np} sense. This holds also for the \ac{lssvm}, as Fig. \ref{fig:npsvm} shows that also the \acp{roc} obtained with \ac{lssvm} in the same scenarios of Fig. \ref{fig:ceVSnp} match with the \acp{roc} of the \ac{np} framework.}
 
-\revi{numResSimplScen3}{Fig. \ref{fig:ceVSmse} shows the \ac{fa} vs. the \ac{md} probabilities comparing \ac{mlp} with \ac{ce} and \ac{mse} loss functions. We note that both \ac{nn}-\ac{ce} and \ac{nn}-\ac{mse} obtain the same performance for the same number of layers $N_L$ and neurons $N_h$ per layer as expected, since they both are equivalent to \ac{np} testing in the asymptotic regime.}
+\revi{numResSimplScen3}{Notice that results for \ac{nn} have been reported only for \ac{ce} loss function. Since we have showed in Corollary 1 and Theorem 2 that both training functions lead to the \ac{np} hypothesis testing at convergence we only consider \ac{ce} loss function for the two class \ac{nn} classifier throughout all the numerical results.}
 
-\revi{numResSimplScen4}{In general we notice that fading has a deeper impact on the system performance. However by increasing the value of the path loss coefficient $\nu$ we achieve better results, as the exponential random variable representing the received power has a smaller tail and hence hypothesis testing has lower uncertainty. Non correlated shadowing has better performance than the fading case as the received power is, in the logarithmic domain, affected by the sum of path loss and a Gaussian random variable. Hence, the smaller the variance $\sigma_s^2$, the smaller the uncertainty on the path loss, and hence the higher the performance of the \ac{irlv} system.}
+\revi{numResSimplScen4}{In general we notice that fading has a deeper impact on the system performance. However by increasing the value of the path loss coefficient $\nu$ we achieve better results, as the exponential random variable representing the received power has a smaller tail and hence hypothesis testing has lower uncertainty. Non correlated shadowing has better performance than the fading case for small $\sigma_s$ values as the received power is, in the logarithmic domain, affected by the sum of path loss and a Gaussian random variable. Hence, the smaller the standard deviation $\sigma_s$, the smaller the uncertainty on the path loss, and hence the higher the performance of the \ac{irlv} system.}
 
 \paragraph*{No-LOS Scenario} 
 
@@ -988,7 +988,7 @@ We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models
     \label{fig:map}
 \end{figure}
 
-We now consider a more general channel model including shadowing and no-\ac{los} and more general shapes of $\mathcal A$ and $\mathcal A_0$. With reference to Fig. \ref{fig:map} we focus on a scenario in which the \ac{ap} is located at the center of the map. Moreover, we have a Manhattan grid with two streets crossing at the center of a square region. \revi{building}{We consider as the \ac{roi} a space located inside the building located in the south-west corner of the map. A scenario of this type can model a situation where access to network services is granted only to users located inside an office. The arrows inside the \ac{roi} in Fig. \ref{fig:map} indicates that we can place the \ac{roi} anywhere on the map and with arbitrary dimensions.} Along the streets, \ac{los} propagation conditions are present, while no-\ac{los} propagation conditions are present in the rest of the area. Fig. \ref{fig:map} shows a realization of the  attenuation map including path-loss and shadowing. We can see \ac{los} propagation conditions along the streets and no-\ac{los} propagation conditions in buildings.
+We now consider a more general channel model including \underline{spatially correlated} shadowing, no-\ac{los} and more general shapes of $\mathcal A$ and $\mathcal A_0$. With reference to Fig. \ref{fig:map} we focus on a scenario in which the \ac{ap} is located at the center of the map. Moreover, we have a Manhattan grid with two streets crossing at the center of a square region. \revi{building}{We consider as the \ac{roi} a space located inside a building located in the south-west corner of the map. A scenario of this type can model a situation where access to network services is granted only to users located inside an office. The arrows inside the \ac{roi} in Fig. \ref{fig:map} indicates that we can place the \ac{roi} anywhere on the map and with arbitrary dimensions.} Along the streets, \ac{los} propagation conditions are present, while no-\ac{los} propagation conditions are present in the rest of the area. Fig. \ref{fig:map} shows a realization of the  attenuation map including path-loss and shadowing. We can see \ac{los} propagation conditions along the streets and no-\ac{los} propagation conditions in buildings.
 
 Also in this scenario, we do not expect to be able to achieve simultaneously low \ac{md} and \ac{fa} probabilities by using a single \ac{ap} ($N_{\rm AP} =1)$. Indeed, when compared to the \ac{los} scenario, the presence of shadowing increases the ambiguity on the attenuation inside and outside the region. However, we can compare \ac{ml} and \ac{np} \ac{irlv} approaches.  
 
@@ -1004,7 +1004,7 @@ Also in this scenario, we do not expect to be able to achieve simultaneously low
 
 Since no close-form expression of the \ac{llr} is available in this case, we start from the collected data in the learning phase, then, we quantize the attenuation values with a large alphabet and estimate the sampled \ac{pdf} for the quantized attenuation to be used in the \ac{llr} computation. For the considered scenario with path-loss and shadowing, we use $4.46 \cdot 10^6$ training points in the area and a uniform quantizer for the attenuation was considered with $300$ quantization values. On the other hand, we use only $10^3$ points for training both \ac{mlp} and \ac{svm}. 
 
-Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} obtained by averaging over many attenuation maps with different shadowing (\hl{how many? giorgio}). The \ac{np} test function has been obtained from the sampled \ac{pdf}, as just described. We notice that both \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} outperform the \ac{np} test. This means that even for very large numbers of samples available to estimate the \ac{pdf}, we still we have a performance degradation with respect to perfect knowledge of the statistics which would outperform all other methods. On the other hand, a relatively smaller number of training points for \ac{ml} methods already provide more powerful test functions showing the effectiveness of \ac{ml} techniques when no channel statistics is available a-priori. Therefore, in the following sections we drop the \ac{np} method and we consider large training datasets and more layers/neurons for the \ac{nn} in order to achieve close-to-optimal performance.
+Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} obtained by averaging over many attenuation maps with different shadowing \underline{realizations} (\hl{how many? giorgio}). The \ac{np} test function has been obtained from the sampled \ac{pdf}, as just described. We notice that both \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} outperform the \ac{np} test. This means that even for very large numbers of samples available to estimate the \ac{pdf}, we still we have a performance degradation with respect to perfect knowledge of the statistics which would outperform all other methods. On the other hand, a relatively smaller number of training points for \ac{ml} methods already provide more powerful test functions showing the effectiveness of \ac{ml} techniques when no channel statistics is available a-priori. Therefore, in the following sections we drop the \ac{np} method and we consider large training datasets and more layers/neurons for the \ac{nn} in order to achieve close-to-optimal performance.
  
 \begin{figure}[t]
     \centering
@@ -1034,7 +1034,7 @@ Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{l
 In Fig. \ref{fig:mBS}, we consider a network with $N_{\rm ap}=5$ \acp{ap} used for \ac{irlv} and a square area $\mathcal A$ with side length of 525 meters, while the \ac{roi} $\mathcal A_0$ is a square with side length of 255 meters. 
 We include also fading into the channel model, as introduced in Section II.
 
-Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
+Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
 
 
 \begin{figure}[t]
@@ -1044,7 +1044,7 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
     \label{fig:kf10}
 \end{figure}
 
-(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. First, note that for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let $n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ the number of collected fading realizations per location. Overall, we obtain $S = n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $k_f=10$ fading realizations per location (thus $n_x = S/10$). \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
+(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let \underline{$S$ be the number of explored locations by the \ac{ue}, and $N_{\rm avg}$ be the number of collected fading realizations per location.} Overall, we obtain $S$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $N_{\rm avg}=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $N_{\rm avg}=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
 
 \revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by \cite{MOMENTUM-D53}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at $(2500,2500)$~m , $(500, 4000)$~m, $(4000, 4000)$~m, $(500, 500)$~m, $(4000, 500)$~m, $(100, 4500)$~m, $(1000, 400)$~m, $(4000, 500)$~m, $(4300, 4000)$~m, and $(4500, 500)$~m. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$ . The \ac{svm} configuration is .}
 
@@ -1053,16 +1053,16 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
 
 \subsection{One-Class \ac{irlv} With Multiple \acp{ap}}\label{sec:numResOneClass}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.6\columnwidth]{noFading_10BS.eps}
-    \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and without fading.}
-    \label{fig:aeNh}
-\end{figure}
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=0.6\columnwidth]{noFading_10BS.eps}
+%     \caption{\ac{roc} for one-class \acp{irlv} in a scenario with path-loss, shadowing and without fading.}
+%     \label{fig:aeNh}
+% \end{figure}
 
-We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear.} We first consider a scenario with path-loss and shadowing without fading.
+We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear. Furthermore we considered random weights initialization.} 
 
-Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$ and $S=10^4$ training vectors. We see that, by increasing $N_h$, the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to how \ac{ae} compresses the attenuation vectors: the best performance are achieved when it extracts the optimal number of features from the input. As we have seen, the one-class solutions are not optimal in general, and we clearly see that \ac{oclssvm} is significantly more powerful than \ac{ae}, as the obtained \ac{roc} achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$.
+% Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$ and $S=10^4$ training vectors. We see that, by increasing $N_h$, the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to how \ac{ae} compresses the attenuation vectors: the best performance are achieved when it extracts the optimal number of features from the input. As we have seen, the one-class solutions are not optimal in general, and we clearly see that \ac{oclssvm} is significantly more powerful than \ac{ae}, as the obtained \ac{roc} achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$.
  
  
 \begin{figure}[t]
@@ -1073,7 +1073,7 @@ Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N
 \end{figure}
 
 
-We now consider the effects of fading and the choice of the training points. For one-class \ac{irlv}, the training set collects only attenuation vectors from \ac{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. We consider $S = n_x \cdot k_f$ training points with $n_x$ locations and $k_f$ fading realizations per location. Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show the \ac{roc} for one-class \acp{irlv} systems for $k_f = 1$ and $10$, respectively. In particular \ac{oclssvm} and  \ac{ae} with $N_h=2$ are considered.  We first notice that the \ac{ae} is less sensitive to the training set size $S$. Furthermore we note that for $P_{\rm FA} > 10^{-1}$ the \ac{oclssvm} attains a lower  $P_{\rm MD}$. Moreover, we note that \ac{ae} is less sensitive to fading, as error probabilities are very similar in both figures. Instead we notice that  \ac{oclssvm} is more sensitive to fading for small values of $S$, while for a large $S$, performance get close for both values of $k_f$. Furthermore we notice that for small $S$ it is better to use one fading realization per space point ($k_f=1$) in building the training set for the \ac{oclssvm}. This is different  from what we observed for two-class classification, where taking more fading measures provided an advantage.  
+We here consider the effects of fading and the choice of the number of training points. For one-class \ac{irlv}, the training set collects only attenuation vectors from \acp{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. We consider $S$ training points, \underline{each of them averaged over $k_f$ fading realizations}. Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show the \ac{roc} for one-class \acp{irlv} systems for $k_f = 1$ and $10$, respectively. In particular \ac{oclssvm} and  \ac{ae} with $N_h=2$ are considered.  We first notice that the \ac{ae} is less sensitive to the training set size $S$. Furthermore we note that for $P_{\rm FA} > 10^{-1}$ the \ac{oclssvm} attains a lower  $P_{\rm MD}$. Moreover, we note that \ac{ae} is less sensitive to fading, as error probabilities are very similar in both figures. Instead we notice that  \ac{oclssvm} is more sensitive to fading for small values of $S$, while for a large $S$, performance get close for both values of $k_f$. Furthermore we notice that for small $S$ it is better to use one fading realization per space point ($k_f=1$) in building the training set for the \ac{oclssvm}. This is different  from what we observed for two-class classification, where taking more fading measures provided an advantage.  
 
 If we compare Fig.s \ref{fig:kf10} and \ref{fig:kf1Oc}, we can observe that, in the considered scenario, the two-class \acp{irlv} outperform the one-class \ac{irlv}: the former achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$, although the difference between the performance of the two methods is small. This result is expected since the two-class \ac{irlv} also exploits the (estimated) statistics of attacks, which are instead not exploited by the one-class solution. Note that, in this case, the attacker is behaving as expected by the network in the training phase, so that two-class approach is more powerful in the hypothesis testing, actually is optimum  as we shown its convergence to the \ac{np} test performance (\hl{rileggere ultima frase. giorgio}).
  
@@ -1245,8 +1245,8 @@ In this paper, we have proposed innovative solutions for the \ac{irlv} in wirele
 
 {\bf Ans:} We would like to thank the reviewer for his/her positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. In addition, as per request of other reviewers we have further strengthen the numerical results by 
 \begin{itemize}
-    \item including a comparison with existing technique that estimates the \ac{ue} position in order to perform \ac{irlv} (see \hl{CHK:} Fig. \ref{figcon confronto});
-    \item considering 10 \acp{ap} instead of 5 of the previous manuscript version, in order to obtain lower MD and FA probabilities.
+    \item including a comparison with existing technique that estimates the \ac{ue} position in order to perform \ac{irlv} (see Fig.s \ref{fig:kf10}, \ref{fig:kf10Oc});
+    \item \hl{considering 10} \acp{ap} instead of 5 of the previous manuscript version, in order to obtain lower MD and FA probabilities.
 \end{itemize}
 
 
@@ -1296,7 +1296,7 @@ Neural networks in Figure 2 (Fig. \ref{fig:aeArch} in the new version of the man
 \end{quote}
 Moreover, following the advice of another reviewer, we have included more hidden layers in the same figure.
 
-In the numerical results we still use a fully-connected NN (with two hidden layers), as the number of input in the considered scenario is small and still tractable with this kind of networks.
+In the numerical results we still use a fully-connected NN, as the number of input in the considered scenario is small and still tractable with this kind of networks.
 
 % We would like to thank the reviewer for having indicated more complex solutions to our problem. \hl{NON CAPISCO} In this paper we do not consider convolutional autoencoders and hence we implemented networks with fully connected layers. We added a more general description of the AE in Sec. \ref{sec:auto} : 
 % \begin{quote}
@@ -1705,7 +1705,7 @@ Section IV switches to a new model where data is only collected within region A0
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} In Sec. \ref{sec:OneClass} the new model collects data uniquely from region $\mathcal{A}_0$ in the training phase and consider particular implementation of \ac{ml} classifiers able to distinguish between two classes by being trained only with samples of one class. Hence samples are collected from $\mathcal{A}_0$ during the training phase and from both $\mathcal{A}0$ and $\mathcal{A}_1$ during the testing phase. 
+{\bf Ans:} In Sec. \ref{sec:OneClass} the new model collects data uniquely from region $\mathcal{A}_0$ in the training phase and consider particular implementation of \ac{ml} classifiers able to distinguish between two classes by being trained only with samples of one class. Hence samples are collected from $\mathcal{A}_0$ during the training phase and from both $\mathcal{A}_0$ and $\mathcal{A}_1$ during the testing phase. 
 
 In order to clarify this aspect we added in Sec. \ref{sec:OneClass}:
 \begin{quote}
