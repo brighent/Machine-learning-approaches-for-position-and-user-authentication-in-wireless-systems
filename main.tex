@@ -175,7 +175,7 @@ where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue}
 \begin{equation}
     \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
 \end{equation}
-where $(\sigma_{a,n}^2)_{dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_s^2)$ is the shadowing component.
+where $(\sigma_{a,n}^2)_{dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component.
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 The channel model for path-loss and shadowing is derived from \cite{3gpp}. In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. 
@@ -190,7 +190,7 @@ For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
     P_{{\rm PL}, {\rm NLOS}}\left(L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})\right) = 40\log_{10}\left (\frac{L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) + 21\log_{10}\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
 
-The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma^2_s$. Moreover, the shadowing parameters of two \acp{ue} located at positions $\bm{x}_i$ $\bm{x}_j$ and transmitting to the same \ac{ap} have correlation $\sigma_s^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}. 
+The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma_{s,dB}^2$. Moreover, the shadowing parameters of two \acp{ue} located at positions $\bm{x}_i$ $\bm{x}_j$ and transmitting to the same \ac{ap} have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}. 
 
 Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
 
@@ -337,7 +337,7 @@ The application of the \ac{np} theorem requires the knowledge of the conditional
     \item {\em Exploitation phase}: the \ac{ap} verifies the location of an un-trusted \ac{ue} by the attenuation's estimate using the data acquired in the learning phase. 
 \end{itemize}
 
-\revi{supervised}{As in the learning phase the trusted \ac{ue} reports to the \ac{ap} its position, we can assign true labels to all the collected attenuation vectors in this phase and therefore train the \ac{ml}-based \ac{irlv} system with examples of classified data. In the \ac{ml} frameowkr this type of learning is referred to as \emph{supervised learning}.}
+\revi{supervised}{As in the learning phase the trusted \ac{ue} reports to the \ac{ap} its position, we can assign true labels to all the collected attenuation vectors in this phase and therefore train the \ac{ml}-based \ac{irlv} system with examples of classified data. In the \ac{ml} framework this type of learning is referred to as \emph{supervised learning}.}
 
 The learning phase works as follows: for each training attenuation vector $\ai$,  $i=1, \ldots, S$, collected during the learning phase, there is an associated identification value $t_i$, $i=1, \ldots, S$, where $t_i= -1$ if the trusted \ac{ue} is in region $\mathcal{A}_0$ and $t_i = 1$ if the trusted \ac{ue} is in region $\mathcal{A}_1$. Vector $\bm{t}=[t_1, \ldots, t_S]$ collects the labels of all the  attenuation vectors in the training phase. Given these data, the \ac{ap} learns a function  $\hat{t} = f(\bm{a})\in \{-1, 1\}$ that provides a decision $\hat{\mathcal H}$ for each attenuation vector $\bm{a}$. Then, in the exploitation phase, the \ac{irlv} algorithm computes $\hat{t} = f(\bm{a})$ for a new attenuation vectors and takes a decision between the two hypotheses. Note that our solution does not explicitly evaluate the \ac{pdf} and the \ac{llr}, but rather it directly implements the test function.
 
@@ -1001,41 +1001,45 @@ Also in this scenario, we do not expect to be able to achieve simultaneously low
 %    \mathcal{L} \approx \frac{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_0 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}{\text{number of positions} \, (x_u,y_u) \in \mathcal{A}_1 \, \text{s.t.} \, a(x_u,y_u) = \hat{a}}
 %\end{equation}
 %The value computed by (\ref{eq:lrApp}) gets closer to the real value as the number of grid points over the map increases, as an higher number of points means a better statistical characterization of the attenuation over the map area.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_NP_approx_SVM.eps}
+    \caption{\ac{roc} for a scenario with path-loss and shadowing for \ac{np}, \ac{svm} and \ac{ce}-\ac{nn}, $N_L = 1$ with $N_h$ neurons.}
+    \label{fig:trueMap}
+\end{figure}
 
 Since no close-form expression of the \ac{llr} is available in this case, we start from the collected data in the learning phase, then, we quantize the attenuation values with a large alphabet and estimate the sampled \ac{pdf} for the quantized attenuation to be used in the \ac{llr} computation. For the considered scenario with path-loss and shadowing, we use $4.46 \cdot 10^6$ training points in the area and a uniform quantizer for the attenuation was considered with $300$ quantization values. On the other hand, we use only $10^3$ points for training both \ac{mlp} and \ac{svm}. 
 
 Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} obtained by averaging over many attenuation maps with different shadowing \underline{realizations} (\hl{how many? giorgio}). The \ac{np} test function has been obtained from the sampled \ac{pdf}, as just described. We notice that both \ac{nn}-\ac{ce} and \ac{ls}-\ac{svm} outperform the \ac{np} test. This means that even for very large numbers of samples available to estimate the \ac{pdf}, we still we have a performance degradation with respect to perfect knowledge of the statistics which would outperform all other methods. On the other hand, a relatively smaller number of training points for \ac{ml} methods already provide more powerful test functions showing the effectiveness of \ac{ml} techniques when no channel statistics is available a-priori. Therefore, in the following sections we drop the \ac{np} method and we consider large training datasets and more layers/neurons for the \ac{nn} in order to achieve close-to-optimal performance.
  
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.6\columnwidth]{res_NP_approx_SVM.eps}
-    \caption{\ac{roc} for a scenario with path-loss and shadowing for \ac{np}, \ac{svm} and \ac{mse}-\ac{nn} and hidden layer $N_h$ neurons.}
-    \label{fig:trueMap}
-\end{figure}
+
 
 %Comparing the number of grid points and the number of training points used for the \ac{ml} algorithms we can conclude that the \ac{ml}-based solution is advantageous over the \ac{np}-based one, as it requires a smaller number of points in order to get an estimate of the area dependent probabilities. Furthermore this implies that the \ac{ml}-based \ac{irlv} system can be implemented without any a-priory knowledge of the \ac{pdf} of the hypothesis to be tested.
-
-\subsection{Two-class \ac{irlv} With Multiple \acp{ap}}
-\label{sec:res_fading}
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.5\columnwidth]{scenarioBuilding.jpg}
     \caption{Scenario with $N_{\rm A} =5$ \acp{ap}, the side of the square representing area $\mathcal A$ has a length of 525 m, while the side of area $\mathcal A_0$ has a length of 255 m.} 
     \label{fig:mBS}
 \end{figure}
+
+\subsection{Two-class \ac{irlv} With Multiple \acp{ap}}
+\label{sec:res_fading}
+
+
+In Fig. \ref{fig:mBS}, we consider a network with $N_{\rm AP}=5$ \acp{ap} used for \ac{irlv} and a square area $\mathcal A$ with side length of 525 meters, while the \ac{roi} $\mathcal A_0$ is a square with side length of 255 meters. 
+We include also fading into the channel model, as introduced in Section II.
+
+\underline{Results in this section have been obtained with deep \ac{nn}} \hl{ruvoletto} 
+
+Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
+
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_training_10BS_2Class.eps}
     \caption{\ac{roc} of \ac{svm} and \ac{nn}-\ac{ce} ($N_h = 10$) for different numbers of training set size $S$.}
     \label{fig:kf1}
 \end{figure}
-
-In Fig. \ref{fig:mBS}, we consider a network with $N_{\rm ap}=5$ \acp{ap} used for \ac{irlv} and a square area $\mathcal A$ with side length of 525 meters, while the \ac{roi} $\mathcal A_0$ is a square with side length of 255 meters. 
-We include also fading into the channel model, as introduced in Section II.
-
-Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
-
 
 \begin{figure}[t]
     \centering
