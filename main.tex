@@ -16,6 +16,8 @@
 \usepackage{comment}
 \usepackage{setspace}
 \usepackage[inline]{enumitem}
+\usepackage{booktabs}
+
 \makeglossaries
 %%% Glossaries/Acronyms
 \DeclareMathOperator\erf{erf}
@@ -1050,7 +1052,29 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}
 
 (\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let \underline{$S$ be the number of explored locations by the \ac{ue}, and $N_{\rm avg}$ be the number of collected fading realizations per location.} Overall, we obtain $S$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $N_{\rm avg}=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $N_{\rm avg}=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
 
-\revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by \cite{MOMENTUM-D53}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at $(2500,2500)$~m , $(500, 4000)$~m, $(4000, 4000)$~m, $(500, 500)$~m, $(4000, 500)$~m, $(100, 4500)$~m, $(1000, 400)$~m, $(4000, 500)$~m, $(4300, 4000)$~m, and $(4500, 500)$~m. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$ . The \ac{svm} configuration is .}
+\revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by \cite{MOMENTUM-D53}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at the locations specified in table \ref{tab:berlin}. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$ . The \ac{svm} configuration is .}
+
+\begin{table}
+\centering
+\caption{Location of the \acp{ap} in the Berlin scenario.}
+\label{tab:berlin}
+\begin{tabular}{c c c}
+\toprule
+\ac{ap} & $x$ m & $y$ m \\
+\midrule
+1 & 2500 & 2500 \\
+2 & 500 & 4000 \\
+3 & 4000 & 4000 \\
+4 & 500 & 500 \\
+5 & 4000 & 500 \\
+6 & 100 & 4500 \\
+7 & 1000 & 400 \\
+8 & 4000 & 500 \\
+9 & 4300 & 4000 \\
+10 & 4500 & 500 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[t]
     \centering
