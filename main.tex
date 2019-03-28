@@ -1048,6 +1048,13 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}-\ac{ce}  (with $N_h = 10$) and
 
 \revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by \cite{MOMENTUM-D53}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at $(2500,2500)$~m , $(500, 4000)$~m, $(4000, 4000)$~m, $(500, 500)$~m, $(4000, 500)$~m, $(100, 4500)$~m, $(1000, 400)$~m, $(4000, 500)$~m, $(4300, 4000)$~m, and $(4500, 500)$~m. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$ . The \ac{svm} configuration is .}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{berlin.eps}
+    \caption{\ac{roc} for two-class \acp{irlv} for the real scenario with the dataset in \cite{MOMENTUM-D53}.}
+    \label{fig:Berlin}
+\end{figure}
+
 %By comparing the two figures, we note that for small values of $S$, the performance get slightly worse as $k_f$ grows. For a large enough training set size $S$, different values $k_f$ provide approximately the same performance.  Therefore, we can conclude that, for large training sets, \ac{ml} algorithms are also robust to fading irrespective of the number of collected fading realization per location. However, in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location. 
 
 
@@ -1103,6 +1110,7 @@ If we compare Fig.s \ref{fig:kf10} and \ref{fig:kf1Oc}, we can observe that, in 
     \caption{\ac{cdf} of the time of first successful attack $\eta$ for various attack strategies. Both the selective \ac{ml} attacks  and \ac{irlv} are based on \ac{ae} and $P_{\text{FA}}= 0.5$.}
     \label{fig:selectiveAE}
 \end{figure}
+
 
 
 \subsection{\ac{ml} Attack Strategies}
