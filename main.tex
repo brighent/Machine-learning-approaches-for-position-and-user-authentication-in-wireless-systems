@@ -149,7 +149,8 @@ The contributions of this paper are summarized hereby:
     \item We compare different \ac{ml} techniques and show how these can be exploited to implement both \acp{irlv} and efficient attacks.
 \end{itemize}
 
-\revi{lit2}{We design our system in a scenario with channel impairments such us shadowing and fading, which is new in the location verification literature. Indeed, in {\cite{Vora}} \ac{rss} measurements are explicitly treated interchangeably as distance measures neglecting all shadowing and fading phenomena. Similarly, in {\cite{Sastry}} it is generically assumed that agents are able to communicate and exchange packets without errors, as in all protocols requiring nounces transmission {\cite{singelee2005location}}, {\cite{song2008secure}}. In {\cite{yan2016location}} and {\cite{li2010security}} shadowing is taken into account, even though not fading. However, in {\cite{yan2016location}} shadowing does not depend on the user position, allowing the authors to derive the channel statistic and in {\cite{li2010security}} authors assume the knowledge of the path-loss model. Both these hypotheses are not required by our \ac{irlv} system. Moreover, none of the references above provide a \ac{roc} which drives the design choices of each protocol.}
+\revi{lit2}{We design our system in a scenario with channel impairments such us shadowing and fading, which is new in the location verification literature. Indeed, in {\cite{Vora}} \ac{rss} measurements are explicitly treated interchangeably as distance measures neglecting all shadowing and fading phenomena. Similarly, in {\cite{Sastry}} it is generically assumed that agents are able to communicate and exchange packets without errors, as in all protocols requiring nounces transmission {\cite{singelee2005location}}, {\cite{song2008secure}}. In {\cite{yan2016location}} and {\cite{li2010security}} shadowing is taken into account, even though not fading. However, in {\cite{yan2016location}} shadowing is relative to a single user position, allowing the authors to derive the channel statistic and in {\cite{li2010security}} authors assume the knowledge of the path-loss model. Both these hypotheses are not required by our \ac{irlv} system. Moreover, in this paper we focus on \ac{irlv}, which is different from verifying a claimed specific location {\cite{singelee2005location} \cite{li2010security}} or authenticating a user with its location {\cite{yan2016location}}}.
+% We will show that if we use the mechanism in {\cite{li2010security}} for specific location verification we achieve worse performance than our proposed \ac{irlv} system.
 
 \revi{framework1}{The more realistic realistic channel model we take into account is instrumental to show that exact likelihood ratio computation is not always feasible, while resorting to \ac{ml} techniques makes \ac{irlv} still possible. This suggests that the same idea can be applied in different contexts. Namely one could use different channel features (like in \cite{fang2018learning} for user authentication), or exploit other sensor measurements depending on the application. In this paper we focus on wireless communication scenario in which standard communication sensors are available, but we believe that the extension to a more general framework is straightforward.}
 
@@ -1546,7 +1547,7 @@ An overall framework/unified model is missing. The impact of the paper would be 
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} Technicalities in the system model section serve to test that \ac{irlv} is feasible also under realistic channel scenarios and to show the comparison between \ac{ml} techniques and the optimal \ac{np} approach. However, we think that the proposed \ac{irlv} system can be extended in a more general framework, using different channel features or other measurements. We better clarified this in Section  \ref{sec:intro}:
+{\bf Ans:} Technicalities in the system model section serve to test that \ac{irlv} is feasible also under realistic channel scenarios and to show the comparison between \ac{ml} techniques and the optimal \ac{np} approach. However, we think that the proposed \ac{irlv} system can be extended to a more general framework, using different channel features or other measurements, when available. We better clarified this in Section  \ref{sec:intro}:
 
 \begin{quote}
 "\revp{framework1}"
@@ -1556,7 +1557,7 @@ Similarly, in Section \ref{sec:irlvML}:
 "\revp{framework2}".
 \end{quote}
 
-We applied our proposed \ac{ml} \ac{irlv} technique also on a real dataset, available in \cite{MOMENTUM-D53}. We show the new numerical results in Fig. \ref{fig:Berlin} and added a paragraph in Section \ref{sec:res_fading} which reads:
+We then applied our proposed \ac{ml} \ac{irlv} technique also on a real dataset, available in \cite{MOMENTUM-D53}. We show the new numerical results in Fig. \ref{fig:Berlin} and added a paragraph in Section \ref{sec:res_fading} which reads:
 \begin{quote}
 	"\revp{Berlin}"
 \end{quote}
