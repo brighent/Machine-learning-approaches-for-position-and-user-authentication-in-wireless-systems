@@ -182,7 +182,7 @@ where $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue}
 \begin{equation}
     \sqrt{a^{(n)}} \sim \mathcal{N}\left(0,\sigma_{a,n}^2\right),
 \end{equation}
-where $(\sigma_{a,n}^2)_{dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component.
+where $(\sigma_{a,n}^2)_{\rm dB} =  {P_{\rm PL}^{(n)}}  + s$ accounts for the path-loss and shadowing components, $(P_{\rm PL}^{(n)})_{\rm dB}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component. Moreover, the shadowing components of \acp{ue} located at different positions are correlated.
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 The channel model for path-loss and shadowing is derived from \cite{3gpp}. In particular, let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UE}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)}) = \sqrt{(X_{\rm AP}^{(n)}-X_u)^2+(Y_{\rm AP}^{(n)}-Y_u)^2}$. 
@@ -196,8 +196,7 @@ For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
 \begin{equation}\label{eq:nlos}
     P_{{\rm PL}, {\rm NLOS}}\left(L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})\right) = 40\log_{10}\left (\frac{L(\bm{x}_{\rm UE},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) + 21\log_{10}\left(\frac{f}{10^6}\right) + 80.
 \end{equation}
-
-The shadowing parameter $s$ is zero-mean Gaussian distributed with power $\sigma_{s,dB}^2$. Moreover, the shadowing parameters of two \acp{ue} located at positions $\bm{x}_i$ $\bm{x}_j$ and transmitting to the same \ac{ap} have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}. 
+\uline{According to \cite{3gpp} shadowing parameters of two \acp{ue}  at  positions $\bm{x}_i$ and $\bm{x}_j$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}.} 
 
 Path-loss and shadowing are assumed to be time-invariant, while the fading component is independent at each attenuation estimate. 
 
