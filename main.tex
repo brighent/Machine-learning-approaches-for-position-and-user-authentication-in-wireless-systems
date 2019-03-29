@@ -952,14 +952,14 @@ In this section, we present the numerical results obtained using the proposed \a
 \end{equation}
 In order to build the training set, we consider $n_x$ spatial points $\bm{x}_{\rm UE}$, each one representing the coordinates of the position of a \ac{ue}, uniformly distributed over the area $\mathcal A$.
 
-About the channel model, we consider a unitary transmitting power for each user and a carrier frequency of $f_0=2.12$ GHz. The path-loss coefficient is $\nu=3$, the shadowing standard deviation is \revi{shadVar}{$\sigma_s=8$ dB} and the shadowing decorrelation distance is $d_c=75$ m. 
+About the channel model, we consider a unitary transmitting power for each user and a carrier frequency of $f_0=2.12$ GHz. The path-loss coefficient is $\nu=3$, the shadowing standard deviation is \revi{shadVar}{$\sigma_{s,{\rm dB}}=8$ dB} and the shadowing decorrelation distance is $d_c=75$ m. 
 
 
 \subsection{Two-class \ac{irlv} With Single \ac{ap}}\label{sec:singleAp}
 
 We consider here the \ac{irlv} system using a single \ac{ap}. Two channel models are considered: a simple \ac{los} channel model as discussed in Section \ref{sec:los}, and a no-\ac{los} model including both path-loss and shadowing.
 
-\paragraph*{\ac{los} Model} \revi{numResSimplScen}{We consider the simplified scenario of Section \ref{sec:los} with $R_{\rm out}= 10$ meters, $R_{\rm in} = 2$ meters and $R_{\rm min} = 0.1$ meters. We here compare the performance of the system for the two different scenarios, i.e., the fading scenario and the shadowing scenario, with the machine learning approaches. In particular, for the fading scenario we consider the cases $\nu=2$ and $\nu=3$ where the \ac{llr} functions used for the \ac{np} test are given by (\ref{eq:llr1}) and (\ref{eq:llr2}), whereas for the shadowing scenario we consider $\nu=2$ and $\sigma_s^2 = \{0.1,1.8,6\}$ dB and the \ac{llr} for the \ac{np} framework is given by (\ref{eq:llr3}). For the \ac{ml} approaches, we consider $S=10^5$ training points and $N_L = 2$ hidden layers each with $N_h=5$ neurons.}
+\paragraph*{\ac{los} Model} \revi{numResSimplScen}{We consider the simplified scenario of Section \ref{sec:los} with $R_{\rm out}= 10$ meters, $R_{\rm in} = 2$ meters and $R_{\rm min} = 0.1$ meters. We here compare the performance of the system for the two different scenarios, i.e., the fading scenario and the shadowing scenario, with the machine learning approaches. In particular, for the fading scenario we consider the cases $\nu=2$ and $\nu=3$ where the \ac{llr} functions used for the \ac{np} test are given by (\ref{eq:llr1}) and (\ref{eq:llr2}), whereas for the shadowing scenario we consider $\nu=2$ and $\sigma_{s, {\rm dB}}^2 = \{0.1,1.8,6\}$ dB and the \ac{llr} for the \ac{np} framework is given by (\ref{eq:llr3}). For the \ac{ml} approaches, we consider $S=10^5$ training points and $N_L = 2$ hidden layers each with $N_h=5$ neurons.}
 
 \begin{figure}[h]
     \centering
@@ -1050,7 +1050,7 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}
     \label{fig:kf10}
 \end{figure}
 
-(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let \underline{$S$ be the number of explored locations by the \ac{ue}, and $N_{\rm avg}$ be the number of collected fading realizations per location.} Overall, we obtain $S$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $N_{\rm avg}=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for the same values of $S$ of Fig. \ref{fig:kf1}, but with $N_{\rm avg}=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
+(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let \underline{$n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ be the number of collected fading realizations per location.} Overall, we obtain $S= n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for $k_f=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
 
 \revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by {\cite{MOMENTUM-D53}}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at the locations specified in table \ref{tab:berlin}. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$. Fig. \ref{fig:Berlin} shows the \ac{roc} of the proposed \ac{ml} \ac{irlv} system, for both \ac{nn} and \ac{lssvm}. We used the raw data provided by {\cite{MOMENTUM-D53}}, without any processing. The available attenuation values are 8464 and we used 5000 for training and the remaining for testing.}
 
@@ -1113,7 +1113,7 @@ We now focus on the one-class \ac{irlv} solutions, where the training points com
 \end{figure}
 
 
-We here consider the effects of fading and the choice of the number of training points. For one-class \ac{irlv}, the training set collects only attenuation vectors from \acp{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. We consider $S$ training points, \underline{each of them averaged over $N_{\rm avg}$ fading realizations}. Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show the \ac{roc} for one-class \acp{irlv} systems for $N_{\rm avg} = 1$ and $10$, respectively. In particular \ac{oclssvm} and  \ac{ae} with $N_h=2$ are considered.  We first notice that the \ac{ae} is less sensitive to the training set size $S$. Furthermore we note that for $P_{\rm FA} > 10^{-1}$ the \ac{oclssvm} attains a lower  $P_{\rm MD}$. Moreover, we note that \ac{ae} is less sensitive to fading, as error probabilities are very similar in both figures. Instead we notice that  \ac{oclssvm} is more sensitive to fading for small values of $S$, while for a large $S$, performance get close for both values of $k_f$. Furthermore we notice that for small $S$ it is better to use one fading realization per space point ($k_f=1$) in building the training set for the \ac{oclssvm}. This is different  from what we observed for two-class classification, where taking more fading measures provided an advantage.  
+We here consider the effects of fading and the choice of the number of training points. For one-class \ac{irlv}, the training set collects only attenuation vectors from \acp{ue} located in $\mathcal{A}_0$, whereas the testing set comprises attenuation vectors of \acp{ue} both inside and outside $\mathcal A_0$. We consider $S$ training points, \underline{each of them averaged over $k_f$ fading realizations}. Fig.s \ref{fig:kf1Oc} and \ref{fig:kf10Oc} show the \ac{roc} for one-class \acp{irlv} systems for $k_f = 1$ and $10$, respectively. In particular \ac{oclssvm} and  \ac{ae} with $N_h=2$ are considered.  We first notice that the \ac{ae} is less sensitive to the training set size $S$. Furthermore we note that for $P_{\rm FA} > 10^{-1}$ the \ac{oclssvm} attains a lower  $P_{\rm MD}$. Moreover, we note that \ac{ae} is less sensitive to fading, as error probabilities are very similar in both figures. Instead we notice that  \ac{oclssvm} is more sensitive to fading for small values of $S$, while for a large $S$, performance get close for both values of $k_f$. Furthermore we notice that for small $S$ it is better to use one fading realization per space point ($k_f=1$) in building the training set for the \ac{oclssvm}. This is different  from what we observed for two-class classification, where taking more fading measures provided an advantage.  
 
 If we compare Fig.s \ref{fig:kf10} and \ref{fig:kf1Oc}, we can observe that, in the considered scenario, the two-class \acp{irlv} outperform the one-class \ac{irlv}: the former achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$, although the difference between the performance of the two methods is small. This result is expected since the two-class \ac{irlv} also exploits the (estimated) statistics of attacks, which are instead not exploited by the one-class solution. Note that, in this case, the attacker is behaving as expected by the network in the training phase, so that two-class approach is more powerful in the hypothesis testing, actually is optimum  as we shown its convergence to the \ac{np} test performance (\hl{rileggere ultima frase. giorgio}).
  
@@ -1890,7 +1890,7 @@ The evaluation in the end of Sec V-B sounds contradictory. First, it is said tha
 \begin{quote}
     "\revp{avg_1}
 $$
-a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}."
+a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a^{(n)}."
 $$
 \end{quote}
 
@@ -1981,7 +1981,7 @@ Proof that this proposed scheme has robust against the channel fading. In other 
 \begin{quote}
     "\revp{avg_1}
 $$
-a^{(n)}_{\Sigma} = \frac{1}{N_{\rm avg}}\sum_{j=1}^{N_{\rm avg}} a^{(n)}."
+a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a^{(n)}."
 $$
 \end{quote}
 
