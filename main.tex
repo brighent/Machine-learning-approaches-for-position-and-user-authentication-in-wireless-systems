@@ -128,10 +128,11 @@ Auto-encoder, in-region location verification, machine learning, neural network,
 \glsresetall
 \clearpage
 \section{Introduction}
+\label{sec:intro}
 
 Location information without verification gives ample opportunities to attack a service granting system since the location information can be easily manipulated either by tampering the hardware/software reporting the location or by spoofing the \ac{gnss} signal outside the user device. In this context, location verification systems aim at verifying the position of mobile devices in a mobile communication network. These systems can be used to implement location-based granting systems, e.g., location-based access control, media streaming, and social networking, and have applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature, there are approaches that leverage the features of the wireless channel over which communication occurs. For example, the approach proposed by \cite{yan2016location} uses \ac{rss} to provide the measurement of the distance between the user and other network nodes. \revi{rev3cit}{Moreover, the location verification problem is similar to the  {\em user authentication} problem addressed at the physical layer where channel measurements are processed to verify the identity of the message sender. Examples include the comparison of an estimated channel feature with a  reference channel feature when the noise statistics is known \protect{\cite{Baracca-12}}, or learning strategies when the channel statistics are unknown \protect{\cite{7398138}} (see also \protect{\cite{7270404}} for a survey).}
 
-In this work, we focus on \ac{irlv} that aims at verifying whether a user is inside a specific \ac{roi} by exploiting the features of the channel between the user to be verified and a set of trusted \acp{ap} \cite{Zeng-survey}. In this regard, distance bounding techniques with rapid exchanges of packets between the verifier and the prover have been proposed in \cite{Brands}. Different solutions use radio-frequency and ultrasound signals \cite{Sastry} or anchor nodes and increasing transmit power by the sender \cite{Vora}. More recently, a delay-based verification technique leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays, has been proposed in \cite{7145434}.  
+In this work, we focus on \ac{irlv} that aims at verifying whether a user is inside a specific \ac{roi} by exploiting the features of the channel between the user to be verified and a set of trusted \acp{ap} \cite{Zeng-survey}. In this regard, distance bounding techniques with rapid exchanges of packets between the verifier and the prover have been proposed in \cite{Brands} \revi{lit1}{{\cite{singelee2005location}} and applied to vehicular ad-hoc networks in {\cite{song2008secure}}}. Different solutions use radio-frequency and ultrasound signals \cite{Sastry} or anchor nodes and increasing transmit power by the sender \cite{Vora}. More recently, a delay-based verification technique leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays, has been proposed in \cite{7145434}.  
 %
 Some of the proposed techniques partially neglect wireless channel phenomena (such as shadowing and fading) that make the estimation of distance measurements through the wireless communication signal problematic \cite{Brands,Sastry,Vora}. Other approaches assume specific channel statistics \cite{quaglia} that may be not accurate due to changing environment conditions, their dependency on unknown parameters, or the use of advanced signal processing techniques by the attacker. Indeed, if the statistics of the channels of links to devices both inside and outside the \ac{roi} are known to the network infrastructure, the optimal solution for \ac{irlv} is given by the \ac{np} theorem \cite{Cover-book} that provides the most powerful test for a given significance level. 
 
@@ -147,6 +148,8 @@ The contributions of this paper are summarized hereby:
     \item We show that two-class classification \ac{ml} techniques provide the most powerful test for a given significance level, as the \ac{np} test;
     \item We compare different \ac{ml} techniques and show how these can be exploited to implement both \acp{irlv} and efficient attacks.
 \end{itemize}
+
+\revi{lit2}{We design our system in a scenario with channel impairments such us shadowing and fading, which is new in the location verification literature. Indeed, in {\cite{Vora}} \ac{rss} measurements are explicitly treated interchangeably as distance measures neglecting all shadowing and fading phenomena. Similarly, in {\cite{Sastry}} it is generically assumed that agents are able to communicate and exchange packets without errors, as in all protocols requiring nounces transmission {\cite{singelee2005location}}, {\cite{song2008secure}}. In {\cite{yan2016location}} and {\cite{li2010security}} shadowing is taken into account, even though not fading. However, in {\cite{yan2016location}} shadowing does not depend on the user position, allowing the authors to derive the channel statistic and in {\cite{li2010security}} authors assume the knowledge of the path-loss model. Both these hypotheses are not required by our \ac{irlv} system. Moreover, none of the references above provide a \ac{roc} which drives the design choices of each protocol.}
 
 The rest of the paper is organized as follows. Section II introduces the system model for the \ac{irlv} problem, detailing the channel model and summarizing the \ac{np} theorem under the knowledge of channel statistics. Section III describes the considered \ac{ml} approaches for \ac{irlv}, namely the \ac{mlp} \ac{nn} and the \ac{svm}, with their design approaches based on \ac{mse} or \ac{ce} for the \ac{nn}, and on  \ac{ls} for \ac{svm}. In Section IV, we propose the one-class classification approach where only the channel statistics for locations inside the \ac{roi} are used for training. Both the the \ac{ae} \ac{nn} and the \ac{oclssvm} are considered and their performance is compared with the \ac{glrt} test. Advanced attack strategies based on the use of \ac{ml} by the attacker are proposed in Section V. Numerical results comparing the various techniques are shown and discussed in Section VI. Lastly, the main conclusions are outlined in Section VII.
 
@@ -462,7 +465,7 @@ A \ac{svm} \underline{\cite[Chapter~7]{Bishop2006}} is a supervised learning mod
 \end{equation}
 where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter. The test function is again provided by (\ref{testfunNN}) where now $\tilde{t}(\bm{a})$ is given by (\ref{eq:svm}). Note that in the conventional \ac{svm} formulation we have $\lambda = 0$, while here $\lambda$ is chosen according to the desired \ac{fa} and \ac{md} probabilities.
 
-While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, \revi{hyper2}{\ie, it is a hyper-parameter}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
+While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, \revi{hyper2}{\ie it is a hyper-parameter}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
 
 We consider the \ac{lssvm} approach \cite{Suykens1999} for the optimization of the \ac{svm} parameters.  Learning for \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
@@ -1383,7 +1386,14 @@ There exist a large number of literature on location aware services in WiFi as w
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} The literature on \ac{irlv} is not huge, however, following your advice, we added a couple of references in Section \ref{sec:intro}:
+\begin{quote}
+"\revp{lit1}".
+\end{quote}
+Moreover, we better clarified the benefits of the proposed protocol later in the same Section:
+\begin{quote}
+"\revp{lit2}"
+\end{quote} 
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
