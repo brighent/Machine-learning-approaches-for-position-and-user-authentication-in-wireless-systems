@@ -462,7 +462,7 @@ A \ac{svm} \underline{\cite[Chapter~7]{Bishop2006}} is a supervised learning mod
 \end{equation}
 where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight vector and $b$ is a bias parameter. The test function is again provided by (\ref{testfunNN}) where now $\tilde{t}(\bm{a})$ is given by (\ref{eq:svm}). Note that in the conventional \ac{svm} formulation we have $\lambda = 0$, while here $\lambda$ is chosen according to the desired \ac{fa} and \ac{md} probabilities.
 
-While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, \revi{hyper2}{\ie, it is a hyper-parameter}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
+While the feature-space transformation function is typically fixed \underline{\cite[Chapter~7]{Bishop2006}}, \revi{hyper2}{\ie it is a hyper-parameter}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing. 
 
 We consider the \ac{lssvm} approach \cite{Suykens1999} for the optimization of the \ac{svm} parameters.  Learning for \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
@@ -942,13 +942,9 @@ For the one-class classifier, we use either the \ac{ae} or the \ac{svm}, as desc
 \section{Numerical Results}\label{sec:numRes}
 
 
-In this section, we present the numerical results obtained using the proposed \ac{irlv} and attack solutions for the scenario described in Section II. (\hl{Qui inserirei un breve riassunto dell'experimental setup, non solo per le NN. Giorgio}) \revi{activation}{In particular, for the \ac{nn} for two-class classification, the activation function for the input layer is the identity function and for the hidden layer is the sigmoid function}
+In this section, we present the numerical results obtained using the proposed \ac{irlv} and attack solutions for the scenario described in Section II. (\hl{Qui inserirei un breve riassunto dell'experimental setup, non solo per le NN. Giorgio}) \revi{activation}{In particular, for the \ac{nn} for two-class classification, the activation function for the input layer is the identity function and for the hidden and output layers is the sigmoid function}
 \begin{equation}\label{eq:sigmoid}
 \psi^{(1)}(x) = \frac{1}{1-e^{-x}},
-\end{equation}
-\revi{activation2}{For the output layer the choice of the output function depends on the used loss function. Considering the \ac{ce} based \ac{mlp} tho problem we aim at solving is classification. As the output of the \ac{mlp} should be $0$ for \acp{ue} located in $\mathcal{A}_1$ and $1$ for \acp{ue} located in $\mathcal{A}_0$, the output function should be continuous in the interval $[0,1]$. An usual choice for the activation function for} \hl{Ruvoletto}
-\begin{equation}
-\psi^{(1)}(x)=\tanh^{-1}(x) = \frac{1}{2} \left( \frac{1+x}{1-x} \right).
 \end{equation}
 In order to build the training set, we consider $n_x$ spatial points $\bm{x}_{\rm UE}$, each one representing the coordinates of the position of a \ac{ue}, uniformly distributed over the area $\mathcal A$.
 
@@ -1031,28 +1027,52 @@ Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}-\ac{ce} and \ac{l
 In Fig. \ref{fig:mBS}, we consider a network with $N_{\rm AP}=5$ \acp{ap} used for \ac{irlv} and a square area $\mathcal A$ with side length of 525 meters, while the \ac{roi} $\mathcal A_0$ is a square with side length of 255 meters. 
 We include also fading into the channel model, as introduced in Section II.
 
-\underline{Results in this section have been obtained with deep \ac{nn}} \hl{ruvoletto} 
+\underline{Results in this section have been obtained with deep \ac{nn} with $L=3$ hidden layers each with $N_h = 100$ neurons. All activation function are sigmoid (\ref{eq:sigmoid}).}  
 
-Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
+Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  and \ac{ls}-\ac{svm} \ac{irlv} methods and different values of the training set size $S$. We observe that for the same  \ac{fa} probability  we achieve a lower \ac{md} probability as the size of the set $S$ increases, and that both methods performs in a similar way with large a training set, as we know that they both converge to the optimal \ac{np} solution, not reported here for the difficulty of obtaining the \ac{llr}, as discussed above (\hl{rileggere ultima frase}). Moreover, with multiple \acp{ap}, we can better distinguish attenuation vectors associated to \ac{ue} positions inside and outside the \ac{roi} with respect to the scenario with a single \ac{ap}. Still, for security purposes, we would prefer even lower values of \ac{fa} and \ac{md} probabilities; this can be achieved, for example, by increasing the number of \acp{ap} or considering other channel features, e.g., its wideband impulse response. 
 
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_training_10BS_2Class.eps}
-    \caption{\ac{roc} of \ac{svm} and \ac{nn}-\ac{ce} ($N_h = 10$) for different numbers of training set size $S$.}
+    \caption{\ac{roc} of \ac{svm} and \ac{nn} for $N_{\rm AP}=10$ and for different numbers of training set size $S$.}
+    \label{fig:kf1}
+\end{figure}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_training_10BS_2Class_newArea.eps}
+    \caption{\ac{roc} of \ac{svm} and \ac{nn} for $N_{\rm AP}=10$ (newArea) and for different numbers of training set size $S$.}
+    \label{fig:kf1_newArea}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_training_5BS_2Class.eps}
+    \caption{\ac{roc} of \ac{svm} and \ac{nn} for $N_{\rm AP}=5$ and for different numbers of training set size $S$.}
     \label{fig:kf1}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\columnwidth]{res_fading_10BS_2Class.eps}
-    \caption{\ac{roc} of \ac{svm} and \ac{nn}-\ac{ce} ($N_h = 10$) for different numbers of collected locations ($n_x$) and $k_f=10$ fading realization per location.}
+    \caption{\ac{roc} of \ac{svm} and \ac{nn} for $N_{\rm AP}=10$ and for different numbers of collected locations ($n_x$) and $k_f=10$ fading realization per location.}
     \label{fig:kf10}
 \end{figure}
 
-(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let \underline{$n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ be the number of collected fading realizations per location.} Overall, we obtain $S= n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for $k_f=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
 
-\revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by {\cite{MOMENTUM-D53}}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at the locations specified in table \ref{tab:berlin}. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results \hl{Ruvoletto} with $L=1$ and $N_h =5$. Fig. \ref{fig:Berlin} shows the \ac{roc} of the proposed \ac{ml} \ac{irlv} system, for both \ac{nn} and \ac{lssvm}. We used the raw data provided by {\cite{MOMENTUM-D53}}, without any processing. The available attenuation values are 8464 and we used 5000 for training and the remaining for testing.}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{res_fading_5BS_2Class.eps}
+    \caption{\ac{roc} of \ac{svm} and \ac{nn} for $N_{\rm AP}=5$ and for different numbers of collected locations ($n_x$) and $k_f=10$ fading realization per location.}
+    \label{fig:kf10}
+\end{figure}
+
+
+(\hl{forse squi una sottosezione. giorgio}) We now investigate the choice of the points used for training of the \ac{ml} approaches in the presence of fading. \underline{As discussed in Sec. \ref{sec:chMod}}, for a given \ac{ue} position, the attenuation takes various values over time according to the instantaneous fading realization. Therefore, we want to study whether the collection of multiple attenuation vectors for each explored location in the training phase has an impact on the performance of the classifier.  Let $n_x$ be the number of explored locations by the \ac{ue}, and $k_f$ be the number of collected fading realizations per location. Overall, we obtain $S= n_x \cdot k_f$ training attenuation vectors. For example, Fig. \ref{fig:kf1} is obtained with $k_f=1$ as each training point is associated to a different uniform randomly generated location. Fig. \ref{fig:kf10} instead shows the \ac{roc} for $k_f=10$ fading realizations per location. \revi{rev2fad}{ COMMENTO SU FADING AVERAGE}
+
+\revi{Berlin}{We also test the proposed \ac{irlv} system on a real measurement scenario. An appropriate data set is provided by the measurement campaign at the Alexanderplatz in Berlin (Germany) of the MOMENTUM project described by {\cite{MOMENTUM-D53}}. Narrowband ($Q=1$) attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. Consider 10 attenuation maps corresponding to 10 \acp{ap} located approximately at the locations specified in table \ref{tab:berlin}. The \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. The \ac{nn} configuration is the same of the simulation results with $L=3$ and $N_h =100$. Fig. \ref{fig:Berlin} shows the \ac{roc} of the proposed \ac{ml} \ac{irlv} system, for both \ac{nn} and \ac{lssvm}. We used the raw data provided by {\cite{MOMENTUM-D53}}, without any processing. The available attenuation values are 8464 and we used 5000 for training and the remaining for testing.}
 
 \begin{table}
 \centering
@@ -1095,7 +1115,7 @@ Fig. \ref{fig:kf1} shows the \ac{roc} for \ac{nn}  (with $N_h = 10$) and \ac{ls}
 %     \label{fig:aeNh}
 % \end{figure}
 
-We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear. It is composed by $N_L = 5$ hidden layers with respectively $\{7,6,3,2,3,6,7\}$ neurons. Furthermore we considered random weights initialization.} 
+We now focus on the one-class \ac{irlv} solutions, where the training points come only from the \ac{roi} $\mathcal A_0$. \revi{designAE}{The \ac{ae} has been implemented by considering the activation functions in \cite{Hinton-2006}. All neurons use logistic sigmoid activation function (\ref{eq:sigmoid}) except for the central hidden layer which is linear. It is composed by $N_L = 7$ hidden layers with respectively $\{7,6,3,2,3,6,7\}$ neurons. Furthermore we considered random weights initialization.} 
 
 % Fig. \ref{fig:aeNh} shows the \ac{roc} for both \ac{oclssvm} and \ac{ae} with $N_h \in [1, 5]$ and $S=10^4$ training vectors. We see that, by increasing $N_h$, the performance of \ac{ae}-based \ac{irlv} does not improve: indeed, the optimum \ac{roc} is obtained for $N_h=2$. This is due to how \ac{ae} compresses the attenuation vectors: the best performance are achieved when it extracts the optimal number of features from the input. As we have seen, the one-class solutions are not optimal in general, and we clearly see that \ac{oclssvm} is significantly more powerful than \ac{ae}, as the obtained \ac{roc} achieves a lower $P_{\rm MD}$ for the same $P_{\rm FA}$.
 \begin{figure}[t]
