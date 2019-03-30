@@ -537,9 +537,11 @@ We can now prove the following theorem establishing the optimality of the \ac{sv
 
 In summary, we have proven that both \ac{nn} (with \ac{ce} and \ac{mse} design) and \ac{svm} (with \ac{ls} design) converge to the \ac{np} test function as the training set size $S$ goes to infinity, thus establishing their asymptotic optimality and their relation to theory of power powerful hypothesis testing. 
 
-\subsection{Computational Costs of \ac{ml} Approaches}
 
-In this section, we briefly review the computational cost for i) training each model and ii) make a prediction on a new data point. The main elements of this analysis are:
+\subsection{Computational Costs of \ac{ml} Approaches}
+\label{sec:comp}
+\revi{comp1}{
+In this section, we briefly review the computational cost for i) training each model and ii) make a prediction on a new data point. The main elements of this analysis are:}
 \begin{itemize}
 \item $S$ training points;
 \item $N$ input features; % for both \ac{nn} and \ac{svm};
@@ -547,10 +549,11 @@ In this section, we briefly review the computational cost for i) training each m
 \item $epochs$ number of epochs (how many times each training point will be used) of a \ac{nn};
 \item $N_{SV}$ number of support vectors of a \ac{svm}.
 \end{itemize}
+\revi{comp2}{
+For a basic fully connected feed-forward network, the backpropagation training algorithm is $O(epochs \cdot S \cdot N_L \cdot N^3)$ when the number of hidden nodes of each hidden layer is proportional to the size of the input, while the prediction of a new unseen data point is $O(N_L \cdot N^3)$. For a more detailed analysis which takes into account also the cost of the choice of the  activation function see {\cite{Bianchini2014}}.}
 
-For a basic fully connected feed-forward network, the backpropagation training algorithm is $O(epochs \cdot S \cdot N_L \cdot N^3)$ when the number of hidden nodes of each hidden layer is proportional to the size of the input, while the prediction of a new unseen data point is $O(N_L \cdot N^3)$. For a more detailed analysis which takes into account also the cost of the choice of the  activation function see \cite{Bianchini2014}.
-
-For a \ac{svm}, the estimate of the vector $\bm{w}$ at training time requires the solution of a quadratic problem the complexity of which is between $O(S^2)$ and $O(S^3)$. At test time, the prediction is linear in the number of features and the number of support vector $O(N \cdot N_{SV})$. Indeed, more efficient online training algorithms are available \cite{BordesEtAl2005}.
+\revi{comp3}{
+For a \ac{svm}, the estimate of the vector $\bm{w}$ at training time requires the solution of a quadratic problem the complexity of which is between $O(S^2)$ and $O(S^3)$. At test time, the prediction is linear in the number of features and the number of support vector $O(N \cdot N_{SV})$. Indeed, more efficient online training algorithms are available {\cite{BordesEtAl2005}}.}
 
 
 %It is common practice in the literature \cite{Bishop2006,Suykens1999} to work with the dual formulation of the optimization problems \eqref{eq:svmS} to \eqref{eq:lssvm} by constructing the Lagrangian. 
@@ -2050,7 +2053,20 @@ What are the computation complexity of the two machine learning methods (i.e., n
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} We added Section \ref{sec:comp} showing the computational complexity of the two machine learning methods.
+
+\begin{quote}
+"\revp{comp1}
+\begin{itemize}
+\item $S$ training points;
+\item $N$ input features; % for both \ac{nn} and \ac{svm};
+\item $N_L$ number of hidden layers of a \ac{nn};
+\item $epochs$ number of epochs (how many times each training point will be used) of a \ac{nn};
+\item $N_{SV}$ number of support vectors of a \ac{svm}.
+\end{itemize}
+\revp{comp2}
+\revp{comp3}"
+\end{quote}
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
