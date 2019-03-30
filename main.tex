@@ -140,6 +140,10 @@ When the knowledge of the channel statistics is not available, a two-step soluti
 
 In this paper, we remove the channel knowledge assumption and study two \ac{ml} solutions based on \acp{nn} and \ac{svm} to learn channel features of the \ac{roi}. We investigate two loss functions for the \ac{mlp} design: the \ac{ce} and the \ac{mse}; while we study the \ac{ls} implementation of the \ac{svm}. We show that these two approaches are \ac{np}-optimal for sufficiently complex machines as well as sufficiently large training data. Moreover, for a limited training dataset, the \ac{ml} approach turns out to be more accurate than \ac{np} applied on estimated channel statistics. 
 
+\revi{attack1}{
+In the location verification literature there are two classes of threats, either the attacker sends forged messages to the verification system \cite{singelee2005location} \cite{song2008secure} \cite{Sastry} or he tampers with the signal power making it coherent with the fake claimed position \cite{Vora} \cite{yan2016location} \cite{li2010security}. The first class of attacks targets verification systems which require bits transmission, while countermeasures for the second class are based on channel features like \ac{rss}. In this paper we focus on the second class, as our protocol does not require the decoding of verification messages or nonces.
+}
+
 Two specific security issues are then addressed. Firstly, the attacker can select the location for the attack and its statistics \hl{non mi e' chiaro its statistics a cosa faccia riferimento} can be modified. We explore the one-class classification problem both under the knowledge of legitimate channel statistics and by a \ac{ml} approach, and we conclude that conventional \ac{ml} solutions based on both the \ac{ae} and one-class \ac{svm} do not coincide with the \ac{glrt}, even under asymptotic training  conditions. \revi{rev11a}{The obtained asymptotic results are applicable also to elaborate ML solution, such as deep learning NNs, that can still be seen as parametric functions, although more complex than conventioanl NNs.}Secondly, advanced attacks based on the use of \ac{ml} techniques to select the positions of attack by the attacker are considered. Numerical results are provided to support the results in a realistic network scenario, including shadowing and fading effects for the channel. We show that in a simple scenario a simple \ac{nn} and a relatively small training dataset already provide close-to-optimal performance; then, we assess the one-class \ac{irlv} approach as well as the advanced attack strategy based on \ac{ml}. \revi{WiFi}{Indeed, while at the moment most literature has focused on WiFi or IoT applications for \ac{irlv}, positioning is a relevant feature for 5G and beyond cellular systems, and as reference example we consider a cellular scenario in this paper.}
 
 The contributions of this paper are summarized hereby:
@@ -149,7 +153,7 @@ The contributions of this paper are summarized hereby:
     \item We compare different \ac{ml} techniques and show how these can be exploited to implement both \acp{irlv} and efficient attacks.
 \end{itemize}
 
-\revi{lit2}{We design our system in a scenario with channel impairments such us shadowing and fading, which is new in the location verification literature. Indeed, in {\cite{Vora}} \ac{rss} measurements are explicitly treated interchangeably as distance measures neglecting all shadowing and fading phenomena. Similarly, in {\cite{Sastry}} it is generically assumed that agents are able to communicate and exchange packets without errors, as in all protocols requiring nounces transmission {\cite{singelee2005location}}, {\cite{song2008secure}}. In {\cite{yan2016location}} and {\cite{li2010security}} shadowing is taken into account, even though not fading. However, in {\cite{yan2016location}} shadowing is relative to a single user position, allowing the authors to derive the channel statistic and in {\cite{li2010security}} authors assume the knowledge of the path-loss model. Both these hypotheses are not required by our \ac{irlv} system. Moreover, in this paper we focus on \ac{irlv}, which is different from verifying a claimed specific location {\cite{singelee2005location} \cite{li2010security}} or authenticating a user with its location {\cite{yan2016location}}}.
+\revi{lit2}{We design our system in a scenario with channel impairments such us shadowing and fading, which is new in the location verification literature. Indeed, in {\cite{Vora}} \ac{rss} measurements are explicitly treated interchangeably as distance measures neglecting all shadowing and fading phenomena. Similarly, in {\cite{Sastry}} it is generically assumed that agents are able to communicate and exchange packets without errors, as in all protocols requiring nonces transmission {\cite{singelee2005location}}, {\cite{song2008secure}}. In {\cite{yan2016location}} and {\cite{li2010security}} shadowing is taken into account, even though not fading. However, in {\cite{yan2016location}} shadowing is relative to a single user position, allowing the authors to derive the channel statistic and in {\cite{li2010security}} authors assume the knowledge of the path-loss model. Both these hypotheses are not required by our \ac{irlv} system. Moreover, in this paper we focus on \ac{irlv}, which is different from verifying a claimed specific location {\cite{singelee2005location} \cite{li2010security}} or authenticating a user with its location {\cite{yan2016location}}}.
 % We will show that if we use the mechanism in {\cite{li2010security}} for specific location verification we achieve worse performance than our proposed \ac{irlv} system.
 
 \revi{framework1}{The more realistic realistic channel model we take into account is instrumental to show that exact likelihood ratio computation is not always feasible, while resorting to \ac{ml} techniques makes \ac{irlv} still possible. This suggests that the same idea can be applied in different contexts. Namely one could use different channel features (like in \cite{fang2018learning} for user authentication), or exploit other sensor measurements depending on the application. In this paper we focus on wireless communication scenario in which standard communication sensors are available, but we believe that the extension to a more general framework is straightforward.}
@@ -1634,9 +1638,12 @@ If books are referenced, please include page or section or Theorem numbers for e
 \noindent {\bf Rev:
 In the introduction, there are no SoA references for the security attacks including models and countermeasures.}
 \end{framed}
-
 \setstretch{1.5}
-{\bf Ans:} \hl{TBD}
+{\bf Ans:} We better clarified the SoA attack model in location verification systems and added a paragraph in the Introduction, which reads:
+\begin{quote}
+"\revp{attack1}"
+\end{quote}
+
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
