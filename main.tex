@@ -1122,6 +1122,13 @@ We consider the environment of Fig. \ref{fig:mBS} with $N_{AP} =5$ \acp{ap}, fou
     \label{fig:Berlin}
 \end{figure}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{berlinnew.eps}
+    \caption{\ac{roc} of \ac{irlv} methods for the experimental data.}
+    \label{fig:Berlinnew}
+\end{figure}
+
 \paragraph{Results on experimental data} \revi{Berlin}{We have also tested the proposed \ac{irlv} solutions on experimental data obtained by the MOMENTUM project {\cite{MOMENTUM-D53}} in a measurement campaign at Alexanderplatz in Berlin (Germany). Attenuations at the \ac{gsm} frequency have been measured for several \acp{ap} in an area of $4500~{\rm m} \times 4500~{\rm m}$. We have considered 10 attenuation maps, corresponding to 10 \acp{ap} located approximately at the locations specified in Table \ref{tab:berlin}, while the \ac{roi}  has been positioned in the lower-right corner corresponding to a $20~{\rm m} \times 20~{\rm m}$ square. In this case we have a single realization of any channel effect (path-loss, shadowing, fading, ...) per location, for a total of 8464 realizations, of which 5000 have been used for training and the rest for testing. For \ac{nn} we set  $L=3$ and $N_h =100$. Fig. \ref{fig:Berlin} shows for both \ac{nn} and \ac{lssvm}. The  performance is in line with the other figures obtained by simulation. Still, due to the small size of the available training set, \acp{roc} are not smooth. Moreover, we still notice that \ac{svm} significantly outperforms the \ac{nn} approach.}\revi{revLI}{Note also that in order to user   \ac{eda}  we should first know the path-loss model to be used to convert the attenuation estimates into distances, an information not immediately available from the experiments: this is a further demonstration of the utility of model-less techniques for \ac{irlv}.}
 
 %By comparing the two figures, we note that for small values of $S$, the performance get slightly worse as $k_f$ grows. For a large enough training set size $S$, different values $k_f$ provide approximately the same performance.  Therefore, we can conclude that, for large training sets, \ac{ml} algorithms are also robust to fading irrespective of the number of collected fading realization per location. However, in practical situations where the points for training may be limited, it may be advantageous to collect more fading realization per location. 
