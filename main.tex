@@ -131,7 +131,10 @@ Auto-encoder, in-region location verification, machine learning, neural network,
 \section{Introduction}
 \label{sec:intro}
 
-Location information without verification gives ample opportunities to attack a service granting system since the location information can be easily manipulated either by tampering the hardware/software reporting the location or by spoofing the \ac{gnss} signal outside the user device. In this context, location verification systems aim at verifying the position of mobile devices in a mobile communication network. These systems can be used to implement location-based granting systems, e.g., location-based access control, media streaming, and social networking, and have applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature, there are approaches that leverage the features of the wireless channel over which communication occurs. For example, the approach proposed by \cite{li2010security} uses \ac{rss} to provide the measurement of the distance between the user and other network nodes. \revi{rev3cit}{Moreover, the location verification problem is similar to the  {\em user authentication} problem addressed at the physical layer where channel measurements are processed to verify the identity of the message sender. Examples include the comparison of an estimated channel feature with a  reference channel feature when the noise statistics is known \protect{\cite{Baracca-12}}, or learning strategies when the channel statistics are unknown \protect{\cite{7398138}} (see also \protect{\cite{7270404}} for a survey).}
+Location information without verification gives ample opportunities to attack a service granting system since the location information can be easily manipulated either by tampering the hardware/software reporting the location or by spoofing the \ac{gnss} signal outside the user device. In this context, location verification systems aim at verifying the position of mobile devices in a mobile communication network. These systems can be used to implement location-based granting systems, e.g., location-based access control, media streaming, and social networking, and have applications in sensor networks \cite{Zeng-survey, 8376254, wei2013}, the Internet of Things \cite{7903611}, and geo-specific encryption solutions \cite{quaglia}. In the literature, there are approaches that leverage the features of the wireless channel over which communication occurs. For example, the approach proposed by \cite{li2010security} uses \ac{rss} to provide the measurement of the distance between the user and other network nodes. \revi{rev2lit}{Some literature works \cite{}\hl{completa} address the problem of a {\it single} location verification, where we aim at verifying if a user is in specific point. In this respect we can either compare some features of the current channel with those of a reference channel of a trusted user in the same location in the past
+
+
+\revi{rev3cit}{Moreover, the location verification problem is similar to the  {\em user authentication} problem addressed at the physical layer where channel measurements are processed to verify the identity of the message sender. Examples include the comparison of an estimated channel feature with a  reference channel feature when the noise statistics is known \protect{\cite{Baracca-12}}, or learning strategies when the channel statistics are unknown \protect{\cite{7398138}} (see also \protect{\cite{7270404}} for a survey).}
 
 In this work, we focus on \ac{irlv} that aims at verifying whether a user is inside a specific \ac{roi} by exploiting the features of the channel between the user to be verified and a set of trusted \acp{ap} \cite{Zeng-survey}. In this regard, distance bounding techniques with rapid exchanges of packets between the verifier and the prover have been proposed in \cite{Brands} \revi{lit1}{{\cite{singelee2005location}} and applied to vehicular ad-hoc networks in {\cite{song2008secure}}}. Different solutions use radio-frequency and ultrasound signals \cite{Sastry} or anchor nodes and increasing transmit power by the sender \cite{Vora}. More recently, a delay-based verification technique leveraging geometric properties of triangles, which prevents an adversary from manipulating measured delays, has been proposed in \cite{7145434}.  
 %
@@ -822,7 +825,7 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 
 
 %Although it is possible to perform multiple attacks, 
-The purpose of the attacker is to be successful with the minimum number of attacks in order not to let the network detect to be under a series of attacks and take countermeasures (e.g., activating additional \ac{irlv} techniques or switching off the service). Moreover, a smaller number of attacks reduces the resource consumption by the attacker and provides faster access to the services. In order to make attacks more efficient, we propose that the attacker 1) moves in the \ac{roi}-complementary area $\mathcal A_1$, 2) measures the attenuation vectors at various position, and then 3) decides whether to attack or not according to its previous experience of failed attacks. We denote this attack as {\em selective \ac{ml} attack}. As soon as an attack is successful, the procedure is stopped; therefore, the data on which the attacker can use to take his decision comprises only failed attacks.
+The purpose of the attacker is to be successful with the minimum number of attacks in order not to let the network detect to be under a series of attacks and take countermeasures (e.g., activating additional \ac{irlv} techniques or switching off the service). Moreover, a smaller number of attacks reduces the resource consumption by the attacker and provides faster access to the services. In order to make attacks more efficient, we propose that the attacker 1) moves in the \ac{roi}-complementary area $\mathcal A_1$, 2) measures the attenuation vectors at various position, and then 3) decides whether to attack or not according to its previous experience of failed attacks. We denote this attack as {\em selective \ac{ml} attack}. As soon as an attack is successful, the procedure is stopped; therefore, the data on which the attacker can use to take its decision comprises only failed attacks.
 
 In details, the attacker uses the attenuation vectors of (failed) attacks to train a one-class classifier. Then, when reaching a new position it feeds the attenuation vector to the classifier and, if it is classified as belonging to the same class of training, no attacks is performed since the position is deemed to be useless. Otherwise, if the attenuation vector is not recognized as belonging to the class of collected points, it is evaluated as a potential successful attack and the attacker sends a message claiming to be in $\mathcal A_0$ to the network. If successful, the procedure is stopped, while upon failure the attenuation vector is fed as additional training data to the machine so that the classifier becomes more accurate.  
 \end{comment}
@@ -1339,7 +1342,7 @@ In this paper, we have proposed innovative solutions for the \ac{irlv} in wirele
 
 \setstretch{1.5}
 
-{\bf Ans:} We would like to thank the reviewer for his/her positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. In addition, as per request of other reviewers we have rewritten the numerical results by 
+{\bf Ans:} We would like to thank you for your positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. In addition, as per request of other reviewers we have rewritten the numerical results by 
 \begin{itemize}
     \item including a comparison with existing technique that estimates the \ac{ue} position in order to perform \ac{irlv} (see Section \ref{seccomp} and Fig.s \ref{fig:kf10} and \ref{fig:kf10Oc});
     \item considering also configurations with 10 \acp{ap} instead of 5 of the previous manuscript, in order to obtain lower MD and FA probabilities.
@@ -1386,7 +1389,7 @@ Neural networks in Figure 2 (Fig. \ref{fig:aeArch} in the new version of the man
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:}  We thank the reviewer for his/her comment. We have modified Fig. \ref{fig:aeArch} including the possibility of not having some connections among neurons. We also added the following more extensive description of the AE:
+{\bf Ans:}  We thank you for your comment. We have modified Fig. \ref{fig:aeArch} including the possibility of not having some connections among neurons. We also added the following more extensive description of the AE:
 \begin{quote}
     "\revp{deep ae}"
 \end{quote}
@@ -1422,7 +1425,7 @@ Abstract sounds to stress something like the attacks, while in the main text, it
 The authors provide model descriptions and include realistic effects like fading and shadowing. They consider multiple algorithms and compare them to the theoretical optimum. An attacker scenario is considered, too, where the location of the attacker is optimised. ML is shown to reduce the time to read a success with respect to random attacks.}
 \end{framed}
 \setstretch{1.5}
-{\bf Ans:} We would like to thank the reviewer for his/her positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. 
+{\bf Ans:} We would like to thank you for your positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. 
 
 \setstretch{1.0}
 
@@ -1432,15 +1435,29 @@ There exist a large number of literature on location aware services in WiFi as w
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} The literature on \ac{irlv} is not huge, however, following your advice, we added a couple of references in Section \ref{sec:intro}:
-\begin{quote}
-"\revp{lit1}".
-\end{quote}
-Moreover, we better clarified the benefits of the proposed protocol later in the same Section:
-\begin{quote}
+{\bf Ans:} We have carefully revised the literature, according to your suggestion. Current literature can be classified into these two main categories:
+\begin{itemize}
+    \item Some works deal with the problem of comparing the current channel estimate with another single channel realization, used as a reference and collected earlier: our \ac{irlv} problem   is different as we aim at potentially comparing the current channel estimate with many other channel realizations (for the various points of the region of interest). 
+    \item Other works deals with the problem of a {\em specific} location verification, i.e., checking if the user is a given specific position: in this case the literature converts attenuation measurements into distances with respect to reference points and then determine the position and verify it. This approach can be extended to \ac{irlv}, and in fact we have included a comparison with this approach in the revised manuscript (see  Section \ref{seccomp}, and the response to your next question. However, these approaches requires the a-priori knowledge of the relation between the measured physical quantity (e.g., the attenuation) and the distance. With realistic channel models this relation is not fixed but depends on the position itself (e.g., been in line of sight or not), and, as also shown by our results, these approaches are not robust.
+    \item Most papers assume either to have perfect distance estimates of the user with respect to reference points, or to know the statistics of the error on distance. In practical scenarios however these assumptions are unrealistic.
+\end{itemize}
+Since most of the paper either consider a different problem rather than \ac{irlv} (e.g., single location verification) or have too simplistic assumption on the distance estimate (e.g., perfect estimates or known error statistics), we do not spend many words on them in the paper. However, following your advice we have added a direct comparison with a literature technique in the revised manuscript.
+
+The benefits of a \ac{ml} approach are:
+\begin{itemize}
+    \item the robustness against uncertainties in the channel model: as the machine learns from collected data, it is widely agnostic of specific channel models, thus more robust to hardly predictable scenarios (los/no-los, shadowing parameters, interference, fading...)
+    \item their asymptotic optimality. Our paper stresses that with a long training and with complex enough machines, the \ac{ml} approaches can achieve the performance of the optimal \ac{np} test. We agree with you that we consider idealized conditions for the theoretical results, but then in (simple) testing scenarios where the \ac{np} test can be applied we confirm that the asymptotic results are achieved with a limited effort in terms of training and complexity, thus our results are promising also from an implementation perspective.
+\end{itemize}
+
+In the revised version of the paper:
+\begin{itemize}
+    \item We have added the new references \cite{singelee2005location}, \cite{song2008secure}, and \cite{7398138} to the paper;
+    \item We have revised the introduction to better clarify the relation to the literature as follows:
+    \begin{quote}
 "\revp{lit2}"
 \end{quote} 
-
+\end{itemize}
+ 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
 \begin{framed}
@@ -1792,7 +1809,7 @@ In Sec. \ref{sec: ce_train}
 "\revp{ceNeeded3} \cite[Chapter~5.2]{Bishop2006}."
 \end{quote}
 
-Furthermore we merged Sec.s D and E on \ac{svm} as suggested by the reviewer.
+Furthermore we merged Sec.s D and E on \ac{svm} as you suggested.
 
 
 \setstretch{1.0}
@@ -1914,7 +1931,7 @@ Why not using more hidden layers to improve performance?}
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} In the revised manuscript both the feedforward \acp{nn} and the \ac{ae} hev been extended to include multiple layers in order to improve the system performance as suggested by the reviewer. Results are reported in Sec. \ref{sec:numRes}.
+{\bf Ans:} In the revised manuscript both the feedforward \acp{nn} and the \ac{ae} hev been extended to include multiple layers in order to improve the system performance as you suggested. Results are reported in Sec. \ref{sec:numRes}.
 
 \setstretch{1.0}
 \vspace{5mm} %5mm vertical space
@@ -2017,7 +2034,7 @@ In the references: check capitalised letters in [14], [20]. Check author names i
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We would like to thank the reviewer for his/her positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. 
+{\bf Ans:} We would like to thank you for your positive comments. We have addressed all the issues, updated the manuscript, and provided here a point-to-point response. 
 
 \setstretch{1.0}
 \begin{framed}
@@ -2111,7 +2128,7 @@ The results in terms of the miss detection rate and the false alarm rate in Fig.
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} Based on the reviewer's comments we revised Fig. \ref{fig:ceVSmse} and the relative theoretical part in Sec. \ref{sec:los}. Results show that the implemented system achieves petter performance and the equivalence between hypothesis testing based on the \ac{np} framework and via \ac{ml} is still verified.
+{\bf Ans:} Based on your comments we revised Fig. \ref{fig:ceVSmse} and the relative theoretical part in Sec. \ref{sec:los}. Results show that the implemented system achieves petter performance and the equivalence between hypothesis testing based on the \ac{np} framework and via \ac{ml} is still verified.
 
 \vspace{5mm} %5mm vertical space
 
