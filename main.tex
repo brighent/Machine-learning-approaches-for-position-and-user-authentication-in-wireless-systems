@@ -7,7 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
-\usepackage[toc,page]{appendix}
+%\usepackage[toc,page]{appendix}
 \usepackage{amssymb}
 \usepackage{bm,array}
 \usepackage{soul,color}
@@ -110,7 +110,7 @@
 
 
 %\usepackage[autostyle]{csquotes}
-\usepackage[style=ieee,sorting=none]{biblatex}
+\usepackage[backend=bibtex,style=ieee,sorting=none]{biblatex}
 \bibliography{bibliography}
 
 
@@ -1095,7 +1095,9 @@ Fig. \ref{fig:selectiveSVM} shows the \ac{cdf} of the number of the first succes
 In this paper, we have proposed innovative solutions for the \ac{irlv} in wireless networks that exploit the features of the channels between the \ac{ue} whose location must be verified by a trusted network of \acp{ap}. By observing that in typical situations the channel statistics are not available for \ac{irlv}, we have proposed \ac{ml}-based solutions, operating with both one- and two-class classification, i.e., with and without a-priori assumptions on attack statistics. For two-class classification we have proved that  both \ac{nn} and \ac{svm} solutions  are the most powerful tests for a given sensitivity, i.e., they are equivalent to the \ac{np} test. Instead, for one-class classification both \ac{ae} and \ac{svm} solutions are not equivalent to the \ac{glrt}. We have also investigated how to collect the training points for training in order to be robust against the channel fading.
 
 \appendices
-\section{LLRs derivation}\label{sec:llrDer}
+
+\section{LLRs derivation}
+\label{sec:llrDer}
 
 \subsubsection{Fading scenario}
 \revi{simpleScen3}{Assuming spatially uncorrelated Rayleigh fading, without shadowing (\ie $\sigma_{s,dB}=0)$, given a \ac{ue} located at distance $d$, the channel gain $\sqrt{g}\sim N(0,10^{-\log_{10} P_{\rm PL,LOS}(d)})$. Thus $g=1/a$ is exponentially distributed with mean (in dB) $P_{\rm PL,LOS}(d)$ given by $\ref{eq:los}$. Letting}
