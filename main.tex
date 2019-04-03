@@ -1685,11 +1685,11 @@ In Theorem 3 and following, the assumption of perfect training (reaching a globa
 \vspace{5mm} %5mm vertical space
 \begin{framed}
 \noindent {\bf Rev:
-The phrase "parameter" is first used explicitly in Sec. 3-E without introducing it. However, it is implicitly used earlier in the manuscript when the activation function in NNs and kernel function in SVMs are described as being "fixed" (which refers to being a hyperparameter).}
+The phrase "parameter" is first used explicitly in Sec. 3-E without introducing it. However, it is implicitly used earlier when the activation function in NNs and kernel function in SVMs are described as being "fixed" (which refers to being a hyperparameter).}
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans}: We thank the reviewer for pointing out the issue. We dropped the adjective {\it fixed} in favour of clearer statements in Section~\ref{sec:nn} and \ref{sec:svm} which now read:
+{\bf Ans}: We thank the reviewer for pointing out the issue. We have dropped the adjective {\it fixed} in favour of clearer statements in Section~\ref{sec:nn} and \ref{sec:svm} which now read:
 \begin{quote}
 	"\revp{hyper1}"
 \end{quote}
@@ -1697,7 +1697,7 @@ and
 \begin{quote}
 	"\revp{hyper2}"
 \end{quote}
-Then, we also dropped the term {\it hyper-parameter} substituting it directly with its definition. We modified another paragraph in Section \ref{sec:svm} which now reads
+We have also dropped the term {\it hyper-parameter} and substituted it directly with its definition. We have modified another paragraph in Section \ref{sec:svm} which now reads:
  \begin{quote}
  	"\revp{hyper3}"
  \end{quote} 
@@ -1710,7 +1710,7 @@ Section~IV switches to a new model where data is only collected within region A0
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} In Section~\ref{sec:OneClass} the new model collects data uniquely from region $\mathcal{A}_0$ in the training phase and consider \ac{ml} classifiers able to distinguish between two classes while being trained only with samples from one class. Hence, samples are collected from $\mathcal{A}_0$ during the training phase and from both $\mathcal{A}_0$ and $\mathcal{A}_1$ during the testing phase. The reason for this choice is that the area $\mathcal{A}_1$ can be large or not well defined, and it may be complicated to collect significant training samples from this area. Therefore a simple approach with a smaller known set is of interest. 
+{\bf Ans:} In Section~\ref{sec:OneClass}, the new model collects data uniquely from region $\mathcal{A}_0$ in the training phase and considers \ac{ml} classifiers able to distinguish between two classes while being trained only with samples from one class. Hence, samples are collected from $\mathcal{A}_0$ during the training phase and from both $\mathcal{A}_0$ and $\mathcal{A}_1$ during the testing phase. The reason for this choice is that the area $\mathcal{A}_1$ can be large or not well defined, and it may be complicated to collect significant training samples from this area. Therefore, a simple approach with a smaller known set is of interest. 
 In order to clarify this aspect we added in Section~\ref{sec:OneClass}:
 \begin{quote}
 "\revp{oneClass}"
