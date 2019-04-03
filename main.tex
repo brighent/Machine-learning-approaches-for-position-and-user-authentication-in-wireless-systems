@@ -371,7 +371,7 @@ A \ac{svm} \underline{\cite[Chapter~7]{Bishop2006}} is a supervised learning mod
 \label{eq:svm}
 \tilde{t}(\bm{a}) = \bm{w}^T \phi (\bm{a}) + b,
 \end{equation}
-where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight column vector and $b$ is a bias parameter. The test function is again provided by (\ref{testfunNN}) where now $\tilde{t}(\bm{a})$ is given by (\ref{eq:svm}). Note that in the conventional \ac{svm} formulation we have $\lambda = 0$, while here $\lambda$ is chosen according to the desired \ac{fa} and \ac{md} probabilities. \revi{hyper2}{While the feature-space transformation function is chosen before training \protect{\cite[Chapter~7]{Bishop2006}}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing.}
+where $\phi: \mathbb{R}^{N_{\rm AP}} \to \mathbb{R}^K$ is a feature-space transformation function, $\bm{w} \in \mathbb{R}^K$ is the weight column vector and $b$ is a bias parameter. The test function is again provided by (\ref{testfunNN}) where now $\tilde{t}(\bm{a})$ is given by (\ref{eq:svm}). Note that in the conventional \ac{svm} formulation we have $\lambda = 0$, while here $\lambda$ is chosen according to the desired \ac{fa} and \ac{md} probabilities. \revi{hyper2}{While the feature-space transformation function is chosen before training \mbox{\cite[Chapter~7]{Bishop2006}}, vector $\bm{w}$ must be properly learned from the data to perform the desired hypothesis testing.}
 
 We consider the \ac{lssvm} approach \cite{Suykens1999} for the optimization of the \ac{svm} parameters.  Learning for \ac{lssvm} is performed by solving the following optimization problem
 \begin{subequations}
@@ -1103,7 +1103,7 @@ In this paper, we have proposed innovative solutions for the \ac{irlv} in wirele
     F(\Delta,R_0,R_1) = 
     \frac{2}{\Delta}\int_{R_0}^{R_1} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{1}{a}\right)d_0 \, {\tt d}d_0,
 \end{equation}
-\revi{simpleScen3_1}{ from the uniform \ac{ud} distribution we have $p(a|\mathcal{H}_0)=F(\Delta_0,R_{\rm min},R_{\rm in})$, whereas  $p(a|\mathcal{H}_1) = F(\Delta_1,R_{\rm in},R_{\rm out})$.}
+\revi{simpleScen3_1}{ from the uniform \ac{ue} distribution we have $p(a|\mathcal{H}_0)=F(\Delta_0,R_{\rm min},R_{\rm in})$, whereas  $p(a|\mathcal{H}_1) = F(\Delta_1,R_{\rm in},R_{\rm out})$.}
 
 \revi{simpleScen3_2}{By computing integrals for path-loss coefficient $\nu = 2$ the \ac{llr} is} 
 \begin{equation}\label{eq:llr1}
@@ -1927,7 +1927,6 @@ Please compare the proposed scheme with other existing schemes.}
 \hl{***}    "\revp{literature_1} 
 	\begin{align}
  \hat{\bm x}_{\rm UD} =  \underset{\bm x}{\arg \min} \sum_{n=1}^{N_{\rm AP}} \left(L(\bm{x},\bm{x}_{\rm AP}^{(n)}) - \hat{L}(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)}) \right)^2,.
-
 \end{align}
 \revp{literature_2}
 $$
