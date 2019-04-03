@@ -348,14 +348,12 @@ When training is performed with a \ac{ce} loss function, the output of the \ac{m
 \end{equation} 
 where the approximation is in the \ac{mse} sense. 
 
-Now, by using the threshold function (\ref{testfunNN}) we have 
-\begin{equation}
+Now, by using the threshold function (\ref{testfunNN}) we have $
     \mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a}) \approx  \tilde{t}(\bm{a}) \gtrsim \lambda,
-\end{equation}
-which can be rewritten as
-\begin{equation}
-    2\mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a} )-1 \gtrsim \hat{\lambda}
-\end{equation}
+$ which can be rewritten as
+% \begin{equation}
+%     2\mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a} )-1 \gtrsim \hat{\lambda}
+% \end{equation}
 \begin{equation}
     \mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a} )-(1-\mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a} )) \gtrsim \hat{\lambda}
 \end{equation}
@@ -363,7 +361,7 @@ which can be rewritten as
 \label{lasteq}
     \mathbb{P}(\mathcal{H}=\mathcal{H}_0|\bm{a} )-\mathbb{P}(\mathcal{H}=\mathcal{H}_1|\bm{a} ) \gtrsim \hat{\lambda}.
 \end{equation}
-By using (\ref{testfunNN}) on the output of the \ac{nn} designed with the \ac{ce} criterion, under the convergence hypotheis, (\ref{lasteq}) coincides (except for a different threshold value) with (\ref{eq:bayesDisc}), the function implemented by the \ac{nn} trained with the \ac{mse} criterion. Therefore, from Theorem 1 we conclude that also the \ac{ce} design criterion provides a test function equivalent the \ac{np} test function.
+By using (\ref{testfunNN}) on the output of the \ac{nn} designed with the \ac{ce} criterion, under the convergence hypothesis, (\ref{lasteq}) coincides (except for a different threshold value) with (\ref{eq:bayesDisc}), the function implemented by the \ac{nn} trained with the \ac{mse} criterion. Therefore, from Theorem 1 we conclude that also the \ac{ce} design criterion provides a test function equivalent the \ac{np} test function.
 \end{proof}
 
 \subsection{Support Vector Machine}\label{sec:svm}
@@ -718,13 +716,15 @@ which, from Lemma \ref{lem:lem2} is, asymptotically, the objective function opti
 The purpose of the attacker is to be successful with the minimum number of attacks in order not to let the network detect to be under a series of attacks and take countermeasures (e.g., activating additional \ac{irlv} techniques or switching off the service). Moreover, a smaller number of attacks reduces the resource consumption by the attacker and provides faster access to the services. In order to make attacks more efficient, we propose that the attacker 1) moves in the \ac{roi}-complementary area $\mathcal A_1$, 2) measures the attenuation vectors at various position, and then 3) decides whether to attack or not according to its previous experience of failed attacks. We denote this attack as {\em selective \ac{ml} attack}. As soon as an attack is successful, the procedure is stopped; therefore, the data on which the attacker can use to take its decision comprises only failed attacks.
 
 In details, the attacker uses the attenuation vectors of (failed) attacks to train a one-class classifier. Then, when reaching a new position it feeds the attenuation vector to the classifier and, if it is classified as belonging to the same class of training, no attacks is performed since the position is deemed to be useless. Otherwise, if the attenuation vector is not recognized as belonging to the class of collected points, it is evaluated as a potential successful attack and the attacker sends a message claiming to be in $\mathcal A_0$ to the network. If successful, the procedure is stopped, while upon failure the attenuation vector is fed as additional training data to the machine so that the classifier becomes more accurate.  
+
+For the one-class classifier, we use either the \ac{ae} or the \ac{svm}, as described in the previous section. 
 \end{comment}
 %As before stated the one class classification involves training the \ac{ml} algorithms with attenuation vectors measured from one of the two available classes. We here propose an attack strategy which trains the \ac{ml} algorithms with attenuation vectors measured from the non-legitimate area $\mathcal{A}_1$. However, differently from a simple random attack, the attenuation vectors are \emph{filtered} by the attacker with a machine trained to learn the class of non successful points. The chosen attack point is then only the one yielding the worst metric as output of the filter. In this way we aim at minimizing the number of attempted attacks.
 
 %In particular, consider an attenuation vector $\bm{a}_{\mathcal{A}_1}$ measured in area $\mathcal{A}_1$ This vector could be a possible successful attack and is hence tested. If the attack is not successful $\bm{a}_{\mathcal{A}_1}$ is used to train the \ac{ml} algorithm. 
 %We generate $n_{\rm x}$ spatial coordinates located in area $\mathcal{A}_1$ and we measure the attenuation values incurred in each position. We then filter this set of vectors with the \ac{ml} algorithm and select as a possible attack the vector which is more likely to belong to class $\mathcal{A}_0$ (i.e., the one with highest reconstruction error for the \ac{ae} and with smallest $\tilde{t}_0$ for the \ac{oclssvm}). If the selected vector is not a successful attack then it is used to update the training of the \ac{ml} algorithm.
 
-For the one-class classifier, we use either the \ac{ae} or the \ac{svm}, as described in the previous section. 
+
 %
 % This process is repeated until a successful attack vector is generated. The algorithm steps are shown in Algorithm \ref{alg:filter}.
 %
