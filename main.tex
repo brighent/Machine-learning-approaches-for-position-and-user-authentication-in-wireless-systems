@@ -168,13 +168,13 @@ Two specific security issues are then addressed. Firstly, \uline{it may be diffi
 
 We consider a wireless network  with\footnote{The following notation is used throughout the paper: bold lowercase letters refer to vectors, whereas bold uppercase letters refer to matrices, $\mathbb{E}[\cdot]$ and $\mathbb P[\cdot]$ denote the expectation and probability operators, respectively, $(\cdot)^T$ denotes the transpose operator, and $\ln x$, $\log_{10} x$ denote the natural-base and base-10 logarithms, respectively.} $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a \ac{irlv} system to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ inside  $\mathcal{A}$, while its complementary region is $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$. The authentication process exploits the location dependency of the features of the channel between the \ac{ue} and the \acp{ap}. \revi{revPHASE}{As an example, we consider as feature the channel power attenuation (of a narrowband transmission), similarly to other works in the literature \protect{\cite{li2010security,yan2016location,Vora}}. Indeed, other features can be exploited, such as the phase or the wideband impulse response: ours solution readily apply also to these cases, as we do not make special assumptions on the channel model for their design and analysis.}
 
-We assume that the \ac{ue} transmits a pilot signal with fixed power, known at the \acp{ap}, from which the \acp{ap} can meaure the received power and estimate the channel attenuation. We assume that the attenuation estimation is perfect, i.e., not affected by noise or interference: this can be achieved by using a sufficiently long pilot signal.
+We assume that the \ac{ue} transmits a pilot signal with fixed power, known at the \acp{ap}, from which the \acp{ap} can measure the received power and estimate the channel attenuation. We assume that the attenuation estimation is perfect, i.e., not affected by noise or interference: this can be achieved by using a sufficiently long pilot signal.
 
 
 
 \subsection{Channel Model}\label{sec:chMod}
 
-We now describe a widely adopted wireless channel model to clarify the challenge faced by an \ac{irlv} based on attenuation estimate. \revi{WiFi2}{In particular we consider a general channel model that covers a large frequency range from hundreds of MHz to 6~GHz, suitable for wireless local area networks (WLANs) and IoT, where \ac{irlv} is typically applied.} Let $a^{(n)}$ is the attenuation incurred over the channel between the \ac{ue} and the \ac{ap} $n$. The attenuation coefficient includes the effects of path-loss, shadowing and fading. In particular, by assuming Rayleigh model for fading we have $g = (\sqrt{a^{(n)}})^{-1} \sim {\mathcal N}\left(0,\sigma_{g,n}^2\right)$, where ${\mathcal N}(m,\sigma^2)$ denotes a Gaussian random variable with mean $m$ and variance $\sigma^2$, $(\sigma_{a,n}^2)_{\rm dB} =  -10\log_{10}\sigma_{g,n}^2={P_{\rm PL}^{(n)}} + s$ accounts for the path-loss and shadowing components, $P_{\rm PL}^{(n)}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component.   \uline{Shadowing components of two \acp{ue}  at  positions $\bm{x}_i$ and $\bm{x}_j$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Chapter 2.7]{goldsmith2005}}.} 
+We now describe a widely adopted wireless channel model to clarify the challenge faced by an \ac{irlv} based on attenuation estimate. \revi{WiFi2}{In particular we consider a general channel model that covers a large frequency range from hundreds of MHz to 6~GHz, suitable for wireless local area networks (WLANs) and IoT, where \ac{irlv} is typically applied.} Let $a^{(n)}$ be the attenuation incurred over the channel between the \ac{ue} and \ac{ap} $n$. The attenuation coefficient includes the effects of path-loss, shadowing and fading. In particular, by assuming Rayleigh model for fading we have $g = (\sqrt{a^{(n)}})^{-1} \sim {\mathcal N}\left(0,\sigma_{g,n}^2\right)$, where ${\mathcal N}(m,\sigma^2)$ denotes a Gaussian random variable with mean $m$ and variance $\sigma^2$, $(\sigma_{a,n}^2)_{\rm dB} =  -10\log_{10}\sigma_{g,n}^2={P_{\rm PL}^{(n)}} + s$ accounts for the path-loss and shadowing components, $P_{\rm PL}^{(n)}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component.   \uline{Shadowing components of two \acp{ue}  at  positions $\bm{x}_i$ and $\bm{x}_j$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_i,\bm{x}_j)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Section 2.7]{goldsmith2005}}.} 
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 Let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UD}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)}) = \sqrt{||\bm{x}_{\rm UD}-\bm{x}_{\rm AP}^{(n)}||_2^2}$. For the path-loss, \cite{3gpp} provides two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
@@ -1413,17 +1413,17 @@ The asymptotic results are only available for very idealised cases.}
 \setstretch{1.5}
 {\bf Ans:} Following your advice 
 \begin{enumerate}
-    \item  we revised the cases for which we also show the performance of the \ac{np} test, by adding more realistic features and providing close-form expressions for the \acp{llr} used in the \ac{np} test;
-    \item we added performance results obtained from experimental data as per your request;
-    \item we presented results (without comparison with the \ac{np} test) for channels  including a) path loss with LOS/noLOS characteristics, b) spatially correlated shadowing, and c) fading, i.e., in accordance with the most detailed literature models. 
+    \item  we have revised the case studies by adding more realistic features and providing close-form expressions for the \acp{llr} used in the \ac{np} test;
+    \item we have added performance results obtained from experimental data as per your request;
+    \item we have presented results (without comparison with the \ac{np} test) for channels  including a) path loss with LOS/noLOS characteristics, b) spatially correlated shadowing, and c) fading, i.e., in accordance with the most detailed models in the literature. 
 \end{enumerate}
-In particular, about point 1)  we revised the entire Section~\ref{sec:los} in order to include more realistic scenarios and show the effect of different channel parameters on the \ac{irlv} performance. In Section~\ref{sec:los} we now consider the following scenarios:
+In particular, about point 1), we have revised the entire Section~\ref{sec:los} in order to include more realistic scenarios and show the effect of different channel parameters on the \ac{irlv} performance. In Section~\ref{sec:los}, we now consider the following scenarios:
 \begin{quote}
 "\revp{simpleScen}"
 \end{quote}
-Then we derive close-form expressions of the \ac{llr} in both scenarios.
+Then, we derive close-form expressions of the \ac{llr} in both scenarios.
 
-In the Numerical Result section performance results are reported for the new scenarios, confirming that both \acp{nn} and \ac{svm} match the performance of the \ac{np} test. In particular we write:
+In the Numerical Result section, performance results are reported for the new scenarios, confirming that both \acp{nn} and \ac{svm} match the performance of the \ac{np} test. In particular, we write:
 \begin{quote}
     "\revp{numResSimplScen} \revp{numResSimplScen2}"
 \end{quote}
@@ -1436,19 +1436,19 @@ An overall framework/unified model is missing. The impact of the paper would be 
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} The proposed \ac{ml} solutions operate with any channel feature, and the comparative analysis on their asymptotic behaviour with respect to \ac{np} test holds irrespective of the input model. Moreover, note that the \ac{ml} approach is model-less by nature, as no assumption is done on the structure/model of the input. In this sense, the details provided for the channel model in Section~II only show the complexity of the \ac{irlv} problem and are used to obtain numerical results in realistic conditions. However, we do not use the specific model of Section~II for the analysis described in the rest of the paper. In order to strengthen the fact that our approach is general and not related to a specific model in the revised manuscript we report performance results obtained by  applying the \ac{ml} \ac{irlv} techniques also on experimental data.
+{\bf Ans:} The proposed \ac{ml} solutions operate with any channel feature, and the comparative analysis on their asymptotic behaviour with respect to \ac{np} test holds irrespective of the input model. Moreover, the \ac{ml} approach is model-less by nature, as no assumption is done on the structure/model of the input. In this sense, the details provided for the channel model in Section~II only show the complexity of the \ac{irlv} problem and are used to obtain numerical results in real conditions. However, we do not use the specific model of Section~II for the analysis described in the rest of the paper. In order to strengthen the fact that our approach is general and not related to a specific model, we report performance results obtained by  applying the \ac{ml} \ac{irlv} techniques also on experimental data in the revised manuscript.
 
 In order to make this point more more clear:
 \begin{itemize}
-    \item we added the following sentence in Section~ \ref{sec:intro}:
+    \item we have added the following sentence in Section~ \ref{sec:intro}:
 \begin{quote}
 "\revp{framework1}"
 \end{quote}
-\item we added the following sentence in Section~\ref{sec:irlvML}: 
+\item we have added the following sentence in Section~\ref{sec:irlvML}: 
 \begin{quote}
 "\revp{framework2}"
 \end{quote}
-\item we added performance results on experimental data in Fig. \ref{fig:Berlinnew} with the following comment:
+\item we have added performance results on experimental data in Fig. \ref{fig:Berlinnew} with the following comment:
 \begin{quote}
 	"\revp{Berlin} \revp{revLI}"
 \end{quote}
@@ -1462,12 +1462,12 @@ The security attack by choosing locations is not properly modelled and does not 
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We agree with you that the part on security attack was confusing. We have revised it by focusing on a specific attack and clearly describing it in a point-by-point procedure, as detailed in a reply to your observation in page \pageref{MLattackissue} of this document. Since the contribution of limited we do not think that it should be further highlighted in the title. We only modified it from "Machine Learning For In-Region Location Verification In Wireless Networks" to "Machine Learning IN In-Region Location Verification FOR Wireless Networks", where now machine learning is intended to be used more generically in this field (thus also for attack purposes) rather than only FOR the verification part. Moreover, we have reduced the relevance on the attack model in the Abstract, which now reads as follows:
-We have revised the abstract to avoid misunderstanding about the attacks. It now reads as follows:
+{\bf Ans:} We agree with you that the part on security attack was confusing. We have revised it by focusing on a specific attack and describing it more clearly in a point-by-point procedure, as detailed in a reply to your observation in page \pageref{MLattackissue} of this document. Since the contribution is limited we do not think that it should be further highlighted in the title. We only modified it from "Machine Learning for In-Region Location Verification in Wireless Networks" to "Machine Learning IN In-Region Location Verification FOR Wireless Networks"; in this way, machine learning is now intended to be used more generally in this field (i.e. also for attack purposes) rather than only FOR the verification part. Moreover, we have reduced the relevance on the attack model in the Abstract, which now reads as follows:
+%We have revised the abstract to avoid misunderstanding about the attacks. It now reads as follows:
 \begin{quote}
     "\revp{rev14}"
 \end{quote}
-Moreover, we also modified the Introduction by writing
+Moreover, we have also modified the Introduction by writing
 \begin{quote}
     "\revp{rev14b}"
 \end{quote}
@@ -1490,11 +1490,11 @@ Most applications are from the WiFi or IoT area. Why the paper then studies the 
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We agree with you your observation that location verification is of high interest for WiFi and IoT. We revised the manuscript accordingly: as our approach is general, we now do not mention a specific cellular setup, and we also replaced the acronym UD with user device, UD, to avoid reference to cellular systems. The considered channel model is very general and covers frequencies of WLANs and IoT. Moreover we added the following sentence in Section~II:
+{\bf Ans:} We agree with your observation: location verification is of high interest for WiFi and IoT. We have revised the manuscript accordingly: as our approach is general, we now do not mention a specific cellular setup, and we also replaced the acronym UD with user device, UD, \colorbox{red}{\`e lo stesso acronimo} to avoid reference to cellular systems. The considered channel model is very general and covers frequencies of WLANs and IoT. Moreover we added the following sentence in Section~II:
 \begin{quote}
     "\revp{WiFi2}"
 \end{quote}
-Lastly, most numerical results are obtained from a 2~GHz frequency that well fits WLAN applications, while the newly inserted results from experimental data are referring to GSM frequencies, just as example of a cellular IoT.
+Lastly, most numerical results are obtained from a 2~GHz frequency that well fits WLAN applications, while the newly inserted results from experimental data are referring to GSM frequencies, just as an example of a cellular IoT.
 
 
 \setstretch{1.0}
