@@ -1,0 +1,1293 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{Zeng-survey}{article}{}
+    \name{author}{5}{}{%
+      {{hash=ZY}{%
+         family={Zeng},
+         familyi={Z\bibinitperiod},
+         given={Yingpei},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Cao},
+         familyi={C\bibinitperiod},
+         given={Jiannong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=HJ}{%
+         family={Hong},
+         familyi={H\bibinitperiod},
+         given={Jue},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZS}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Shigeng},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=XL}{%
+         family={Xie},
+         familyi={X\bibinitperiod},
+         given={Li},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer}%
+    }
+    \strng{namehash}{ZYCJHJ+1}
+    \strng{fullhash}{ZYCJHJZSXL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{3}
+    \field{pages}{685\bibrangedash 701}
+    \field{title}{Secure localization and location verification in wireless
+  sensor networks: a survey}
+    \field{volume}{64}
+    \field{journaltitle}{The Jour. of Supercomputing}
+    \field{month}{11}
+    \field{year}{2013}
+  \endentry
+
+  \entry{8376254}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=CG}{%
+         family={Caparra},
+         familyi={C\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={Centenaro},
+         familyi={C\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LN}{%
+         family={Laurenti},
+         familyi={L\bibinitperiod},
+         given={N.},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={Tomasin},
+         familyi={T\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CGCMLN+1}
+    \strng{fullhash}{CGCMLNTS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. 2017 Int. Conf. on Localization and GNSS
+  (ICL-GNSS), {N}ottingham, {UK}}
+    \field{pages}{1\bibrangedash 6}
+    \field{title}{Optimization of anchor nodes' usage for location verification
+  systems}
+    \field{month}{06}
+    \field{year}{2017}
+  \endentry
+
+  \entry{wei2013}{article}{}
+    \name{author}{2}{}{%
+      {{hash=WY}{%
+         family={Wei},
+         familyi={W\bibinitperiod},
+         given={Yawen},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=GY}{%
+         family={Guan},
+         familyi={G\bibinitperiod},
+         given={Yong},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{WYGY1}
+    \strng{fullhash}{WYGY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{5}
+    \field{pages}{938\bibrangedash 950}
+    \field{title}{Lightweight location verification algorithms for wireless
+  sensor networks}
+    \field{volume}{24}
+    \field{journaltitle}{IEEE Trans. Parallel and Distributed Systems}
+    \field{month}{05}
+    \field{year}{2013}
+  \endentry
+
+  \entry{7903611}{article}{}
+    \name{author}{1}{}{%
+      {{hash=etalLC}{%
+         family={{\it et al.}},
+         familyi={{\it et al\bibinitperiod}},
+         given={L.\bibnamedelima Chen},
+         giveni={L\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{etalLC1}
+    \strng{fullhash}{etalLC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{8956\bibrangedash 8977}
+    \field{title}{Robustness, Security and Privacy in Location-Based Services
+  for Future {IoT}: A Survey}
+    \field{volume}{5}
+    \field{journaltitle}{IEEE Access}
+    \field{month}{04}
+    \field{year}{2017}
+  \endentry
+
+  \entry{quaglia}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=QEA}{%
+         family={Quaglia},
+         familyi={Q\bibinitperiod},
+         given={E.\bibnamedelima A.},
+         giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={Tomasin},
+         familyi={T\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{QEATS1}
+    \strng{fullhash}{QEATS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. 2016 IEEE 17th Int. Workshop on Signal Processing
+  Advances in Wireless Commun. (SPAWC), {E}dinburgh, {UK}}
+    \field{pages}{1\bibrangedash 6}
+    \field{title}{Geo-specific encryption through implicitly authenticated
+  location for {5G} wireless systems}
+    \field{month}{07}
+    \field{year}{2016}
+  \endentry
+
+  \entry{li2010security}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=LC}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Chunxia},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CF}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Fa},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhan},
+         familyi={Z\bibinitperiod},
+         given={Yongzhao},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=WL}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Liangmin},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LCCFZY+1}
+    \strng{fullhash}{LCCFZYWL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. Int. Conf. on Wireless Commun. Networking and
+  Mobile Computing (WiCOM)}
+    \field{pages}{1\bibrangedash 4}
+    \field{title}{Security verification of location estimate in wireless sensor
+  networks}
+    \field{month}{09}
+    \field{year}{2010}
+  \endentry
+
+  \entry{7270404}{article}{}
+    \name{author}{3}{}{%
+      {{hash=JE}{%
+         family={Jorswieck},
+         familyi={J\bibinitperiod},
+         given={E.},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={Tomasin},
+         familyi={T\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Sezgin},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{JETSSA1}
+    \strng{fullhash}{JETSSA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{10}
+    \field{pages}{1702\bibrangedash 1724}
+    \field{title}{Broadcasting Into the Uncertainty: Authentication and
+  Confidentiality by Physical-Layer Processing}
+    \field{volume}{103}
+    \field{journaltitle}{Proceedings of the IEEE}
+    \field{month}{10}
+    \field{year}{2015}
+  \endentry
+
+  \entry{Baracca-12}{article}{}
+    \name{author}{3}{}{%
+      {{hash=BP}{%
+         family={Baracca},
+         familyi={B\bibinitperiod},
+         given={Paolo},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=LN}{%
+         family={Laurenti},
+         familyi={L\bibinitperiod},
+         given={Nicola},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={Tomasin},
+         familyi={T\bibinitperiod},
+         given={Stefano},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BPLNTS1}
+    \strng{fullhash}{BPLNTS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{7}
+    \field{pages}{2564\bibrangedash 2573}
+    \field{title}{Physical layer authentication over {MIMO} fading wiretap
+  channels}
+    \field{volume}{11}
+    \field{journaltitle}{IEEE Trans. Wireless Commun.}
+    \field{month}{05}
+    \field{year}{2012}
+  \endentry
+
+  \entry{7398138}{article}{}
+    \name{author}{5}{}{%
+      {{hash=XL}{%
+         family={{Xiao}},
+         familyi={X\bibinitperiod},
+         given={L.},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={{Li}},
+         familyi={L\bibinitperiod},
+         given={Y.},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=HG}{%
+         family={{Han}},
+         familyi={H\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=LG}{%
+         family={{Liu}},
+         familyi={L\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=ZW}{%
+         family={{Zhuang}},
+         familyi={Z\bibinitperiod},
+         given={W.},
+         giveni={W\bibinitperiod},
+      }}%
+    }
+    \keyw{Bayes methods;game theory;learning (artificial intelligence);radio
+  networks;software radio;telecommunication computing;wireless channels;indoor
+  environments;universal software radio peripherals;optimal test
+  threshold;Q-learning;Dyna-Q;exact channel parameters;spoofing detection
+  schemes;radio nodes;dynamic radio environment;static authentication game;Nash
+  equilibrium;Bayesian risk;zero-sum authentication game;legitimate
+  receiver;spoofing attack detection;radio channel information;PHY-layer
+  authentication;wireless networks;reinforcement learning;PHY-layer spoofing
+  detection;Authentication;Receivers;Games;Transmitters;Wireless
+  networks;Detectors;Game theory;Game theory;PHY-layer
+  authentication;reinforcement learning;spoofing detection}
+    \strng{namehash}{XLLYHG+1}
+    \strng{fullhash}{XLLYHGLGZW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{12}
+    \field{pages}{10037\bibrangedash 10047}
+    \field{title}{{PHY}-Layer Spoofing Detection With Reinforcement Learning in
+  Wireless Networks}
+    \field{volume}{65}
+    \field{journaltitle}{IEEE Trans. Vehic. Tech.}
+    \field{month}{12}
+    \field{year}{2016}
+  \endentry
+
+  \entry{Brands}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=BS}{%
+         family={Brands},
+         familyi={B\bibinitperiod},
+         given={Stefan},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=CD}{%
+         family={Chaum},
+         familyi={C\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {Springer}%
+    }
+    \strng{namehash}{BSCD1}
+    \strng{fullhash}{BSCD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. Workshop on the Theory and Application of
+  Cryptographic Techniques}
+    \field{pages}{344\bibrangedash 359}
+    \field{title}{Distance-bounding protocols}
+    \list{location}{1}{%
+      {Lofthus, Norway}%
+    }
+    \field{month}{07}
+    \field{year}{1993}
+  \endentry
+
+  \entry{singelee2005location}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=SD}{%
+         family={Singelee},
+         familyi={S\bibinitperiod},
+         given={Dave},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=PB}{%
+         family={Preneel},
+         familyi={P\bibinitperiod},
+         given={Bart},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SDPB1}
+    \strng{fullhash}{SDPB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. IEEE Int. Conf. on Mobile Adhoc and Sensor Systems,
+  2005.}
+    \field{pages}{7}
+    \field{title}{Location verification using secure distance bounding
+  protocols}
+    \field{month}{12}
+    \field{year}{2005}
+  \endentry
+
+  \entry{song2008secure}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=SJH}{%
+         family={Song},
+         familyi={S\bibinitperiod},
+         given={Joo-Han},
+         giveni={J\bibinitperiod-H\bibinitperiod},
+      }}%
+      {{hash=WVW}{%
+         family={Wong},
+         familyi={W\bibinitperiod},
+         given={Vincent\bibnamedelima WS},
+         giveni={V\bibinitperiod\bibinitdelim W\bibinitperiod},
+      }}%
+      {{hash=LVC}{%
+         family={Leung},
+         familyi={L\bibinitperiod},
+         given={Victor\bibnamedelima CM},
+         giveni={V\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SJHWVWLVC1}
+    \strng{fullhash}{SJHWVWLVC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. IEEE Global Telecommunications Conf.}
+    \field{pages}{1\bibrangedash 5}
+    \field{title}{Secure location verification for vehicular ad-hoc networks}
+    \field{month}{12}
+    \field{year}{2008}
+  \endentry
+
+  \entry{Sastry}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=SN}{%
+         family={Sastry},
+         familyi={S\bibinitperiod},
+         given={Naveen},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=SU}{%
+         family={Shankar},
+         familyi={S\bibinitperiod},
+         given={Umesh},
+         giveni={U\bibinitperiod},
+      }}%
+      {{hash=WD}{%
+         family={Wagner},
+         familyi={W\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{SNSUWD1}
+    \strng{fullhash}{SNSUWD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proc. of the 2nd ACM workshop on Wireless security}
+    \field{pages}{1\bibrangedash 10}
+    \field{title}{Secure verification of location claims}
+    \list{location}{1}{%
+      {San Diego (CA)}%
+    }
+    \field{month}{09}
+    \field{year}{2003}
+  \endentry
+
+  \entry{Vora}{article}{}
+    \name{author}{2}{}{%
+      {{hash=VA}{%
+         family={Vora},
+         familyi={V\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=NM}{%
+         family={Nesterenko},
+         familyi={N\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{VANM1}
+    \strng{fullhash}{VANM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{4}
+    \field{pages}{377\bibrangedash 385}
+    \field{title}{Secure Location Verification Using Radio Broadcast}
+    \field{volume}{3}
+    \field{journaltitle}{IEEE Trans. Dependable and Secure Computing}
+    \field{month}{10}
+    \field{year}{2006}
+  \endentry
+
+  \entry{7145434}{article}{}
+    \name{author}{3}{}{%
+      {{hash=AA}{%
+         family={Abdou},
+         familyi={A\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=MA}{%
+         family={Matrawy},
+         familyi={M\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=vOPC}{%
+         prefix={van},
+         prefixi={v\bibinitperiod},
+         family={Oorschot},
+         familyi={O\bibinitperiod},
+         given={P.\bibnamedelima C.},
+         giveni={P\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{AAMAOPCv1}
+    \strng{fullhash}{AAMAOPCv1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{2}
+    \field{pages}{130\bibrangedash 144}
+    \field{title}{{CPV}: Delay-Based Location Verification for the {I}nternet}
+    \field{volume}{14}
+    \field{journaltitle}{IEEE Trans. Dependable and Secure Computing}
+    \field{month}{03}
+    \field{year}{2017}
+  \endentry
+
+  \entry{yan2016location}{article}{}
+    \name{author}{4}{}{%
+      {{hash=YS}{%
+         family={Yan},
+         familyi={Y\bibinitperiod},
+         given={Shihao},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=NI}{%
+         family={Nevat},
+         familyi={N\bibinitperiod},
+         given={Ido},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=PGW}{%
+         family={Peters},
+         familyi={P\bibinitperiod},
+         given={Gareth\bibnamedelima W},
+         giveni={G\bibinitperiod\bibinitdelim W\bibinitperiod},
+      }}%
+      {{hash=MR}{%
+         family={Malaney},
+         familyi={M\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{YSNIPGW+1}
+    \strng{fullhash}{YSNIPGWMR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{6}
+    \field{pages}{4132\bibrangedash 4144}
+    \field{title}{Location verification systems under spatially correlated
+  shadowing}
+    \field{volume}{15}
+    \field{journaltitle}{IEEE Trans. Wireless Commun.}
+    \field{month}{02}
+    \field{year}{2016}
+  \endentry
+
+  \entry{Cover-book}{book}{}
+    \name{author}{2}{}{%
+      {{hash=CTM}{%
+         family={Cover},
+         familyi={C\bibinitperiod},
+         given={Thomas\bibnamedelima M},
+         giveni={T\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=TJA}{%
+         family={Thomas},
+         familyi={T\bibinitperiod},
+         given={Joy\bibnamedelima A},
+         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {John Wiley \& Sons}%
+    }
+    \strng{namehash}{CTMTJA1}
+    \strng{fullhash}{CTMTJA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Elements of information theory}
+    \field{year}{2012}
+  \endentry
+
+  \entry{xiao-2018}{article}{}
+    \name{author}{3}{}{%
+      {{hash=XL}{%
+         family={Xiao},
+         familyi={X\bibinitperiod},
+         given={Liang},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=WX}{%
+         family={Wan},
+         familyi={W\bibinitperiod},
+         given={Xiaoyue},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=HZ}{%
+         family={Han},
+         familyi={H\bibinitperiod},
+         given={Zhu},
+         giveni={Z\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XLWXHZ1}
+    \strng{fullhash}{XLWXHZ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{3}
+    \field{pages}{1676\bibrangedash 1687}
+    \field{title}{PHY-layer authentication with multiple landmarks with reduced
+  overhead}
+    \field{volume}{17}
+    \field{journaltitle}{IEEE Trans. Wireless Commun.}
+    \field{month}{12}
+    \field{year}{2018}
+  \endentry
+
+  \entry{tian2015robust}{article}{}
+    \name{author}{5}{}{%
+      {{hash=TY}{%
+         family={Tian},
+         familyi={T\bibinitperiod},
+         given={Ye},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=DB}{%
+         family={Denby},
+         familyi={D\bibinitperiod},
+         given={Bruce},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=AI}{%
+         family={Ahriz},
+         familyi={A\bibinitperiod},
+         given={Iness},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RP}{%
+         family={Roussel},
+         familyi={R\bibinitperiod},
+         given={Pierre},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=DG}{%
+         family={Dreyfus},
+         familyi={D\bibinitperiod},
+         given={G{\'e}rard},
+         giveni={G\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{TYDBAI+1}
+    \strng{fullhash}{TYDBAIRPDG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{1}
+    \field{pages}{157}
+    \field{title}{Robust indoor localization and tracking using {GSM}
+  fingerprints}
+    \field{volume}{2015}
+    \field{journaltitle}{EURASIP Jour. on Wireless Commun. and Networking}
+    \field{month}{06}
+    \field{year}{2015}
+  \endentry
+
+  \entry{3gpp}{report}{}
+    \field{labeltitlesource}{title}
+    \field{title}{{LTE}; Evolved Universal Terrestrial Radio Access
+  ({E}-{UTRA}); Radio Frequency ({RF}) system scenarios}
+    \list{institution}{1}{%
+      {3GPP}%
+    }
+    \field{type}{TR 36.942 version 15.0.0 Release 15}
+    \field{year}{Jul 2018}
+  \endentry
+
+  \entry{goldsmith2005}{book}{}
+    \name{author}{1}{}{%
+      {{hash=GA}{%
+         family={Goldsmith},
+         familyi={G\bibinitperiod},
+         given={Andrea},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Cambridge university press, Cambridge}%
+    }
+    \strng{namehash}{GA1}
+    \strng{fullhash}{GA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Wireless communications}
+    \field{year}{2005}
+  \endentry
+
+  \entry{Kay-book}{book}{}
+    \name{author}{1}{}{%
+      {{hash=KSM}{%
+         family={Kay},
+         familyi={K\bibinitperiod},
+         given={Steven\bibnamedelima M.},
+         giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Prentice-Hall, Inc.}%
+    }
+    \strng{namehash}{KSM1}
+    \strng{fullhash}{KSM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Fundamentals of Statistical Signal Processing: Estimation
+  Theory}
+    \list{location}{1}{%
+      {Upper Saddle River, NJ, USA}%
+    }
+    \field{year}{1993}
+  \endentry
+
+  \entry{goodfellow}{book}{}
+    \name{author}{3}{}{%
+      {{hash=GI}{%
+         family={Goodfellow},
+         familyi={G\bibinitperiod},
+         given={Ian},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Bengio},
+         familyi={B\bibinitperiod},
+         given={Yoshua},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CA}{%
+         family={Courville},
+         familyi={C\bibinitperiod},
+         given={Aaron},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {MIT press, Cambridge}%
+    }
+    \strng{namehash}{GIBYCA1}
+    \strng{fullhash}{GIBYCA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Deep learning}
+    \field{year}{2016}
+  \endentry
+
+  \entry{bishop92}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BCM}{%
+         family={Bishop},
+         familyi={B\bibinitperiod},
+         given={Christopher\bibnamedelima M},
+         giveni={C\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=RC}{%
+         family={Roach},
+         familyi={R\bibinitperiod},
+         given={CM},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {AIP}%
+    }
+    \strng{namehash}{BCMRC1}
+    \strng{fullhash}{BCMRC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{10}
+    \field{pages}{4450\bibrangedash 4456}
+    \field{title}{Fast curve fitting using neural networks}
+    \field{volume}{63}
+    \field{journaltitle}{Review of scientific instruments}
+    \field{month}{06}
+    \field{year}{1992}
+  \endentry
+
+  \entry{Bishop2006}{book}{}
+    \name{author}{1}{}{%
+      {{hash=BCM}{%
+         family={Bishop},
+         familyi={B\bibinitperiod},
+         given={Christopher\bibnamedelima M.},
+         giveni={C\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer, New York}%
+    }
+    \strng{namehash}{BCM1}
+    \strng{fullhash}{BCM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{{Pattern Recognition And Machine Learning}}
+    \field{year}{2006}
+  \endentry
+
+  \entry{Ruck-90}{article}{}
+    \name{author}{5}{}{%
+      {{hash=RDW}{%
+         family={Ruck},
+         familyi={R\bibinitperiod},
+         given={Dennis\bibnamedelima W},
+         giveni={D\bibinitperiod\bibinitdelim W\bibinitperiod},
+      }}%
+      {{hash=RSK}{%
+         family={Rogers},
+         familyi={R\bibinitperiod},
+         given={Steven\bibnamedelima K},
+         giveni={S\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=KM}{%
+         family={Kabrisky},
+         familyi={K\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=OME}{%
+         family={Oxley},
+         familyi={O\bibinitperiod},
+         given={Mark\bibnamedelima E},
+         giveni={M\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=SBW}{%
+         family={Suter},
+         familyi={S\bibinitperiod},
+         given={Bruce\bibnamedelima W},
+         giveni={B\bibinitperiod\bibinitdelim W\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{RDWRSKKM+1}
+    \strng{fullhash}{RDWRSKKMOMESBW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{4}
+    \field{pages}{296\bibrangedash 298}
+    \field{title}{The multilayer perceptron as an approximation to a {B}ayes
+  optimal discriminant function}
+    \field{volume}{1}
+    \field{journaltitle}{IEEE Trans. Neural Networks}
+    \field{month}{12}
+    \field{year}{1990}
+  \endentry
+
+  \entry{nostro}{article}{}
+    \name{author}{5}{}{%
+      {{hash=BA}{%
+         family={{Brighente}},
+         familyi={B\bibinitperiod},
+         given={Alessandro},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=FF}{%
+         family={{Formaggio}},
+         familyi={F\bibinitperiod},
+         given={Francesco},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={{Centenaro}},
+         familyi={C\bibinitperiod},
+         given={Marco},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DGM}{%
+         family={{Di Nunzio}},
+         familyi={D\bibinitperiod},
+         given={Giorgio\bibnamedelima Maria},
+         giveni={G\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={{Tomasin}},
+         familyi={T\bibinitperiod},
+         given={Stefano},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \keyw{Electrical Engineering and Systems Science - Signal Processing}
+    \strng{namehash}{BAFFCM+1}
+    \strng{fullhash}{BAFFCMDGMTS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1811.06729
+    \endverb
+    \field{title}{Location-Verification and Network Planning via Machine
+  Learning Approaches}
+    \field{journaltitle}{arXiv e-prints}
+    \field{eprinttype}{arXiv}
+    \field{month}{11}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Suykens1999}{article}{}
+    \name{author}{2}{}{%
+      {{hash=SJA}{%
+         family={Suykens},
+         familyi={S\bibinitperiod},
+         given={Johan\bibnamedelima AK},
+         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=VJ}{%
+         family={Vandewalle},
+         familyi={V\bibinitperiod},
+         given={Joos},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer}%
+    }
+    \strng{namehash}{SJAVJ1}
+    \strng{fullhash}{SJAVJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{3}
+    \field{pages}{293\bibrangedash 300}
+    \field{title}{Least squares support vector machine classifiers}
+    \field{volume}{9}
+    \field{journaltitle}{Neural processing letters}
+    \field{month}{06}
+    \field{year}{1999}
+  \endentry
+
+  \entry{guo2008novel}{article}{}
+    \name{author}{5}{}{%
+      {{hash=GX}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={XC},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=YJ}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={JH},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=WC}{%
+         family={Wu},
+         familyi={W\bibinitperiod},
+         given={CG},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=WC}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={CY},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Liang},
+         familyi={L\bibinitperiod},
+         given={YC},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Elsevier}%
+    }
+    \strng{namehash}{GXYJWC+1}
+    \strng{fullhash}{GXYJWCWCLY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{16-18}
+    \field{pages}{3211\bibrangedash 3215}
+    \field{title}{A novel {LS-SVMs} hyper-parameter selection based on particle
+  swarm optimization}
+    \field{volume}{71}
+    \field{journaltitle}{Neurocomputing}
+    \field{month}{10}
+    \field{year}{2008}
+  \endentry
+
+  \entry{Yevs}{article}{}
+    \name{author}{2}{}{%
+      {{hash=YJ}{%
+         family={Ye},
+         familyi={Y\bibinitperiod},
+         given={Jieping},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=XT}{%
+         family={Xiong},
+         familyi={X\bibinitperiod},
+         given={Tao},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{YJXT1}
+    \strng{fullhash}{YJXT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{644\bibrangedash 651}
+    \field{title}{{SVM} versus least squares {SVM}}
+    \field{journaltitle}{Artificial Intelligence and Statistics}
+    \field{month}{04}
+    \field{year}{2007}
+  \endentry
+
+  \entry{Bianchini2014}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BM}{%
+         family={Bianchini},
+         familyi={B\bibinitperiod},
+         given={Monica},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SF}{%
+         family={Scarselli},
+         familyi={S\bibinitperiod},
+         given={Franco},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BMSF1}
+    \strng{fullhash}{BMSF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{8}
+    \field{pages}{1553\bibrangedash 1565}
+    \field{title}{On the Complexity of Neural Network Classifiers: A Comparison
+  Between Shallow and Deep Architectures}
+    \field{volume}{25}
+    \field{journaltitle}{IEEE Trans. Neural Networks and Learning Systems}
+    \field{month}{08}
+    \field{year}{2014}
+  \endentry
+
+  \entry{vanGestel2004}{article}{}
+    \name{author}{8}{}{%
+      {{hash=vGT}{%
+         prefix={van},
+         prefixi={v\bibinitperiod},
+         family={Gestel},
+         familyi={G\bibinitperiod},
+         given={Tony},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=SJA}{%
+         family={Suykens},
+         familyi={S\bibinitperiod},
+         given={Johan\bibnamedelima A.K.},
+         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=BB}{%
+         family={Baesens},
+         familyi={B\bibinitperiod},
+         given={Bart},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=VS}{%
+         family={Viaene},
+         familyi={V\bibinitperiod},
+         given={Stijn},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=VJ}{%
+         family={Vanthienen},
+         familyi={V\bibinitperiod},
+         given={Jan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=DG}{%
+         family={Dedene},
+         familyi={D\bibinitperiod},
+         given={Guido},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=dMB}{%
+         prefix={de},
+         prefixi={d\bibinitperiod},
+         family={Moor},
+         familyi={M\bibinitperiod},
+         given={Bart},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=VJ}{%
+         family={Vandewalle},
+         familyi={V\bibinitperiod},
+         given={Joos},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GTvSJABB+1}
+    \strng{fullhash}{GTvSJABBVSVJDGMBdVJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{1}
+    \field{pages}{5\bibrangedash 32}
+    \field{title}{Benchmarking Least Squares Support Vector Machine
+  Classifiers}
+    \field{volume}{54}
+    \field{journaltitle}{Machine Learning}
+    \field{month}{01}
+    \field{year}{2004}
+  \endentry
+
+  \entry{Hinton-2006}{article}{}
+    \name{author}{2}{}{%
+      {{hash=HGE}{%
+         family={Hinton},
+         familyi={H\bibinitperiod},
+         given={Geoffrey\bibnamedelima E},
+         giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=SRR}{%
+         family={Salakhutdinov},
+         familyi={S\bibinitperiod},
+         given={Ruslan\bibnamedelima R},
+         giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {American Association for the Advancement of Science}%
+    }
+    \strng{namehash}{HGESRR1}
+    \strng{fullhash}{HGESRR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{5786}
+    \field{pages}{504\bibrangedash 507}
+    \field{title}{Reducing the dimensionality of data with neural networks}
+    \field{volume}{313}
+    \field{journaltitle}{Science}
+    \field{month}{07}
+    \field{year}{2006}
+  \endentry
+
+  \entry{choi2009}{article}{}
+    \name{author}{1}{}{%
+      {{hash=CYS}{%
+         family={Choi},
+         familyi={C\bibinitperiod},
+         given={Young-Sik},
+         giveni={Y\bibinitperiod-S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Elsevier}%
+    }
+    \strng{namehash}{CYS1}
+    \strng{fullhash}{CYS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{13}
+    \field{pages}{1236\bibrangedash 1240}
+    \field{title}{Least squares one-class support vector machine}
+    \field{volume}{30}
+    \field{journaltitle}{Pattern Recognition Letters}
+    \field{month}{10}
+    \field{year}{2009}
+  \endentry
+
+  \entry{Scholkopf2001estimating}{article}{}
+    \name{author}{5}{}{%
+      {{hash=SB}{%
+         family={Sch{\"o}lkopf},
+         familyi={S\bibinitperiod},
+         given={Bernhard},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=PJC}{%
+         family={Platt},
+         familyi={P\bibinitperiod},
+         given={John\bibnamedelima C},
+         giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=STJ}{%
+         family={Shawe-Taylor},
+         familyi={S\bibinitperiod-T\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SAJ}{%
+         family={Smola},
+         familyi={S\bibinitperiod},
+         given={Alex\bibnamedelima J},
+         giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=WRC}{%
+         family={Williamson},
+         familyi={W\bibinitperiod},
+         given={Robert\bibnamedelima C},
+         giveni={R\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {MIT Press}%
+    }
+    \strng{namehash}{SBPJCSTJ+1}
+    \strng{fullhash}{SBPJCSTJSAJWRC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{7}
+    \field{pages}{1443\bibrangedash 1471}
+    \field{title}{Estimating the support of a high-dimensional distribution}
+    \field{volume}{13}
+    \field{journaltitle}{Neural computation}
+    \field{month}{07}
+    \field{year}{2001}
+  \endentry
+
+  \entry{MOMENTUM-D53}{report}{}
+    \name{author}{1}{}{%
+      {{hash=etalHG}{%
+         family={{\it et al.}},
+         familyi={{\it et al\bibinitperiod}},
+         given={HF\bibnamedelima Geerdes},
+         giveni={H\bibinitperiod\bibinitdelim G\bibinitperiod},
+      }}%
+    }
+    \name{editor}{2}{}{%
+      {{hash=LP}{%
+         family={Louren\c{c}o},
+         familyi={L\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=FER}{%
+         family={Fledderus},
+         familyi={F\bibinitperiod},
+         given={E.\bibnamedelima R.},
+         giveni={E\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{etalHG1}
+    \strng{fullhash}{etalHG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{D5.3}
+    \field{title}{Evaluation of Reference and Public Scenarios}
+    \verb{url}
+    \verb http://www.zib.de/momentum/paper/momentum-d53.pdf
+    \endverb
+    \list{institution}{1}{%
+      {IST-2000-28088 MOMENTUM}%
+    }
+    \field{type}{techreport}
+    \field{year}{2003}
+  \endentry
+\enddatalist
+\endinput
