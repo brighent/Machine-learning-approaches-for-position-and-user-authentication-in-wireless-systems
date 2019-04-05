@@ -1,5 +1,5 @@
-\documentclass[draftcls,onecolumn,12pt]{IEEEtran}
-\usepackage[width=6.5in, left=2.5cm,height=54em]{geometry}
+\documentclass[final,twocolumn]{IEEEtran}
+%\usepackage[width=6.5in, left=2.5cm,height=54em]{geometry}
 %\documentclass[final,journal]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
@@ -133,7 +133,7 @@ Auto-encoder, in-region location verification, machine learning, neural network,
 \end{IEEEkeywords}
 
 \glsresetall
-\clearpage
+%\clearpage
 \section{Introduction}
 \label{sec:intro}
 
@@ -186,14 +186,16 @@ We now describe a widely adopted wireless channel model to clarify the challenge
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 Let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UD}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)}) = \sqrt{||\bm{x}_{\rm UD}-\bm{x}_{\rm AP}^{(n)}||_2^2}$. For the path-loss, \cite{3gpp} provides two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
 \begin{equation}\label{eq:los}
-    P_{{\rm PL},{\rm LOS}}\left(L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) = 10 \nu \log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{c}\right),
+\begin{split}
+    P_{{\rm PL},{\rm LOS}} & \left(  L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) = \\
+    &10 \nu \log_{10}\left(\frac{f 4\pi L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{c}\right),
+\end{split}
 \end{equation}
 where $\nu$ is the path-loss coefficient, $f$ is the carrier frequency and $c$ is the speed of light. 
 For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
 \begin{equation}\label{eq:nlos}
 \begin{split}
-    P_{{\rm PL},  {\rm NLOS}}&\left(L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) = 40 (1 - 4 \cdot 10^{-3} h_ {\rm AP}^{(n)})\log_{10}\left (\frac{L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) +   \\
-    & - 18 \log_{10} h_{\rm AP}^{(n)}  +21\log_{10}\left(\frac{f}{10^6}\right) + 80,
+    P_{{\rm PL},  {\rm NLOS}} & \left(L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) = 40 (1 - 4 \cdot 10^{-3} h_ {\rm AP}^{(n)}) \cdot \\ &\log_{10}\left (\frac{L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) - 18 \log_{10} h_{\rm AP}^{(n)} + \\ &+21\log_{10}\left(\frac{f}{10^6}\right) + 80,
     \end{split}
 \end{equation}
 where $h_{\rm AP}$ is the   AP height. Path-loss and shadowing components (thus $\sigma_{a,n}^2$) are assumed to be time-invariant, while the fading (thus attenuation $a^{(n)}$) is independent for each attenuation estimate. \revi{avg_1}{Fading does not give information on the \ac{ue} location; therefore it is a disturbance for \ac{irlv}. However, by performing $k_f$ estimates of the attenuation in a short time $a_j^{(n)}$, $j=1, \ldots,k_f$, and averaging them, we obtain the new attenuation estimate $a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}$.}
@@ -1100,8 +1102,11 @@ In this paper, we have proposed innovative solutions for \ac{irlv} in wireless n
 \subsubsection{Uncorrelated Fading scenario}
 \revi{simpleScen3}{Assuming spatially uncorrelated Rayleigh fading, without shadowing (\ie $\sigma_{s,\rm dB}=0)$, given a \ac{ue} located at distance $d$, the channel gain $g=1/a$ is exponentially distributed with mean (in dB) $P_{\rm PL,LOS}(d)$ given by $\eqref{eq:los}$. Letting}
 \begin{equation}
-    F(\Delta,R_0,R_1) = 
-    \frac{2}{\Delta}\int_{R_0}^{R_1} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{1}{a}\right)d_0 \, {\tt d}d_0,
+\begin{split}
+    F(\Delta,R_0,R_1) &= 
+    \frac{2}{\Delta}\int_{R_0}^{R_1} 10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \\
+     & \exp\left(-10^{P_{{\rm PL},{\rm LOS}}(d_0)/10} \frac{1}{a}\right)d_0 \, {\tt d}d_0,
+\end{split}
 \end{equation}
 \revi{simpleScen3_1}{from the uniform \ac{ue} distribution and \eqref{eq:prc} we have $p(a|\mathcal{H}_0)=F(\Delta_0,R_{\rm min},R_{\rm in})$, whereas  $p(a|\mathcal{H}_1) = F(\Delta_1,R_{\rm in},R_{\rm out})$.}
 \revi{simpleScen3_2}{By computing integrals for path-loss coefficient $\nu = 2$, the \ac{llr} is} 
@@ -1110,20 +1115,30 @@ In this paper, we have proposed innovative solutions for \ac{irlv} in wireless n
    \ln\left(\frac{R^2-R_{\rm min}^2}{R_{\rm in}^2-R_{\rm in}^2}\frac{\mathcal{V}(R_{\rm min},a)-\mathcal{V}(R_{\rm in},a)}{\mathcal{V}(R_{\rm in},a)-\mathcal{V}(R,a)}\right),
 \end{equation}
  \begin{equation}
-\mathcal{V}(d_0,a) = \exp\left(-\frac{1}{a}\left(\frac{4 \pi f_0 d_0}{c}\right)^2\right) \left(\frac{1}{a}\left(\frac{4 \pi f_0 d_0}{c}\right)^2+1\right) .   
+ \begin{split}
+&\mathcal{V}(d_0,a) = \\
+& \exp\left(-\frac{1}{a}\left(\frac{4 \pi f_0 d_0}{c}\right)^2\right) \left(\frac{1}{a}\left(\frac{4 \pi f_0 d_0}{c}\right)^2+1\right) .   
+ \end{split}
 \end{equation}
 
 \revi{simpleScen3_3}{Let $\Gamma(\gamma,b)= \int_{b}^{\infty}t^{\gamma-1}e^{-t} dt$ be the incomplete gamma function, then for $\nu=3$ we have instead}
 \begin{equation}\label{eq:llr2}
- \mathcal{M}(a) =
- \ln\left(\frac{R^2-R_{\rm in}^2}{R_{\rm in}^2-R_{\rm min}^2}\frac{\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm min}^3\right)-\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm in}^3\right)}{\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm in}^3\right)-\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R^3\right)}\right),
+\begin{split}
+ \mathcal{M}(a) = &
+ \ln\left(\frac{R^2-R_{\rm in}^2}{R_{\rm in}^2-R_{\rm min}^2}
+ \frac{\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm min}^3\right)}
+ {\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm in}^3\right)} \right.\\
+  & \left. \frac{-\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R_{\rm in}^3\right)}{-\Gamma\left(\frac{5}{3},\frac{1}{a}\left(\frac{4 \pi f_0}{c}\right)^3 R^3\right)} \right),
+\end{split}
 \end{equation}
  
 \subsubsection{Uncorrelated shadowing scenario}
 \revi{simpleScen4}{Assuming spatially uncorrelated shadowing, without fading   we have $10\log_{10}a^{(n)}=P^{(n)}_{\rm PL}+s$, \ie the received power from a given location is distributed in the logarithmic domain as a Gaussian random variable with mean value given by the path-loss (\ref{eq:los}) and standard deviation $\sigma_{s,\rm dB}$. Letting}
 \begin{equation}\label{eq:sh}
-   G(\Delta,R_0,R_1) = 
-    \frac{2}{\Delta}\int_{R_0}^{R_1} \exp\left(-\frac{1}{2}\frac{\left(\frac{1}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_{s,\rm dB}^2}\right) d_0 \, {\tt d} d_0, 
+\begin{split}
+&   G(\Delta, R_0,R_1) = \\ 
+&\frac{2}{\Delta}\int_{R_0}^{R_1} \exp\left(-\frac{1}{2}\frac{\left(\frac{1}{a}+10\nu\log_{10}\left(\frac{4 \pi f_0 d_0}{c}\right)\right)^2}{\sigma_{s,\rm dB}^2}\right) d_0 \, {\tt d} d_0, 
+\end{split}
 \end{equation}
 \revi{simpleScen4_1}{from (\ref{eq:prc}), the \ac{pdf} of incurring an attenuation $a$ in hypothesis $\mathcal{H}_0$ is $p(a|\mathcal{H}_0)=G(\Delta_0,R_{\rm min}, R_{\rm in})$, and $p(a|\mathcal{H}_1) = G(\Delta_1, R_{\rm in},R_{\rm out})$.}
 \revi{simpleScen4_2}{By solving the integral in (\ref{eq:sh}) we obtain the \ac{llr}}
@@ -1146,7 +1161,10 @@ In this paper, we have proposed innovative solutions for \ac{irlv} in wireless n
 	Asymptotically, for $S \to \infty$, problem (\ref{eq:lssvm}) becomes
 		\begin{equation}
 		\label{eq:lssvm2}
-		\underset{\bm{w},e}{\text{min}} \quad f_l' \triangleq \frac{1}{2} \bm{w}^T \bm{w} + C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) \epsilon_{j,1}^2 + p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1) \epsilon_{j,-1}^2]  
+		\begin{split}
+		\underset{\bm{w},e}{\text{min}} \quad f_l' \triangleq \frac{1}{2} \bm{w}^T \bm{w} + & C S \frac{1}{2} \sum_{j=1}^M [p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1) \epsilon_{j,1}^2 + \\
+		&+p_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1) \epsilon_{j,-1}^2]  
+		\end{split}
 		\end{equation}
 		subject to 
 $
@@ -1158,20 +1176,28 @@ $
 $
 	whose solution provides the convergence value (in probability) of vector $\bm{w}$. We write the Lagrangian
 	\begin{equation}
-	\mathcal{L}_1 = f_l' - \sum_{j=1}^{M} v_j \left[ \bm{w}^T \phi (\bm{\alpha}_j) + b - 1 + \epsilon_{j,1} \right] 
-	- \sum_{j=1}^{M} u_j \left[- \bm{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + \epsilon_{j,-1} \right], 
+	\begin{split}
+	\mathcal{L}_1 = f_l'& - \sum_{j=1}^{M} v_j \left[ \bm{w}^T \phi (\bm{\alpha}_j) + b - 1 + \epsilon_{j,1} \right] + \\
+	&- \sum_{j=1}^{M} u_j \left[- \bm{w}^T  \phi (\bm{\alpha}_j) - b  - 1 + \epsilon_{j,-1} \right], 
+	\end{split}
 	\end{equation}
 	where $\{u_k,v_k\}_{k=1}^{M}$ are the Lagrangian multipliers. By setting to zero the derivatives with respect to $\{\bm{w},b,\epsilon_{j,1},\epsilon_{j,-1}, v_j,u_j\}$  we get the system of equations
 	\begin{subequations}
 		\label{eq:system1}
 		\begin{equation}
-		\sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) + b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1)} = 0
+		\begin{split}
+		\sum_{k=1}^{M} &(u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) + b - 1 + \\ 
+		&+ \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,1)} = 0
 		\quad j=1\dots M,
+		\end{split}
 		\end{equation}
 		\begin{equation}
-		- \sum_{k=1}^{M} (u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) - b - 1 + \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1)} = 0
+		\begin{split}
+		- \sum_{k=1}^{M} &(u_k - v_k) k(\phi (\bm{\alpha}_k,\bm{\alpha}_j)) - b - 1 + \\+
+		& \frac{v_j}{CSp_{\bm{a}^{(i)},t_i}(\bm{\alpha}_j,-1)} = 0
 		\quad j=1,\dots, M,
-		\end{equation}
+		\end{split}
+		\end{equation}		
 		\begin{equation}
 		\sum_{k=1}^{M} (u_k - v_k) = 0.
 		\end{equation}
@@ -1192,6 +1218,9 @@ $
 \renewcommand*{\bibfont}{\footnotesize}
 
 \printbibliography
+
+\begin{comment}
+
 
 \clearpage
 \section*{Answer to Reviewers' Comments}
@@ -2001,5 +2030,5 @@ A couple of papers are worth citing:
 \begin{quote}
     "\revp{rev3cit}"
 \end{quote}
-
+\end{comment}
 \end{document}
