@@ -125,7 +125,7 @@
 \sloppy
 
 \begin{abstract}
-\uline{\Ac{irlv} aims at verifying whether a user is inside a \ac{roi}. In wireless networks, \ac{irlv} can exploit the features of the channel between the user and a set of trusted access points. In practice, the channel feature statistics is not available and we resort \ac{ml} solutions for \ac{irlv}. We first show that solutions based on either \acp{nn} or \acp{svm} are \ac{np}-optimal at learning convergence for sufficiently complex machines and large enough training datasets with typical loss functions. Indeed, for finite training, \ac{ml} solutions are more accurate than the \ac{np} test applied on estimated channel statistics. Then, as estimating channel features outside the \ac{roi} may be difficult, we consider one-class classifiers, namely auto-encoders \acp{nn} and one-class \acp{svm}, which however are not equivalent to the \acf{glrt},  typically replacing the \ac{np} test in the one-class problem.  Numerical results support the results in realistic \uline{wireless networks}, with channel model including path-loss, shadowing, and fading.}
+\uline{\Ac{irlv} aims at verifying whether a user is inside a \ac{roi}. In wireless networks, \ac{irlv} can exploit the features of the channel between the user and a set of trusted access points. In practice, the channel feature statistics is not available and we resort to \ac{ml} solutions for \ac{irlv}. We first show that solutions based on either \acp{nn} or \acp{svm} and typical loss functions are \ac{np}-optimal at learning convergence for sufficiently complex learning machines and large training datasets . Indeed, for finite training, \ac{ml} solutions are more accurate than the \ac{np} test based on estimated channel statistics. Then, as estimating channel features outside the \ac{roi} may be difficult, we consider one-class classifiers, namely auto-encoders \acp{nn} and one-class \acp{svm}, which however are not equivalent to the \acf{glrt},  typically replacing the \ac{np} test in the one-class problem.  Numerical results support the results in realistic wireless networks, with channel models including path-loss, shadowing, and fading.}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -149,7 +149,7 @@ In this paper, we remove the channel knowledge assumption and study two \ac{ml} 
 %Two specific security issues are then addressed. 
 \uline{Since it may be difficult to obtain training data from the space outside the \ac{roi}, as it can be vast or not well defined, we explore the one-class classification problem under the knowledge of legitimate channel statistics, and we conclude that conventional \ac{ml} solutions based on both the \ac{ae} and the one-class \ac{svm} do not coincide with the \ac{glrt}, even for large training datasets.}  
 %\revi{rev14b}{Lastly, we consider  the use of (one-class) classifiers to accelerate the success of a sequence of attacks made from various positions.} 
-Numerical results support the theoretical results in a realistic wireless network scenario, including path-loss, shadowing, and fading. We show that in a simple scenario a shallow \ac{nn} and a relatively small training dataset already provide optimal performance. We also show that one-class \ac{irlv} approaches achieve a performance comparable to that of two-class techniques.
+Numerical results support the theoretical results in a realistic wireless network scenario, including path-loss, shadowing, and fading. We show that in a simple scenario a shallow \ac{nn} and a relatively small training dataset already provide optimal performance. We also show that one-class \ac{irlv}  achieves a performance comparable to that of two-class \ac{irlv}.
 
 \uline{The contributions of this paper are summarized hereby:}
 \begin{enumerate}
@@ -181,7 +181,14 @@ We assume that the \ac{ue} transmits a pilot signal with fixed power, known at t
 
 \subsection{Channel Model}\label{sec:chMod}
 
-We now describe a widely adopted wireless channel model to clarify the challenge faced by an \ac{irlv} based on the attenuation estimate. \revi{WiFi2}{In particular, we consider the general channel \cite{3gpp} model that covers a large frequency range from $800$~MHz to 2.5~GHz, suitable for wireless local area networks (WLANs) and IoT, where \ac{irlv} is typically applied.} Let $a^{(n)}$ be the attenuation incurred over the channel between the \ac{ue} and \ac{ap} $n$, including the effects of path-loss, shadowing, and fading. In particular, by assuming a Rayleigh model for fading, we have $g = (\sqrt{a^{(n)}})^{-1} \sim {\mathcal N}\left(0,\sigma_{g,n}^2\right)$, $(\sigma_{a,n}^2)_{\rm dB} =  -10\log_{10}\sigma_{g,n}^2={P_{\rm PL}^{(n)}} + s$ accounts for the path-loss and shadowing components, $P_{\rm PL}^{(n)}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$, where ${\mathcal N}(m,\sigma^2)$ denotes a Gaussian random variable with mean $m$ and variance $\sigma^2$, is the shadowing component.   \uline{Shadowing components of two \acp{ue}  at  positions $\bm{x}_1$ and $\bm{x}_2$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_1,\bm{x}_2)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Section 2.7]{goldsmith2005}}.} 
+We now describe a widely adopted wireless channel model to clarify the challenge faced by an \ac{irlv} based on the attenuation estimate. \revi{WiFi2}{In particular, we consider the general channel \cite{3gpp} model that covers a large frequency range from $800$~MHz to 2.5~GHz, suitable for wireless local area networks (WLANs) and IoT, where \ac{irlv} is typically applied.} Let $a^{(n)}$ be the attenuation incurred over the channel between the \ac{ue} and \ac{ap} $n$, including the effects of path-loss, shadowing, and fading. In particular, by assuming a Rayleigh model for fading we have \begin{equation}
+    g^{(n)} = (\sqrt{a^{(n)}})^{-1} \sim {\mathcal N}\left(0,\sigma_{g,n}^2\right),
+\end{equation}
+where ${\mathcal N}(m,\sigma^2)$ denotes a Gaussian random variable with mean $m$ and variance $\sigma^2$. Moreover, due to shadowing we have 
+\begin{equation}
+    (\sigma_{a,n}^2)_{\rm dB} =  -10\log_{10}\sigma_{g,n}^2={P_{\rm PL}^{(n)}} + s,
+\end{equation}
+where $P_{\rm PL}^{(n)}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$ is the shadowing component.   \uline{Shadowing components of two \acp{ue}  at  positions $\bm{x}_1$ and $\bm{x}_2$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_1,\bm{x}_2)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance {\cite[Section 2.7]{goldsmith2005}.}} 
 
 %Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 Let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UD}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)}) = \sqrt{||\bm{x}_{\rm UD}-\bm{x}_{\rm AP}^{(n)}||_2^2}$. For the path-loss, \cite{3gpp} provides two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
@@ -196,7 +203,10 @@ For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
     & - 18 \log_{10} h_{\rm AP}^{(n)}  +21\log_{10}\left(\frac{f}{10^6}\right) + 80,
     \end{split}
 \end{equation}
-where $h_{\rm AP}$ is the   AP height. Path-loss and shadowing components (thus $\sigma_{a,n}^2$) are assumed to be time-invariant, while the fading (thus attenuation $a^{(n)}$) is independent for each attenuation estimate. \revi{avg_1}{Fading does not give information on the \ac{ue} location; therefore it is a disturbance for \ac{irlv}. However, by performing $k_f$ estimates of the attenuation in a short time $a_j^{(n)}$, $j=1, \ldots,k_f$, and averaging them, we obtain the new attenuation estimate $a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}$.}
+where $h_{\rm AP}$ is the AP height. Path-loss and shadowing components (thus $\sigma_{a,n}^2$) are assumed to be time-invariant, while the fading (thus attenuation $a^{(n)}$) is independent for each attenuation estimate. \revi{avg_1}{Fading does not give information on the \ac{ue} location; therefore it is a disturbance for \ac{irlv}. However, by performing $k_f$ estimates of the attenuation in a short time $a_j^{(n)}$, $j=1, \ldots,k_f$, and averaging them, we obtain the new attenuation estimate}
+\begin{equation}
+    a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}.
+\end{equation}
  
 
 \subsection{\ac{irlv} With Known Channel Statistics}\label{sec:auth}
@@ -284,7 +294,7 @@ In our setting, the input of the \ac{nn} is the attenuation vector $\bm{a}$, $N=
     \end{cases}
 \end{equation}
 
-\revi{lambdaNN}{Parameter $\lambda$ shall be chosen in order to obtain the required \ac{fa} probability. The value of $\lambda$ which guarantees a certain \ac{fa} probability can obtained by simulation, whereas it can not be obtained by inverting the \ac{fa} probability function. This is due to the fact that the \ac{ml} framework is applied when there is no knowledge of the distribution of the variables and hence we can not compute a closed-form expression of the \ac{fa} probability}\footnote{Notice that usually, for zero-one loss function, literature assumes $\lambda = 0.5$. However, this choice does not provide control of neither \acp{fa}, or \ac{md} probabilities.}.
+\revi{lambdaNN}{Parameter $\lambda$ shall be chosen in order to obtain the required \ac{fa} probability. The value of $\lambda$ which guarantees a certain \ac{fa} probability can obtained by simulation, whereas it can not be obtained by inverting the \ac{fa} probability function. This is due to the fact that the \ac{ml} framework is applied when there is no knowledge of the distribution of the variables and hence we can not compute a closed-form expression of the \ac{fa} probability}.\footnote{Notice that usually, for zero-one loss function, literature assumes $\lambda = 0.5$. However, this choice provides the control of neither \ac{fa} nor \ac{md} probabilities.}
 
 \revi{ceNeeded}{Based on the loss function to be optimized during training \acp{nn} can solve different problems, and we consider here two widely used loss functions: \ac{mse} and \ac{ce}. }
 
@@ -409,7 +419,7 @@ See the Appendix \ref{sec:proofTh3}.
 We can now prove the following theorem establishing the optimality of the \ac{svm} solution, as it provides the most powerful \ac{np} test for a given \ac{fa} probability.
 \begin{theorem}
 	\label{th:lsnp}
-	\revi{revGO}{Consider a \ac{lssvm} with training converged to the global minimum of $\omega(\bm{w},b)$ and using an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal C$.} Then the test function (\ref{eq:svm}) provides the \ac{np} test, thus it is the most powerful test.
+	\revi{revGO}{Consider a \ac{lssvm} with training converged to the global minimum of $\omega(\bm{w},b)$, and using an infinite number of training points $\bm{a}^{(i)}$ drawn from the finite alphabet $\mathcal C$.} Then the test function (\ref{testfunNN}) with (\ref{eq:svm}) provides the \ac{np} test, thus it is the most powerful test.
 \end{theorem}
 \begin{proof}
 	From \eqref{eq:lssvmOrig} consider
@@ -417,7 +427,7 @@ We can now prove the following theorem establishing the optimality of the \ac{sv
 	\label{eq:lssvmDim1}
 	\lim_{S \to +\infty} \frac{1}{S} \omega(\bm{w},b) =\frac{C}{2} \lim_{S \to +\infty}\frac{1}{S}  \sum_{i=1}^S e^2_i	=\frac{C}{2}\E_t(\bm{w},b),
 	\end{equation}
-	where $\E_t(\bm{w},b) = \Exp{\epsilon_i^2} $ is the expected value computed \wrt the training points $\bm{a}^{(i)}$, as $S$ goes to infinity. 	The first equality in \eqref{eq:lssvmDim1} comes from Lemma 1: since $\bm{w}$ converges to a finite norm, we can write
+	where $\E_t(\bm{w},b) = \Exp{e_i^2} $ is the expected value computed \wrt the training points $\bm{a}^{(i)}$, as $S$ goes to infinity. 	The first equality in \eqref{eq:lssvmDim1} comes from Lemma 1: since $\bm{w}$ converges to a finite norm, we can write
 $
 	\lim_{S\to \infty} \frac{1}{S} \bm{w}^T \bm{w} 	= 0.
 $
@@ -466,9 +476,9 @@ In summary, we have proven that both \ac{nn} (with \ac{ce} and \ac{mse} design) 
 \label{sec:OneClass}
  
 
-\revi{revOC}{In practice, collecting training points from region ${\mathcal A}_1$ may be difficult, since this region may be large and not necessarily well defined (being simply the complement of $\mathcal A_0$).} \revi{oneClass}{Therefore, during the training phase, we collect only from inside $\mathcal{A}_0$ attenuation vectors that are used to train a \ac{ml} classifier to distinguish between vectors belonging to $\mathcal{A}_0$ and $\mathcal{A}_1$ in the testing phase.} This problem can also be denoted as one-class classification, since we have only samples taken from one of the two classes of the problem at training. 
+\revi{revOC}{In practice, collecting training points from region ${\mathcal A}_1$ may be difficult, since this region may be large and not necessarily well defined (being simply the complement of $\mathcal A_0$).} \revi{oneClass}{Therefore, during the training phase, we collect attenuation vectors only from inside $\mathcal{A}_0$ and use them to train a \ac{ml} classifier to distinguish between vectors belonging to $\mathcal{A}_0$ and $\mathcal{A}_1$ in the testing phase.} This problem can also be denoted as one-class classification, since we have only samples taken from one of the two classes of the problem to train the models. 
 
-In the following, we address the problem of  one-class classification  implemented via both \ac{nn} and \ac{svm}. Two approaches are considered: the \ac{ae}, using a \ac{nn}, and the \ac{oclssvm}.
+\uline{In the following, we address the problem of  one-class classification  implemented via both \ac{nn} and \ac{svm}. Two approaches are considered: the \ac{ae}, using a \ac{nn}, and the \ac{oclssvm}.}
 
 Before proceeding, we consider the optimal approach when only the channel statistics from within $\mathcal A_0$ are known a-priori. In this case the \ac{llr} \eqref{eq:lr} can not be used as discriminant function, as $p(\bm{a}|\mathcal{H}_1)$ is not known. We can instead resort to the \ac{glrt} \cite{Kay-book}, which, although in general sub-optimal, is a meaningful generalization of the \ac{np} test, providing the test function 
 \begin{equation}\label{eq:GLRT}
@@ -860,7 +870,7 @@ For the one-class classifier, we use either the \ac{ae} or the \ac{svm}, as desc
 \uline{In this section, we present the performance of the proposed \ac{irlv} methods, obtained from both experimental data and the channel models of Section~II. We consider a unitary transmitting power for each user and a carrier frequency of $f_0=2.12$~GHz, and $h_{\rm AP}^{(n)} = 15$~m for all the APs, unless differently specified. When spatial correlation of shadowing is assumed, we consider a decorrelation distance of $d_c = 75$~m according to the model of Section~II.} \uline{The training points for the classification tasks are taken uniformly over the area $\mathcal A$ ($\mathcal A_0$).}
 
 \uline{For the \ac{lssvm} we use a Gaussian kernel function \protect{\cite[Chapter 6]{Bishop2006}}.}
-\revi{activation}{For the \ac{nn} approach we use fully connected networks. For the two-class classification problem, the activation function of the input layer is the identity function, while the activation function of neurons in the  hidden and output layers is the sigmoid \protect{\cite[Section 6.2.2.2]{goodfellow}.}} \revi{numResSimplScen3}{All results for \acp{nn} have been reported only for \ac{ce} loss function, as we have shown in Corollary 1 and Theorem 2 that with both \ac{mse} and \ac{ce} loss functions we achieve the same performance of the \ac{np} test.}
+\revi{activation}{For the \ac{nn} approach we use fully connected networks. For the two-class classification problem, the activation function of the input layer is the identity function, while the activation function of neurons in the  hidden and output layers is the sigmoid \protect{\cite[Section 6.2.2.2]{goodfellow}.}} \revi{numResSimplScen3}{\acp{nn} have been trained only for \ac{ce} loss function, as we have shown in Corollary 1 and Theorem 2 that with both \ac{mse} and \ac{ce} loss functions we achieve the same performance of the \ac{np} test.}
 
 \subsection{Two-class \ac{irlv} With Single \ac{ap}}\label{sec:singleAp}
 
@@ -971,7 +981,7 @@ Fig. \ref{fig:trueMap} shows the \ac{roc}  of \ac{np}, \ac{nn}, and \ac{ls}-\ac{
 
 
 \paragraph{Effect of fading average}  \uline{As discussed in Section~\ref{sec:chMod}, for a given \ac{ue} position, the attenuation changes over time due to fading. By averaging $k_f$ realizations of attenuation in the same position, the effect of fading on \ac{irlv} is mitigated.}
-We consider the environment of Fig. \ref{fig:mBS} with $N_{AP} =5$ \acp{ap}\uline{ used for \ac{irlv}, namely ${\rm AP}_i$ with $i = 1,\dots,5$}, and he values of the channel parameters are those of Fig. \ref{fig:kf1}. For $n_x$  explored locations by the \ac{ue} we obtain $S= n_x \cdot k_f$ training attenuation vectors. Fig. \ref{fig:kf10-5}  shows the \ac{roc} for $k_f=1$ and 10, \uline{with $n_x = 2 \cdot 10^4$ for \ac{svm} and $n_x = 3.2 \cdot 10^5$ for \ac{nn}. } \revi{revLI2a}{We also report the performance of \ac{eda}, assuming to know the path-loss relation between the attenuation and the distance.} \revi{rev2fad}{We note that both \ac{md} and \ac{fa} probabilities can be significantly reduced by averaging fading, thus approaching the performance on channels without fading. Indeed, an average of 10 fading realizations already reduces the average \ac{md} probability from $10^{-1}$ to $10^{-2}$, for an \ac{fa} probability of $2\cdot 10^{-1}$, while we achieve an average \ac{md} probability of $4\cdot 10^{-4}$ without fading using a \ac{nn}. We also notice that, in absence of fading, \ac{svm} significantly outperforms  \ac{nn} even if \ac{nn} uses a larger $S$. This suggests that, in this scenario, the \ac{nn} has not yet converged to the optimum, wherein potentially very good performance can be achieved, due to limits in architecture, computational capabilities, and design algorithms. We should remember, in fact, that the number of parameters defining the \ac{svm} grows with the training size, while the number of parameters of the  \ac{nn} is set a-priori.} \revi{revLI2b}{Lastly, we observe that the proposed \ac{ml} techniques (both with and without fading) outperform \ac{eda}, whose performance has been obtained on channels without fading. This is due to the fact that \ac{eda} is more severely affected by shadowing seen as disturbance in the derivation of the distance, while \ac{ml} solutions may exploit it in making the decision, while still not relying on specific channel models.} 
+We consider the environment of Fig. \ref{fig:mBS} with $N_{AP} =5$ \acp{ap}\uline{ used for \ac{irlv}, namely ${\rm AP}_i$ with $i = 1,\dots,5$}, and the values of the channel parameters are those of Fig. \ref{fig:kf1}. For $n_x$  explored locations by the \ac{ue} we obtain $S= n_x \cdot k_f$ training attenuation vectors. Fig. \ref{fig:kf10-5}  shows the \ac{roc} for $k_f=1$ and 10, \uline{with $n_x = 2 \cdot 10^4$ for \ac{svm} and $n_x = 3.2 \cdot 10^5$ for \ac{nn}. } \revi{revLI2a}{We also report the performance of \ac{eda}, assuming to know the path-loss relation between the attenuation and the distance.} \revi{rev2fad}{We note that both \ac{md} and \ac{fa} probabilities can be significantly reduced by averaging fading, thus approaching the performance on channels without fading. Indeed, an average of 10 fading realizations already reduces the average \ac{md} probability from $10^{-1}$ to $10^{-2}$, for an \ac{fa} probability of $2\cdot 10^{-1}$, while we achieve an average \ac{md} probability of $4\cdot 10^{-4}$ without fading using a \ac{nn}. We also notice that, in absence of fading, \ac{svm} significantly outperforms  \ac{nn} even if \ac{nn} uses a larger $S$. This suggests that, in this scenario, the \ac{nn} has not yet converged to the optimum, wherein potentially very good performance can be achieved, due to limits in architecture, computational capabilities, and design algorithms. We should remember, in fact, that the number of parameters defining the \ac{svm} grows with the training size, while the number of parameters of the  \ac{nn} is set a-priori.} \revi{revLI2b}{Lastly, we observe that the proposed \ac{ml} techniques (both with and without fading) outperform \ac{eda}, whose performance has been obtained on channels without fading. This is due to the fact that \ac{eda} is more severely affected by shadowing seen as disturbance in the derivation of the distance, while \ac{ml} solutions may exploit it in making the decision, while still not relying on specific channel models.} 
 
 %\uline{Fig. \ref{fig:kf10} shows the \ac{irlv} performance in the same setting of Fig. \ref{fig:kf10-5} with $N_{\rm AP} = 10$ \acp{ap} positioned as in Fig. \ref{fig:mBS}. Comparing Fig.s \ref{fig:kf10-5} and \ref{fig:kf10} we note that by using more \acp{ap} significantly lowers the MD probability for a given FA probability when fading is present. The advantage in the absence of fading is instead very limited.}   
 
@@ -1570,7 +1580,7 @@ The example closes with equation (11): How does the test function look like? Wha
 \end{framed}
 
 \setstretch{1.5}
-{\bf Ans:} We decided not to include the plot for the test functions (\ref{eq:llr1}), (\ref{eq:llr2}) and (\ref{eq:llr3}), as we already have many figures and they do not provide much additional insight to the problem. We also revised the example, by including more complex scenarios. The reason of the example is to show the complexity of determining analytically the \ac{llr}, as a motivation for the \ac{ml} approach.. In order to clarify this, we added in Section~\ref{sec:los}:
+{\bf Ans:} We decided not to include the plot for the test functions (\ref{eq:llr1}), (\ref{eq:llr2}) and (\ref{eq:llr3}), as we already have many figures and they do not provide much additional insight to the problem. We also revised the example, by including more complex scenarios. The reason of the example is to show the complexity of determining analytically the \ac{llr}, as a motivation for the \ac{ml} approach. In order to clarify this, we added in Section~\ref{sec:los}:
 \begin{quote}
 "\revp{llrComp}"
 \end{quote}
@@ -1839,7 +1849,10 @@ The evaluation in the end of Sec V-B sounds contradictory. First, it is said tha
 \setstretch{1.5}
 {\bf Ans:} Thank you for your note. Indeed, we have revised our approach in the presence of fading. Now, we average the $k_f$ fading realizations and give the resulting average as input to the learning machines. In particular, we have described the fading average in Section~\ref{sec:auth} as:
 \begin{quote}
-"\revp{avg_1}"
+"\revp{avg_1}
+$$
+    a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}."
+$$
 \end{quote}
 The sentence mentioned in the revision has been replaced by the following comment on Fig. \ref{fig:kf10-5}:
 \begin{quote}
@@ -1936,6 +1949,9 @@ Proof that this proposed scheme has robust against the channel fading. In other 
 {\bf Ans:} Please note that our considered channel model already included fading. Indeed, Fig.s \ref{fig:kf1}, \ref{fig:kf1_newArea}, \ref{fig:kf10-5}, \ref{fig:kf1Oc}, and \ref{fig:kf10Oc} all include fading effect. Moreover, we have also considered a refinement of our approach, explicitly targeting the adverse effect of fading, wherein the learning machines are fed with averages of attenuation vectors over multiple fading realizations. By choosing the number of averaged realizations, we can understand the relevance of averaging fading, taking into account that having multiple realizations of attenuation vectors may not always be possibile and takes additional time. In order to make this point clearer, we have added the following sentences in Section~\ref{sec:auth}:
 \begin{quote}
  "\revp{avg_1}
+ $$
+    a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}."
+$$
 \end{quote}
 Furthermore, we have revised Section \ref{sec:los} to include uncorrelated shadowing and fading.
 
