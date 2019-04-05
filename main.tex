@@ -162,28 +162,16 @@ Numerical results support the theoretical results in a realistic wireless networ
 
 \uline{The following notation is used throughout the paper: bold lowercase letters refer to vectors, whereas bold uppercase letters refer to matrices, $\mathbb{E}[\cdot]$ and $\mathbb P[\cdot]$ denote the expectation and probability operators, respectively, $(\cdot)^T$ denotes the transpose operator, $\ln x$, and $\log_{10} x$ denote the natural-base and base-10 logarithms, respectively.}
 
-
-
 \section{System Model}
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=8.5cm]{irlv.jpg}
-%     \caption{The considered \ac{irlv} scenario.}
-%     \label{fig1}
-% \end{figure}
 
 We consider a wireless network  with $N_{\rm AP}$ \acp{ap} covering the area $\mathcal{A}$ over a plane. We propose a \ac{irlv} system to determine if a \ac{ue} is transmitting from within an {\em authorized} \ac{roi} $\mathcal{A}_0$ inside  $\mathcal{A}$, and we define $\mathcal{A}_1=\mathcal{A} \setminus \mathcal{A}_0$ as its complementary region. The verification process exploits the location dependency of the features of the channel between the \ac{ue} and the \acp{ap}. \revi{revPHASE}{For example, we consider as feature the channel power attenuation (of a narrowband transmission), similarly to \protect{\cite{li2010security,Vora}} and \protect{\cite{yan2016location}}. Indeed, other features can be exploited, such as the phase or the wideband impulse response (see \protect{\cite{7270404}} for a survey): our solutions readily apply also to these cases, as we do not make special assumptions on the channel model for their design and analysis.}
 
 We assume that the \ac{ue} transmits a pilot signal with fixed power, known at the \acp{ap}, from which the \acp{ap} can measure the received power and estimate the channel attenuation. We assume that the attenuation estimation is perfect, i.e., not affected by noise or interference, thanks to a sufficiently long pilot signal.
 
-
-
 \subsection{Channel Model}\label{sec:chMod}
 
 We now describe a widely adopted wireless channel model to clarify the challenge faced by an \ac{irlv} based on the attenuation estimate. \revi{WiFi2}{In particular, we consider the general channel \cite{3gpp} model that covers a large frequency range from $800$~MHz to 2.5~GHz, suitable for wireless local area networks (WLANs) and IoT, where \ac{irlv} is typically applied.} Let $a^{(n)}$ be the attenuation incurred over the channel between the \ac{ue} and \ac{ap} $n$, including the effects of path-loss, shadowing, and fading. In particular, by assuming a Rayleigh model for fading, we have $g = (\sqrt{a^{(n)}})^{-1} \sim {\mathcal N}\left(0,\sigma_{g,n}^2\right)$, $(\sigma_{a,n}^2)_{\rm dB} =  -10\log_{10}\sigma_{g,n}^2={P_{\rm PL}^{(n)}} + s$ accounts for the path-loss and shadowing components, $P_{\rm PL}^{(n)}$ is the path-loss coefficient in dB, and $s \sim \mathcal{N}(0,\sigma_{s,{\rm dB}}^2)$, where ${\mathcal N}(m,\sigma^2)$ denotes a Gaussian random variable with mean $m$ and variance $\sigma^2$, is the shadowing component.   \uline{Shadowing components of two \acp{ue}  at  positions $\bm{x}_1$ and $\bm{x}_2$   have correlation $\sigma_{s,{\rm dB}}^2e^{-\frac{L(\bm{x}_1,\bm{x}_2)}{d_c}}$, where $d_c$ is the shadowing decorrelation distance \underline{\cite[Section 2.7]{goldsmith2005}}.} 
 
-%Both path-loss and shadowing models are  derived from \cite{3gpp}. 
 Let us denote as $\bm{x}_{\rm AP}^{(n)} =(X_{\rm AP}^{(n)},Y_{\rm AP}^{(n)})$ the position of  \ac{ap} $n= 1, \ldots, N_{\rm AP}$. For a \ac{ue} located at $\bm{x}_{\rm UD}=(X_u,Y_u)$, its distance from \ac{ap} $n$ is $L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)}) = \sqrt{||\bm{x}_{\rm UD}-\bm{x}_{\rm AP}^{(n)}||_2^2}$. For the path-loss, \cite{3gpp} provides two scenarios: \ac{los} and non-\ac{los}. For a \ac{los} link, the path-loss in dB is modelled as
 \begin{equation}\label{eq:los}
 \begin{split}
@@ -195,11 +183,10 @@ where $\nu$ is the path-loss coefficient, $f$ is the carrier frequency and $c$ i
 For a  non-\ac{los} link, the path-loss coefficient in dB is defined as
 \begin{equation}\label{eq:nlos}
 \begin{split}
-    P_{{\rm PL},  {\rm NLOS}} & \left(L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) = 40 (1 - 4 \cdot 10^{-3} h_ {\rm AP}^{(n)}) \cdot \\ &\log_{10}\left (\frac{L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) - 18 \log_{10} h_{\rm AP}^{(n)} + \\ &+21\log_{10}\left(\frac{f}{10^6}\right) + 80,
+&    P_{{\rm PL},  {\rm NLOS}}  \left(L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})\right) =80 + 40 (1 - 4 \cdot 10^{-3} h_ {\rm AP}^{(n)}) \cdot \\ &\log_{10}\left (\frac{L(\bm{x}_{\rm UD},\bm{x}_{\rm AP}^{(n)})}{10^3}\right ) - 18 \log_{10} h_{\rm AP}^{(n)}   +21\log_{10}\left(\frac{f}{10^6}\right),
     \end{split}
 \end{equation}
-where $h_{\rm AP}$ is the   AP height. Path-loss and shadowing components (thus $\sigma_{a,n}^2$) are assumed to be time-invariant, while the fading (thus attenuation $a^{(n)}$) is independent for each attenuation estimate. \revi{avg_1}{Fading does not give information on the \ac{ue} location; therefore it is a disturbance for \ac{irlv}. However, by performing $k_f$ estimates of the attenuation in a short time $a_j^{(n)}$, $j=1, \ldots,k_f$, and averaging them, we obtain the new attenuation estimate $a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}$.}
- 
+where $h_{\rm AP}$ is the   AP height. Path-loss and shadowing components (thus $\sigma_{a,n}^2$) are assumed to be time-invariant, while the fading (thus attenuation $a^{(n)}$) is independent for each attenuation estimate. \revi{avg_1}{Fading does not give information on the \ac{ue} location; therefore it is a disturbance for \ac{irlv}. However, by performing $k_f$ estimates of the attenuation in a short time $a_j^{(n)}$, $j=1, \ldots,k_f$, and averaging them, we obtain the new attenuation estimate $a^{(n)}_{\Sigma} = \frac{1}{k_f}\sum_{j=1}^{k_f} a_j^{(n)}$.} 
 
 \subsection{\ac{irlv} With Known Channel Statistics}\label{sec:auth}
 
